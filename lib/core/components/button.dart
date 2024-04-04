@@ -26,14 +26,6 @@ class CustomButton extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return ElevatedButton(
       style: ButtonStyle(
-        overlayColor: MaterialStateProperty.resolveWith(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
-              return Colors.red; // Border color for disabled state
-            }
-            return null; // No border color for other states
-          },
-        ),
         side: MaterialStateProperty.resolveWith<BorderSide>(
               (Set<MaterialState> states) {
             if (states.contains(MaterialState.disabled)) {
