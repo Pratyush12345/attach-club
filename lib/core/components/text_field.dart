@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextFieldType type;
-  final double width;
+  final String? hintText;
+  final Widget? suffixIcon;
+  final bool isTextArea;
+  final TextEditingController controller;
+  final void Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
     required this.type,
-    required this.width,
+    required this.controller,
+    this.hintText,
+    this.suffixIcon,
+    this.isTextArea = false,
+    this.onChanged,
   });
 
   @override
@@ -17,7 +25,6 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
-
   @override
   void initState() {
     super.initState();
@@ -44,11 +51,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    if (widget.type == TextFieldType.PhoneNumberField) {
-      return Container(
-        width: 0.8883 * widget.width,
+    final width = MediaQuery.of(context).size.width;
+
+    return Container(
+        width: 0.8883 * width,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
@@ -62,45 +71,62 @@ class _CustomTextFieldState extends State<CustomTextField> {
               _isFocused = hasFocus;
             });
           },
-          child: TextField(
-            cursorColor: Colors.white,
-            decoration: InputDecoration(
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 13.0),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 9.0),
-                        child: Icon(
-                          Icons.phone,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "91",
-                        style: textStyle(Colors.white),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        width: 1,
-                        color: Colors.white,
-                        height: 20,
-                      )
-                    ],
-                  ),
-                ),
-                prefixIconConstraints: const BoxConstraints(maxWidth: 90),
-                hintText: "00000 00000",
-                hintStyle: textStyle(Colors.white.withOpacity(0.5))),
-            style: textStyle(Colors.white),
-            keyboardType: TextInputType.number,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: TextField(
+              onChanged: widget.onChanged,
+              controller: widget.controller,
+              maxLines: (widget.isTextArea)?5:1,
+              cursorColor: Colors.white,
+              decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  prefixIcon: _getPrefixIcon(),
+                  prefixIconConstraints: const BoxConstraints(maxWidth: 75),
+                  hintText: _getHintText(),
+                  hintStyle: textStyle(Colors.white.withOpacity(0.5)),
+                suffixIcon: widget.suffixIcon,
+              ),
+              style: textStyle(Colors.white),
+              keyboardType: TextInputType.number,
+            ),
           ),
         ),
       );
-    } else {
-      return const TextField();
+  }
+
+  Widget? _getPrefixIcon(){
+    if(widget.type==TextFieldType.PhoneNumberField){
+      return Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 9.0),
+            child: Icon(
+              Icons.phone,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            "91",
+            style: textStyle(Colors.white),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            width: 1,
+            color: Colors.white,
+            height: 20,
+          )
+        ],
+      );
+    }
+    return null;
+  }
+
+  String? _getHintText(){
+    if(widget.type==TextFieldType.PhoneNumberField){
+      return "00000 00000";
+    }else{
+      return widget.hintText;
     }
   }
 }

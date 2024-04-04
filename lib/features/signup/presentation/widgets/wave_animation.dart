@@ -19,7 +19,7 @@ class CircleWaveRouteState extends State<CircleWaveRoute>
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: Duration(milliseconds: 1500), vsync: this);
+        duration: const Duration(milliseconds: 1500), vsync: this);
 
     controller.forward();
 
