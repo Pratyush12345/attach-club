@@ -1,15 +1,19 @@
 import 'dart:developer';
 
 import 'package:attach_club/core/components/button.dart';
+import 'package:attach_club/core/components/heading.dart';
+import 'package:attach_club/core/components/label.dart';
+import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/core/components/step_progress_indicator.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/core/constants.dart';
 import 'package:attach_club/features/on_board1/bloc/on_board1_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnBoard1 extends StatefulWidget {
-  static const globalPadding = 24.0;
+
 
   const OnBoard1({super.key});
 
@@ -58,54 +62,38 @@ class _OnBoard1State extends State<OnBoard1> {
           builder: (context, state) {
             return Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: OnBoard1.globalPadding),
+                  horizontal: onBoardingHorizontalPadding,
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.0622 * height),
-                      child: const StepProgressIndicator(
-                        padding: OnBoard1.globalPadding,
-                        totalBars: 4,
-                        selectedBars: 1,
-                      ),
+                    const OnBoardingHero(
+                      totalBars: 4,
+                      selectedBars: 1,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 0.0257 * height,
-                        bottom: 0.0343 * height,
-                      ),
-                      child: const Text(
-                        "Complete your profile",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white),
-                      ),
+                    SizedBox(
+                      height: 0.0257 * height,
                     ),
-                    const Text(
-                      "Profile Link",
-                      style: TextStyle(
-                        color: Color(0xFFCED2D6),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    const Heading(title: "Complete your profile"),
+                    SizedBox(
+                      height: 0.0343 * height,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 0.0171 * height,
-                        bottom: 0.008583690987 * height,
-                      ),
-                      child: CustomTextField(
-                        type: TextFieldType.RegularTextField,
-                        hintText: "Enter username",
-                        suffixIcon: _getSuffixIcon(),
-                        controller: userNameController,
-                        onChanged: (s) {
-                          _sendUpdate();
-                        },
-                      ),
+                    const Label(title: "Profile Link"),
+                    SizedBox(
+                      height: 0.0171 * height,
+                    ),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      hintText: "Enter username",
+                      suffixIcon: _getSuffixIcon(),
+                      controller: userNameController,
+                      onChanged: (s) {
+                        _sendUpdate();
+                      },
+                    ),
+                    SizedBox(
+                      height: 0.00858 * height,
                     ),
                     GestureDetector(
                       child: Text(
@@ -119,36 +107,36 @@ class _OnBoard1State extends State<OnBoard1> {
                             );
                       },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.0343 * height, bottom: 4),
-                      child: Text(
-                        "Your profile will be available at:",
-                        style: _getTextStyle(Colors.white, 14, FontWeight.w400),
-                      ),
+                    SizedBox(
+                      height: 0.0343 * height,
+                    ),
+                    const Label(
+                      title: "Your profile will be available at:",
+                    ),
+                    const SizedBox(
+                      height: 4,
                     ),
                     RichText(
                       text: TextSpan(
-                          text: "www.theattachclub.com/",
-                          style:
-                              _getTextStyle(Colors.white, 20, FontWeight.w500),
-                          children: const [TextSpan(text: "username")]),
+                        text: "www.theattachclub.com/",
+                        style: _getTextStyle(Colors.white, 20, FontWeight.w500),
+                        children: const [
+                          TextSpan(text: "username"),
+                        ],
+                      ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 0.0343 * height,
-                        bottom: 0.01716738197 * height,
-                      ),
-                      child: Text(
-                        "Basic Details",
-                        style: _getTextStyle(
-                            const Color(0xFFCED2D6), 14, FontWeight.w500),
-                      ),
+                    SizedBox(
+                      height: 0.0343 * height,
+                    ),
+                    const Label(title: "Basic Details"),
+                    SizedBox(
+                      height: 0.01716738197 * height,
                     ),
                     CustomTextField(
                       type: TextFieldType.RegularTextField,
                       hintText: "Name",
                       controller: nameController,
-                      onChanged: (s){
+                      onChanged: (s) {
                         _sendUpdate();
                       },
                     ),
@@ -159,7 +147,7 @@ class _OnBoard1State extends State<OnBoard1> {
                         type: TextFieldType.RegularTextField,
                         hintText: "Profession",
                         controller: professionController,
-                        onChanged: (e){
+                        onChanged: (e) {
                           _sendUpdate();
                         },
                       ),
@@ -169,20 +157,20 @@ class _OnBoard1State extends State<OnBoard1> {
                       hintText: "About yourself",
                       isTextArea: true,
                       controller: aboutController,
-                      onChanged: (e){
+                      onChanged: (e) {
                         _sendUpdate();
                       },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.03 * height),
-                      child: CustomButton(
-                        onPressed: () {
-                          log("clicked");
-                        },
-                        title: "Next",
-                        assetName: "assets/svg/arrow_right.svg",
-                        disabled: disabled,
-                      ),
+                    SizedBox(
+                      height: 0.03 * height,
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/onboard2");
+                      },
+                      title: "Next",
+                      assetName: "assets/svg/arrow_right.svg",
+                      disabled: disabled,
                     )
                   ],
                 ),
@@ -194,16 +182,16 @@ class _OnBoard1State extends State<OnBoard1> {
     );
   }
 
-  _sendUpdate(){
+  _sendUpdate() {
     context.read<OnBoard1Bloc>().add(
-      OnFieldsUpdated(
-        username: userNameController.text,
-        name: nameController.text,
-        profession: professionController.text,
-        about: aboutController.text,
-        loading: loading,
-      ),
-    );
+          OnFieldsUpdated(
+            username: userNameController.text,
+            name: nameController.text,
+            profession: professionController.text,
+            about: aboutController.text,
+            loading: loading,
+          ),
+        );
   }
 
   Widget? _getSuffixIcon() {

@@ -7,6 +7,7 @@ class CustomTextField extends StatefulWidget {
   final bool isTextArea;
   final TextEditingController controller;
   final void Function(String)? onChanged;
+  final Widget? prefixWidget;
 
   const CustomTextField({
     super.key,
@@ -16,6 +17,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.isTextArea = false,
     this.onChanged,
+    this.prefixWidget,
   });
 
   @override
@@ -118,8 +120,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           )
         ],
       );
+    }else{
+      return widget.prefixWidget;
     }
-    return null;
   }
 
   String? _getHintText(){

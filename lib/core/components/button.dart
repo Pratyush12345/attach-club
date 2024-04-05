@@ -8,10 +8,13 @@ class CustomButton extends StatelessWidget {
     fontWeight: FontWeight.w600,
   );
 
+  final bool isDark;
   final void Function() onPressed;
   final String title;
   final String? assetName;
   final bool disabled;
+  final double? buttonWidth;
+  final Widget? prefixIcon;
 
   const CustomButton({
     super.key,
@@ -19,6 +22,9 @@ class CustomButton extends StatelessWidget {
     required this.title,
     this.assetName,
     this.disabled = false,
+    this.isDark = false,
+    this.buttonWidth,
+    this.prefixIcon
   });
 
   @override
@@ -28,14 +34,14 @@ class CustomButton extends StatelessWidget {
       style: ButtonStyle(
         side: MaterialStateProperty.resolveWith<BorderSide>(
               (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
+            if (states.contains(MaterialState.disabled) || isDark) {
               return const BorderSide(color: Colors.white, width: 1); // Border width for disabled state
             }
             return BorderSide.none; // No border for other states
           },
         ),
         fixedSize: MaterialStateProperty.resolveWith(
-          (states) => Size(0.8883 * width, 64),
+          (states) => Size((buttonWidth??0.8883) * width, 64),
         ),
         shape: MaterialStateProperty.resolveWith(
           (states) => RoundedRectangleBorder(
@@ -44,7 +50,7 @@ class CustomButton extends StatelessWidget {
         ),
         backgroundColor: MaterialStateProperty.resolveWith(
           (states){
-            if(states.contains(MaterialState.disabled)){
+            if(states.contains(MaterialState.disabled) || isDark){
               return Colors.transparent;
             }else {
               return const Color(0xFF2D4CF9);
@@ -52,18 +58,12 @@ class CustomButton extends StatelessWidget {
           },
         ),
       ),
-      // style: ElevatedButton.styleFrom(
-      //     fixedSize: Size(0.8883 * width, 64),
-      //     shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(8),
-      //     ),
-      //     backgroundColor: const Color(0xFF2D4CF9),
-      // ),
       onPressed: (disabled) ? null : onPressed,
 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          prefixIcon??const SizedBox(),
           Text(
             title,
             style: textStyle,
