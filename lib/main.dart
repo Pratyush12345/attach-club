@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: const Color(0xFF181B2F)
         ),
-        initialRoute: "/onboard4",
+        initialRoute: "/signup",
         routes: {
           "/signup":(context)=>const SignUp(),
           "/onboard1":(context)=>const OnBoard1(),
