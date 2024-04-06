@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
           "/onboard2": (context)=>const OnBoard2(),
           "/onboard3": (context)=>const OnBoard3(),
           "/onboard4": (context)=>const OnBoard4(),
-
         },
       ),
     );

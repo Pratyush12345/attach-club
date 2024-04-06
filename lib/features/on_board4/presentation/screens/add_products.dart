@@ -1,7 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:attach_club/core/components/button.dart';
-import 'package:attach_club/core/components/custom_add_icon.dart';
 import 'package:attach_club/core/components/heading.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/onboarding_hero.dart';
@@ -10,13 +10,14 @@ import 'package:attach_club/core/constants.dart';
 import 'package:attach_club/features/on_board4/bloc/on_board4_bloc.dart';
 import 'package:attach_club/features/on_board4/data/models/product.dart';
 import 'package:attach_club/features/on_board4/presentation/widgets/add_images.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProducts extends StatefulWidget {
-  const AddProducts({super.key});
+  final Product? oldProduct;
+
+  const AddProducts({super.key, this.oldProduct});
 
   @override
   State<AddProducts> createState() => _AddProductsState();
@@ -34,6 +35,14 @@ class _AddProductsState extends State<AddProducts> {
   void initState() {
     super.initState();
     disabled = _isDisabled();
+    if (widget.oldProduct != null) {
+      titleController.text = widget.oldProduct?.title ?? "";
+      descriptionController.text = widget.oldProduct?.description ?? "";
+      priceController.text = widget.oldProduct?.description ?? "";
+      enquiry = widget.oldProduct?.showEnquiry ?? false;
+      file = XFile(widget.oldProduct!.image.path);
+      disabled = _isDisabled();
+    }
   }
 
   @override
@@ -156,22 +165,15 @@ class _AddProductsState extends State<AddProducts> {
               ),
               CustomButton(
                 onPressed: () {
-                  context.read<OnBoard4Bloc>().add(
-                        ProductAdded(Product(
-                          title: titleController.text,
-                          description: descriptionController.text,
-                          price: priceController.text,
-                          showEnquiry: enquiry,
-                          image: File(file!.path),
-                        )),
-                      );
-                  Navigator.pop(context);
+                  _onPress(context);
                 },
-                title: "Add",
-                prefixIcon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
+                title: (widget.oldProduct != null) ? "Edit" : "Add",
+                prefixIcon: (widget.oldProduct == null)
+                    ? const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      )
+                    : null,
                 disabled: disabled,
               ),
             ],
@@ -186,5 +188,29 @@ class _AddProductsState extends State<AddProducts> {
         descriptionController.text.isEmpty ||
         priceController.text.isEmpty ||
         file == null);
+  }
+
+  void _onPress(BuildContext context) {
+    final product = Product(
+      title: titleController.text,
+      description: descriptionController.text,
+      price: priceController.text,
+      showEnquiry: enquiry,
+      image: File(file!.path),
+    );
+    if (widget.oldProduct != null) {
+      log("edit log");
+      context.read<OnBoard4Bloc>().add(
+            EditProduct(
+              oldProduct: widget.oldProduct!,
+              newProduct: product,
+            ),
+          );
+    } else {
+      context.read<OnBoard4Bloc>().add(
+            ProductAdded(product),
+          );
+    }
+    Navigator.pop(context);
   }
 }

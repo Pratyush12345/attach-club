@@ -7,6 +7,7 @@ import 'package:attach_club/core/constants.dart';
 import 'package:attach_club/features/on_board4/bloc/on_board4_bloc.dart';
 import 'package:attach_club/features/on_board4/data/models/product.dart';
 import 'package:attach_club/features/on_board4/presentation/screens/add_products.dart';
+import 'package:attach_club/features/on_board4/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,6 +36,13 @@ class _OnBoard4State extends State<OnBoard4> {
           listener: (context, state) {
             if (state is AddToList) {
               list.add(state.product);
+            }
+            if(state is EditList){
+              list.remove(state.oldProduct);
+              list.add(state.newProduct);
+            }
+            if(state is DeleteFromList){
+              list.remove(state.product);
             }
           },
           builder: (context, state) {
@@ -76,64 +84,8 @@ class _OnBoard4State extends State<OnBoard4> {
                               crossAxisSpacing: 19,
                             ),
                             itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 0.4279 * width,
-                                  height: 0.2982 * height,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: const Color(0xFF181B2F),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: SizedBox(
-                                          width: 0.4279 * width,
-                                          height: 0.4279 * width,
-                                          child: Image.file(
-                                            list[index].image,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
-                                      Text(
-                                        list[index].title,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Rs ${list[index].price}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Text(
-                                        list[index].description,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              return ProductCard(
+                                product: list[index],
                               );
                             },
                             itemCount: list.length,
@@ -161,8 +113,10 @@ class _OnBoard4State extends State<OnBoard4> {
                       ),
                       CustomButton(
                         onPressed: () {},
-                        title: (list.isEmpty)?"Next":"Completed",
-                        assetName: (list.isEmpty)?"assets/svg/arrow_right.svg":null,
+                        title: (list.isEmpty) ? "Next" : "Completed",
+                        assetName: (list.isEmpty)
+                            ? "assets/svg/arrow_right.svg"
+                            : null,
                       ),
                     ],
                   ),
