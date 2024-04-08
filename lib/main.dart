@@ -1,11 +1,16 @@
-import 'package:attach_club/features/on_board1/bloc/on_board1_bloc.dart';
-import 'package:attach_club/features/on_board1/presentation/screens/on_board1.dart';
-import 'package:attach_club/features/on_board2/presentation/screens/on_board2.dart';
-import 'package:attach_club/features/on_board3/bloc/on_board3_bloc.dart';
-import 'package:attach_club/features/on_board3/presentation/screens/on_board3.dart';
-import 'package:attach_club/features/on_board4/bloc/on_board4_bloc.dart';
-import 'package:attach_club/features/on_board4/presentation/screens/on_board4.dart';
-import 'package:attach_club/features/signup/presentation/screens/sign_up.dart';
+import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
+import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
+import 'package:attach_club/bloc/complete_profile/complete_profile_bloc.dart';
+import 'package:attach_club/views/add_link/add_link.dart';
+import 'package:attach_club/views/add_service/add_service_screen.dart';
+import 'package:attach_club/views/complete_profile/complete_profile.dart';
+import 'package:attach_club/views/manage_profile/manage_profile.dart';
+import 'package:attach_club/views/profile/profile.dart';
+import 'package:attach_club/views/profile_image/profile_image.dart';
+import 'package:attach_club/views/profile_privacy/profile_privacy.dart';
+import 'package:attach_club/views/settings/settings.dart';
+import 'package:attach_club/home.dart';
+import 'package:attach_club/views/signup/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,22 +25,41 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context)=>OnBoard1Bloc()),
-        BlocProvider(create: (context)=>OnBoard3Bloc()),
-        BlocProvider(create: (context)=>OnBoard4Bloc()),
+        BlocProvider(create: (context) => CompleteProfileBloc()),
+        BlocProvider(create: (context) => AddLinkBloc()),
+        BlocProvider(create: (context) => AddServiceBloc()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          scaffoldBackgroundColor: const Color(0xFF181B2F)
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: const Color(0xFF181B2F),
+          appBarTheme: const AppBarTheme(
+            color: Color(0xFF26293B),
+          ),
+          cardTheme: const CardTheme(
+            color: Color(0xFF26293B),
+            surfaceTintColor: Color(0xFF26293B),
+          ),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+              backgroundColor: Color(0xFF2D4CF9)),
         ),
+        themeMode: ThemeMode.dark,
         initialRoute: "/signup",
         routes: {
-          "/signup":(context)=>const SignUp(),
-          "/onboard1":(context)=>const OnBoard1(),
-          "/onboard2": (context)=>const OnBoard2(),
-          "/onboard3": (context)=>const OnBoard3(),
-          "/onboard4": (context)=>const OnBoard4(),
+          "/signup": (context) => const SignUp(),
+          "/onboard1": (context) => const CompleteProfile(),
+          "/onboard2": (context) => const ProfileImage(),
+          "/onboard3": (context) => const AddLink(),
+          "/onboard4": (context) => const AddService(),
+          "/settings": (context) => const Settings(),
+          "/settings/manageProfile": (context) => const ManageProfile(),
+          "/settings/profilePrivacy": (context) => const ProfilePrivacy(),
+          "/home": (context) => const HomeScreen(),
+          "/profile": (context) => const Profile(),
         },
       ),
     );
