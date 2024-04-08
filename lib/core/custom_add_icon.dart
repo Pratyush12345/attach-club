@@ -27,7 +27,10 @@ class CustomAddIcon extends StatelessWidget {
           ),
           SvgPicture.asset(
             "assets/svg/plus.svg",
-            color: Colors.white,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.src,
+            ),
           )
         ],
       ),
