@@ -131,6 +131,7 @@ class _AddProductsState extends State<AddProducts> {
                       type: TextFieldType.RegularTextField,
                       controller: priceController,
                       hintText: "Price (optional)",
+                      keyboardType: TextInputType.number,
                       onChanged: (s) {
                         setState(() {
                           disabled = _isDisabled();

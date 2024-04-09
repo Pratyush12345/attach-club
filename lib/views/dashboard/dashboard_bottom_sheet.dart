@@ -41,6 +41,7 @@ class _DashboardBottomSheetState extends State<DashboardBottomSheet> {
             type: TextFieldType.RegularTextField,
             controller: controller,
             hintText: "00000 00000",
+            keyboardType: TextInputType.number,
           ),
           SizedBox(height: 0.03004291845 * height),
           CustomButton(

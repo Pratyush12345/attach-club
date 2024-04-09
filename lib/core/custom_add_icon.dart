@@ -29,7 +29,7 @@ class CustomAddIcon extends StatelessWidget {
             "assets/svg/plus.svg",
             colorFilter: const ColorFilter.mode(
               Colors.white,
-              BlendMode.src,
+              BlendMode.srcIn,
             ),
           )
         ],

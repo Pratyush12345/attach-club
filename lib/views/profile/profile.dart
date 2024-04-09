@@ -103,6 +103,7 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
               const SizedBox(
                 width: double.infinity,
                 child: Column(
@@ -115,6 +116,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.white,
                       ),
                     ),
+                    SizedBox(height: 2),
                     Text(
                       "UI/UX Designer @ Vysion Technology",
                       style: TextStyle(
@@ -122,10 +124,12 @@ class _ProfileState extends State<Profile> {
                           fontWeight: FontWeight.w400,
                           color: Colors.white),
                     ),
+                    SizedBox(height: 16),
                     Rating(
                       selected: 3,
                       alignment: MainAxisAlignment.center,
                     ),
+                    SizedBox(height: 4),
                     Text(
                       "3 stars out of 5",
                       style: TextStyle(
@@ -142,6 +146,7 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
               ),
+              const SizedBox(height: 26),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,

@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? prefixWidget;
   final bool disabled;
   final Color? color;
+  final TextInputType keyboardType;
 
   const CustomTextField({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixWidget,
     this.disabled = false,
     this.color,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -94,7 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 suffixIcon: widget.suffixIcon,
               ),
               style: textStyle(Colors.white),
-              keyboardType: TextInputType.number,
+              keyboardType: widget.keyboardType,
               readOnly: widget.disabled,
             ),
           ),

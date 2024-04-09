@@ -49,6 +49,7 @@ class _SignUpState extends State<SignUp> {
                           CustomTextField(
                             type: TextFieldType.PhoneNumberField,
                             controller: controller,
+                            keyboardType: TextInputType.number,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 16, bottom: 24),
