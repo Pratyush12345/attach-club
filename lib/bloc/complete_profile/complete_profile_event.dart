@@ -50,3 +50,8 @@ class NextButtonClicked extends CompleteProfileEvent {
   @override
   List<Object?> get props => [];
 }
+
+class GetUserData extends CompleteProfileEvent {
+  @override
+  List<Object?> get props => [];
+}

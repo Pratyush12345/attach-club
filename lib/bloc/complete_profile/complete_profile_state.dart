@@ -49,3 +49,12 @@ class NavigateToNextPage extends CompleteProfileState {
   @override
   List<Object?> get props => [];
 }
+
+class InitialUserData extends CompleteProfileState {
+  final UserData userData;
+
+  InitialUserData(this.userData);
+
+  @override
+  List<Object?> get props => [userData];
+}

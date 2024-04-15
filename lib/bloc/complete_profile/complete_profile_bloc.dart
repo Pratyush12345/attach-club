@@ -26,6 +26,9 @@ class CompleteProfileBloc
       emit(CompleteProfileInitial());
     });
     on<NextButtonClicked>(_onNextButtonClicked);
+    on<GetUserData>((event, emit) async {
+      emit(InitialUserData(await _repository.getUserData()));
+    });
   }
 
   _onVerifyClicked(

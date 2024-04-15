@@ -25,4 +25,8 @@ class CompleteProfileRepository {
     final db = FirebaseFirestore.instance;
     await db.collection("users").doc(user.uid).set(userData.toMap());
   }
+
+  Future<UserData> getUserData()async {
+    return await _repository.getUserData();
+  }
 }

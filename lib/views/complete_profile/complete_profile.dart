@@ -42,8 +42,13 @@ class _CompleteProfileState extends State<CompleteProfile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<CompleteProfileBloc>().add(GetUserData());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    log("building");
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
@@ -73,6 +78,12 @@ class _CompleteProfileState extends State<CompleteProfile> {
             }
             if (state is NavigateToNextPage) {
               Navigator.pushNamed(context, "/onboard2");
+            }
+            if (state is InitialUserData) {
+              userNameController.text = state.userData.username;
+              nameController.text = state.userData.name;
+              professionController.text = state.userData.profession;
+              descriptionController.text = state.userData.description;
             }
           },
           builder: (context, state) {
