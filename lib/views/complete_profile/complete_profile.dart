@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:attach_club/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
