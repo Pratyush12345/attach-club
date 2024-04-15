@@ -1,11 +1,12 @@
-import 'package:attach_club/core/button.dart';
-import 'package:attach_club/core/divider.dart';
-import 'package:attach_club/core/rating.dart';
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/text_field.dart';
+import 'package:attach_club/core/components/button.dart';
+import 'package:attach_club/core/components/divider.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../core/components/rating.dart';
+import '../../core/components/text_field.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

@@ -1,17 +1,18 @@
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
-import 'package:attach_club/core/button.dart';
-import 'package:attach_club/core/custom_modal_sheet.dart';
+import 'package:attach_club/core/components/button.dart';
+import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/core/components/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../core/text_field.dart';
 import '../../models/social_link.dart';
 import '../../models/social_media.dart';
 
 showAddPlatformInfoModal({
   required BuildContext context,
   required SocialMedia socialMedia,
+  required List<SocialLink> list,
   SocialLink? socialLink,
 }) {
   showCustomModalBottomSheet(
@@ -20,6 +21,7 @@ showAddPlatformInfoModal({
     child: AddPlatformInfo(
       socialMedia: socialMedia,
       socialLink: socialLink,
+      list: list,
     ),
   );
 }
@@ -27,11 +29,13 @@ showAddPlatformInfoModal({
 class AddPlatformInfo extends StatefulWidget {
   final SocialMedia socialMedia;
   final SocialLink? socialLink;
+  final List<SocialLink> list;
 
 
-  AddPlatformInfo({
+  const AddPlatformInfo({
     super.key,
     required this.socialMedia,
+    required this.list,
     this.socialLink,
   });
 
@@ -53,7 +57,7 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
 
   @override
   Widget build(BuildContext context) {
-    labelController.text = widget.socialLink?.label ?? "";
+    labelController.text = widget.socialLink?.title ?? "";
     linkController.text = widget.socialLink?.link ?? "";
     final height = MediaQuery.of(context).size.height;
     return SizedBox(
@@ -66,7 +70,7 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
           CustomTextField(
             type: TextFieldType.RegularTextField,
             controller: labelController,
-            hintText: "Enter username",
+            hintText: "Enter title",
           ),
           SizedBox(
             height: 0.01287 * height,
@@ -109,7 +113,7 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
               oldSocialLink: widget.socialLink!,
               socialMedia: widget.socialMedia,
               link: linkController.text,
-              label: labelController.text,
+              title: labelController.text,
             ),
           );
     } else {
@@ -117,7 +121,8 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
             SocialLinkAdded(
               socialMedia: widget.socialMedia,
               link: linkController.text,
-              label: labelController.text,
+              title: labelController.text,
+              list: widget.list
             ),
           );
     }

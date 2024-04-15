@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/complete_profile/complete_profile_bloc.dart';
-import 'package:attach_club/core/button.dart';
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/heading.dart';
-import 'package:attach_club/core/onboarding_hero.dart';
+import 'package:attach_club/core/components/button.dart';
+import 'package:attach_club/core/components/heading.dart';
+import 'package:attach_club/core/components/label.dart';
+import 'package:attach_club/core/components/onboarding_hero.dart';
+import 'package:attach_club/core/components/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../core/label.dart';
-import '../../core/text_field.dart';
 
 class CompleteProfile extends StatefulWidget {
   final bool isInsideManageProfile;
@@ -26,7 +27,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final userNameController = TextEditingController();
   final nameController = TextEditingController();
   final professionController = TextEditingController();
-  final aboutController = TextEditingController();
+  final descriptionController = TextEditingController();
   int loading = -1;
 
   bool disabled = true;
@@ -36,12 +37,13 @@ class _CompleteProfileState extends State<CompleteProfile> {
     userNameController.dispose();
     nameController.dispose();
     professionController.dispose();
-    aboutController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    log("building");
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
@@ -55,8 +57,22 @@ class _CompleteProfileState extends State<CompleteProfile> {
               loading = 1;
               _sendUpdate();
             }
+            if (state is StopLoading) {
+              loading = -1;
+              _sendUpdate();
+            }
             if (state is ButtonStatusUpdated) {
               disabled = state.disabled;
+            }
+            if (state is ShowSnackBar) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+            if (state is NavigateToNextPage) {
+              Navigator.pushNamed(context, "/onboard2");
             }
           },
           builder: (context, state) {
@@ -82,7 +98,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       suffixIcon: _getSuffixIcon(),
                       controller: userNameController,
                       onChanged: (s) {
-                        _sendUpdate();
+                        _sendUpdate(isUsername: true);
                       },
                       disabled: widget.isInsideManageProfile,
                     ),
@@ -115,8 +131,8 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       text: TextSpan(
                         text: "www.theattachclub.com/",
                         style: _getTextStyle(Colors.white, 20, FontWeight.w500),
-                        children: const [
-                          TextSpan(text: "username"),
+                        children: [
+                          TextSpan(text: userNameController.text),
                         ],
                       ),
                     ),
@@ -151,7 +167,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       type: TextFieldType.RegularTextField,
                       hintText: "About yourself",
                       isTextArea: true,
-                      controller: aboutController,
+                      controller: descriptionController,
                       onChanged: (e) {
                         _sendUpdate();
                       },
@@ -162,7 +178,14 @@ class _CompleteProfileState extends State<CompleteProfile> {
                     if (!widget.isInsideManageProfile)
                       CustomButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/onboard2");
+                          context
+                              .read<CompleteProfileBloc>()
+                              .add(NextButtonClicked(
+                                userNameController.text,
+                                nameController.text,
+                                professionController.text,
+                                descriptionController.text,
+                              ));
                         },
                         title: "Next",
                         assetName: "assets/svg/arrow_right.svg",
@@ -178,14 +201,15 @@ class _CompleteProfileState extends State<CompleteProfile> {
     );
   }
 
-  _sendUpdate() {
+  _sendUpdate({bool isUsername = false}) {
     context.read<CompleteProfileBloc>().add(
           OnFieldsUpdated(
             username: userNameController.text,
             name: nameController.text,
             profession: professionController.text,
-            about: aboutController.text,
+            about: descriptionController.text,
             loading: loading,
+            isUsernameUpdated: isUsername,
           ),
         );
   }
@@ -210,7 +234,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             "assets/svg/check_circle.svg",
             colorFilter: const ColorFilter.mode(
               Colors.blue,
-              BlendMode.src,
+              BlendMode.srcIn,
             ),
           ),
         ),

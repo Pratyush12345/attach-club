@@ -1,12 +1,15 @@
-import 'package:attach_club/core/button.dart';
+import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/heading.dart';
-import 'package:attach_club/core/label.dart';
-import 'package:attach_club/core/onboarding_hero.dart';
 import 'package:attach_club/views/profile_image/upload_images_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileImage extends StatelessWidget {
+import '../../core/components/button.dart';
+import '../../core/components/heading.dart';
+import '../../core/components/label.dart';
+import '../../core/components/onboarding_hero.dart';
+
+class ProfileImage extends StatefulWidget {
   final bool isInsideManageProfile;
 
   const ProfileImage({
@@ -14,8 +17,19 @@ class ProfileImage extends StatelessWidget {
     this.isInsideManageProfile = false,
   });
 
+  @override
+  State<ProfileImage> createState() => _ProfileImageState();
+}
+
+class _ProfileImageState extends State<ProfileImage> {
   _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).pushNamed("/onboard3");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileImageBloc>().add(FetchImages());
   }
 
   @override
@@ -40,7 +54,7 @@ class ProfileImage extends StatelessWidget {
                   ],
                 ),
               ),
-              if(!isInsideManageProfile)
+              if (!widget.isInsideManageProfile)
                 CustomButton(
                   onPressed: () {
                     _navigateToNextScreen(context);
@@ -53,28 +67,29 @@ class ProfileImage extends StatelessWidget {
       ),
     );
   }
-  _getHeader(BuildContext context, double height){
-    if(!isInsideManageProfile){
+
+  _getHeader(BuildContext context, double height) {
+    if (!widget.isInsideManageProfile) {
       return [
-          OnBoardingHero(
-            totalBars: 4,
-            selectedBars: 2,
-            showSkipButton: true,
-            onSkip: () {
-              _navigateToNextScreen(context);
-            },
-          ),
-          SizedBox(
-            height: 0.0257 * height,
-          ),
-          const Heading(title: "Display"),
-          SizedBox(
-            height: 0.0343 * height,
-          ),
-          const Label(
-              title:
-              "Upload your character to make fantastic first impression Let your personality shine"),
-        ];
+        OnBoardingHero(
+          totalBars: 4,
+          selectedBars: 2,
+          showSkipButton: true,
+          onSkip: () {
+            _navigateToNextScreen(context);
+          },
+        ),
+        SizedBox(
+          height: 0.0257 * height,
+        ),
+        const Heading(title: "Display"),
+        SizedBox(
+          height: 0.0343 * height,
+        ),
+        const Label(
+            title:
+                "Upload your character to make fantastic first impression Let your personality shine"),
+      ];
     }
     return [];
   }

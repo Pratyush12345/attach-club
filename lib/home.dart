@@ -2,6 +2,7 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/nav_tab_data.dart';
 import 'package:attach_club/views/connections/connections.dart';
 import 'package:attach_club/views/dashboard/dashboard.dart';
+import 'package:attach_club/views/fire/fire.dart';
 import 'package:attach_club/views/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen>
     NavTabData(
       label: "Fire",
       assetName: "assets/svg/fire.svg",
-      child: const Placeholder(),
+      child: const Fire(),
       appBar: AppBar(
         title: const Text(
           "Fire",

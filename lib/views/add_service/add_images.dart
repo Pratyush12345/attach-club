@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:attach_club/core/custom_add_icon.dart';
-import 'package:attach_club/core/label.dart';
+import 'package:attach_club/core/components/custom_add_icon.dart';
+import 'package:attach_club/core/components/label.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,6 +1,7 @@
-import 'package:attach_club/core/line_break.dart';
 import 'package:attach_club/views/settings/gradient_button.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/components/line_break.dart';
 
 class OtherPages extends StatelessWidget {
   static const _titleStyle = TextStyle(

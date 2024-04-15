@@ -1,5 +1,5 @@
-import 'package:attach_club/core/button.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/views/dashboard/link_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

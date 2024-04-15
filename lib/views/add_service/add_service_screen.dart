@@ -1,14 +1,15 @@
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
-import 'package:attach_club/core/button.dart';
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/heading.dart';
-import 'package:attach_club/core/label.dart';
-import 'package:attach_club/core/onboarding_hero.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/add_products.dart';
 import 'package:attach_club/views/add_service/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../core/components/button.dart';
+import '../../core/components/heading.dart';
+import '../../core/components/label.dart';
+import '../../core/components/onboarding_hero.dart';
 
 class AddService extends StatefulWidget {
   final bool isInsideManageProfile;
@@ -27,10 +28,15 @@ class _AddServiceState extends State<AddService> {
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   bool enquiry = false;
-  final List<Product> list = [];
 
   _onPress(BuildContext context) {
     Navigator.of(context).pushNamed("/home");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddServiceBloc>().add(FetchAllProducts());
   }
 
   @override
@@ -41,18 +47,16 @@ class _AddServiceState extends State<AddService> {
       body: SafeArea(
         child: BlocConsumer<AddServiceBloc, AddServiceState>(
           listener: (context, state) {
-            if (state is AddToList) {
-              list.add(state.product);
-            }
-            if (state is EditList) {
-              list.remove(state.oldProduct);
-              list.add(state.newProduct);
-            }
-            if (state is DeleteFromList) {
-              list.remove(state.product);
+            if (state is ShowSnackBar) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
             }
           },
           builder: (context, state) {
+            final list = context.read<AddServiceBloc>().list;
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: horizontalPadding,

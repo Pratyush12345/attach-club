@@ -1,5 +1,5 @@
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/step_progress_indicator.dart';
+import 'package:attach_club/core/components/step_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

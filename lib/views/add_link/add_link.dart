@@ -1,15 +1,14 @@
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
-import 'package:attach_club/core/button.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/components/button.dart';
+import 'package:attach_club/core/components/heading.dart';
+import 'package:attach_club/core/components/label.dart';
+import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/views/add_link/platform_list_modal.dart';
 import 'package:attach_club/views/add_link/social_link_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../core/heading.dart';
-import '../../core/label.dart';
-import '../../core/onboarding_hero.dart';
 
 class AddLink extends StatefulWidget {
   final bool isInsideManageProfile;
@@ -24,10 +23,16 @@ class AddLink extends StatefulWidget {
 }
 
 class _AddLinkState extends State<AddLink> {
-  final List<SocialLink> list = [];
+  List<SocialLink> list = [];
 
   _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).pushNamed("/onboard4");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddLinkBloc>().add(FetchSocialLinks());
   }
 
   @override
@@ -46,6 +51,21 @@ class _AddLinkState extends State<AddLink> {
             }
             if (state is DeleteFromList) {
               list.remove(state.socialLink);
+            }
+            if (state is NavigateToNextScreen) {
+              _navigateToNextScreen(context);
+            }
+            if (state is FetchedSocialLinks) {
+              list = state.list;
+            }
+            if (state is ShowSnackBar) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message,
+                  ),
+                ),
+              );
             }
           },
           builder: (context, state) {
@@ -71,6 +91,7 @@ class _AddLinkState extends State<AddLink> {
                           itemBuilder: (context, index) {
                             return SocialLinkCard(
                               socialLink: list[index],
+                              list: list,
                             );
                           },
                         )
@@ -81,7 +102,7 @@ class _AddLinkState extends State<AddLink> {
                     children: [
                       CustomButton(
                         onPressed: () {
-                          showPlatformListModal(context);
+                          showPlatformListModal(context, list);
                         },
                         title: "Add Links",
                         assetName: "assets/svg/link.svg",

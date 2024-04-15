@@ -1,9 +1,19 @@
+import 'dart:developer';
+
+import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReceiveConnections extends StatelessWidget {
-  const ReceiveConnections({super.key});
+  final List<ConnectionRequest> list;
+
+  const ReceiveConnections({
+    super.key,
+    required this.list,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,26 +22,34 @@ class ReceiveConnections extends StatelessWidget {
       child: Column(
         children: [
           _getListView(width),
-          const SizedBox(height: paddingDueToNav,),
+          const SizedBox(
+            height: paddingDueToNav,
+          ),
         ],
       ),
     );
   }
 
-  _getListView(double width){
+  _getListView(double width) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      itemCount: list.length,
       itemBuilder: (
-          BuildContext context,
-          int index,
-          ) {
+        BuildContext context,
+        int index,
+      ) {
         return ConnectionCard(
+          request: list[index],
           actions: [
             GestureDetector(
-              onTap: (){},
+              onTap: () {
+                context
+                    .read<ConnectionsBloc>()
+                    .add(RequestRejected(list[index]));
+              },
               child: Container(
-                width: 0.1860465116*width,
+                width: 0.1860465116 * width,
                 height: 32,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
@@ -50,9 +68,15 @@ class ReceiveConnections extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: (){},
+              onTap: () {
+                context.read<ConnectionsBloc>().add(
+                      RequestAccepted(
+                        index,
+                      ),
+                    );
+              },
               child: Container(
-                width: 0.1860465116*width,
+                width: 0.1860465116 * width,
                 height: 32,
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -73,7 +97,6 @@ class ReceiveConnections extends StatelessWidget {
           ],
         );
       },
-      itemCount: 10,
     );
   }
 }

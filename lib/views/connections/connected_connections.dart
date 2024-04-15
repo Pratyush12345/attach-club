@@ -1,10 +1,16 @@
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ConnectedConnections extends StatelessWidget {
-  const ConnectedConnections({super.key});
+  final List<ConnectionRequest> list;
+
+  const ConnectedConnections({
+    super.key,
+    required this.list,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,7 @@ class ConnectedConnections extends StatelessWidget {
         int index,
       ) {
         return ConnectionCard(
+          request: list[index],
           actions: [
             GestureDetector(
               onTap: () {},
@@ -56,7 +63,7 @@ class ConnectedConnections extends StatelessWidget {
           ],
         );
       },
-      itemCount: 10,
+      itemCount: list.length,
     );
   }
 }

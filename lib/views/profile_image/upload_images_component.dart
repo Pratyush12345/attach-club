@@ -1,9 +1,12 @@
 import 'dart:io';
-import 'package:attach_club/core/custom_add_icon.dart';
-import 'package:attach_club/core/label.dart';
+import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../core/components/custom_add_icon.dart';
+import '../../core/components/label.dart';
 
 class UploadImagesComponent extends StatefulWidget {
   const UploadImagesComponent({super.key});
@@ -13,42 +16,67 @@ class UploadImagesComponent extends StatefulWidget {
 }
 
 class _UploadImagesComponentState extends State<UploadImagesComponent> {
-  XFile? coverImage;
-  XFile? profilePic;
+  File? coverImage;
+  File? profilePic;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return SizedBox(
-      height: 0.3723175966 * height,
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () async {
-              XFile? pickedImage =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
-              setState(() {
-                coverImage = pickedImage;
-              });
-            },
-            child: _getCover(height),
+    return BlocConsumer<ProfileImageBloc, ProfileImageState>(
+      listener: (context, state) {
+        if (state is ProfileImageUpdated) {
+          profilePic = state.file;
+        }
+        if (state is BannerImageUpdated) {
+          coverImage = state.file;
+        }
+        if (state is FetchedImages) {
+          profilePic = state.profileImage;
+          coverImage = state.bannerImage;
+        }
+      },
+      builder: (context, state) {
+        if (state is LoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return SizedBox(
+          height: 0.3723175966 * height,
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  XFile? pickedImage = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  if (context.mounted && pickedImage != null) {
+                    context.read<ProfileImageBloc>().add(
+                          BannerImageUploaded(pickedImage),
+                        );
+                  }
+                },
+                child: _getCover(height),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: GestureDetector(
+                  onTap: () async {
+                    XFile? pickedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (context.mounted && pickedImage != null) {
+                      context.read<ProfileImageBloc>().add(
+                            ProfileImageUploaded(pickedImage),
+                          );
+                    }
+                  },
+                  child: _getProfile(width),
+                ),
+              )
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: GestureDetector(
-              onTap: () async {
-                XFile? pickedImage =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
-                setState(() {
-                  profilePic = pickedImage;
-                });
-              },
-              child: _getProfile(width),
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -58,9 +86,9 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         width: double.infinity,
         height: 0.28751 * height,
         child: Image.file(
-          File(coverImage!.path),
-          key: UniqueKey(),
-        ),
+                coverImage!,
+                key: UniqueKey(),
+              ),
       );
     } else {
       return DottedBorder(
@@ -102,9 +130,9 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         ),
         child: ClipOval(
           child: Image.file(
-            File(coverImage!.path),
-            fit: BoxFit.fill,
-          ),
+                  profilePic!,
+                  fit: BoxFit.fill,
+                ),
         ),
       );
     } else {

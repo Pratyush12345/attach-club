@@ -1,9 +1,10 @@
-import 'package:attach_club/core/button.dart';
-import 'package:attach_club/core/custom_modal_sheet.dart';
-import 'package:attach_club/core/heading.dart';
-import 'package:attach_club/core/label.dart';
-import 'package:attach_club/core/text_field.dart';
+import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/core/components/heading.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/components/button.dart';
+import '../../core/components/label.dart';
+import '../../core/components/text_field.dart';
 
 showDashboardBottomSheet(BuildContext context) {
   showCustomModalBottomSheet(

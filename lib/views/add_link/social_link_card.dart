@@ -6,10 +6,12 @@ import 'edit_platform_info.dart';
 
 class SocialLinkCard extends StatefulWidget {
   final SocialLink socialLink;
+  final List<SocialLink> list;
 
   const SocialLinkCard({
     super.key,
     required this.socialLink,
+    required this.list,
   });
 
   @override
@@ -23,7 +25,11 @@ class _SocialLinkCardState extends State<SocialLinkCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showEditPlatformInfoSheet(context, widget.socialLink);
+        showEditPlatformInfoSheet(
+          context,
+          widget.socialLink,
+          widget.list,
+        );
       },
       child: Card(
         color: const Color(0xFF26293B),
@@ -45,7 +51,7 @@ class _SocialLinkCardState extends State<SocialLinkCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.socialLink.label,
+                        widget.socialLink.title,
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w400,

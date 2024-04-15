@@ -20,6 +20,11 @@ class ShowVerifiedIcon extends CompleteProfileState{
 
 }
 
+class StopLoading extends CompleteProfileState{
+  @override
+  List<Object?> get props => [];
+}
+
 class ButtonStatusUpdated extends CompleteProfileState{
   final bool disabled;
 
@@ -28,4 +33,19 @@ class ButtonStatusUpdated extends CompleteProfileState{
   @override
   List<Object?> get props => [disabled];
 
+}
+
+class ShowSnackBar extends CompleteProfileState {
+  final String message;
+
+  const ShowSnackBar(this.message);
+
+  @override
+  List<Object?> get props => [message];
+
+}
+
+class NavigateToNextPage extends CompleteProfileState {
+  @override
+  List<Object?> get props => [];
 }

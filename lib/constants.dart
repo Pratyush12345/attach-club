@@ -1,4 +1,5 @@
 import 'package:attach_club/models/social_media.dart';
+import 'package:intl/intl.dart';
 
 const horizontalPadding = 24.0;
 

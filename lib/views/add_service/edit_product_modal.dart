@@ -1,10 +1,11 @@
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
-import 'package:attach_club/core/button.dart';
-import 'package:attach_club/core/custom_modal_sheet.dart';
+import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/add_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../core/components/button.dart';
 
 void showEditProductModal(
   BuildContext context,

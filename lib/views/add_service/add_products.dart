@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
-import 'package:attach_club/core/button.dart';
-import 'package:attach_club/core/onboarding_hero.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/components/heading.dart';
+import 'package:attach_club/core/components/label.dart';
+import 'package:attach_club/core/components/onboarding_hero.dart';
+import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/models/product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../core/heading.dart';
-import '../../core/label.dart';
-import '../../core/text_field.dart';
+import '../../core/components/button.dart';
 import 'add_images.dart';
 
 class AddProducts extends StatefulWidget {
@@ -38,8 +39,8 @@ class _AddProductsState extends State<AddProducts> {
     if (widget.oldProduct != null) {
       titleController.text = widget.oldProduct?.title ?? "";
       descriptionController.text = widget.oldProduct?.description ?? "";
-      priceController.text = widget.oldProduct?.description ?? "";
-      enquiry = widget.oldProduct?.showEnquiry ?? false;
+      priceController.text = widget.oldProduct?.price ?? "";
+      enquiry = widget.oldProduct?.isShowEnquiryBtn ?? false;
       file = XFile(widget.oldProduct!.image.path);
       disabled = _isDisabled();
     }
@@ -59,8 +60,7 @@ class _AddProductsState extends State<AddProducts> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: horizontalPadding),
+          padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,8 +198,9 @@ class _AddProductsState extends State<AddProducts> {
       title: titleController.text,
       description: descriptionController.text,
       price: priceController.text,
-      showEnquiry: enquiry,
+      isShowEnquiryBtn: enquiry,
       image: File(file!.path),
+      dateAdded: Timestamp.now(),
     );
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(

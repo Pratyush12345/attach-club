@@ -1,5 +1,6 @@
-import 'package:attach_club/core/rating.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/components/rating.dart';
 
 class ProfileCard extends StatelessWidget {
   final int selected;

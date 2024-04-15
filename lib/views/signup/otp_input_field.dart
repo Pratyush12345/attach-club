@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpInputField extends StatelessWidget {
-  const OtpInputField({super.key});
+  final TextEditingController controller;
+  final String verificationId;
+
+  const OtpInputField({
+    super.key,
+    required this.controller,
+    required this.verificationId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Pinput(
-      length: 4,
+      controller: controller,
+      length: 6,
       showCursor: true,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       defaultPinTheme: PinTheme(
@@ -41,6 +49,12 @@ class OtpInputField extends StatelessWidget {
         ),
       ),
       isCursorAnimationEnabled: false,
+      onCompleted: (String code) {
+        // context.read<SignupBloc>().add(VerifyOtp(
+        //       verificationId: verificationId,
+        //       otp: code,
+        //     ));
+      },
     );
   }
 }

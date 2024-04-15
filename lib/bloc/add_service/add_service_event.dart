@@ -7,7 +7,7 @@ abstract class AddServiceEvent extends Equatable {
 class ProductAdded extends AddServiceEvent {
   final Product product;
 
-  ProductAdded(this.product);
+  const ProductAdded(this.product);
 
   @override
   List<Object?> get props => [];
@@ -30,4 +30,9 @@ class DeleteProduct extends AddServiceEvent {
 
   @override
   List<Object?> get props => [product];
+}
+
+class FetchAllProducts extends AddServiceEvent {
+  @override
+  List<Object?> get props => [];
 }

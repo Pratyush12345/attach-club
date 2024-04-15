@@ -1,22 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SwitchCard extends StatefulWidget {
+class SwitchCard extends StatelessWidget {
   final String title;
   final String subtitle;
-
+  final bool value;
+  final void Function(bool) onChange;
+  
   const SwitchCard({
     super.key,
     required this.title,
     required this.subtitle,
+    required this.value,
+    required this.onChange,
   });
-
-  @override
-  State<SwitchCard> createState() => _SwitchCardState();
-}
-
-class _SwitchCardState extends State<SwitchCard> {
-  bool value = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class _SwitchCardState extends State<SwitchCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title,
+                    title,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -48,7 +44,7 @@ class _SwitchCardState extends State<SwitchCard> {
                     ),
                   ),
                   Text(
-                    widget.subtitle,
+                    subtitle,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -64,11 +60,7 @@ class _SwitchCardState extends State<SwitchCard> {
               inactiveTrackColor: const Color(0xFF2A2D40),
               inactiveThumbColor: const Color(0xffc4c4c4).withOpacity(0.6),
               value: value,
-              onChanged: (newValue) {
-                setState(() {
-                  value = newValue;
-                });
-              },
+              onChanged: onChange,
             ),
           ],
         ),
