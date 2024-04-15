@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:attach_club/core/repository/core_repository.dart';
@@ -79,6 +78,10 @@ class AddServiceRepository {
         final imageRef = storageRef.child(
             "users/${currentUser.uid}/products/${map["title"]}/image.jpg");
         final appDocDir = await getApplicationDocumentsDirectory();
+        final directory = Directory("${appDocDir.path}/images/products/${map["title"]}/");
+        if (!directory.existsSync()) {
+          directory.createSync(recursive: true);
+        }
         final filePath =
             "${appDocDir.path}/images/products/${map["title"]}/image.jpg";
         final file = File(filePath);

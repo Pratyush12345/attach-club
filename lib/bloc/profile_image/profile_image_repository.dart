@@ -41,9 +41,14 @@ class ProfileImageRepository {
 
     final profilePhotoRef =
     storageRef.child("users/${currentUser.uid}/$name.jpg");
-    final appDocDir = await getApplicationDocumentsDirectory();
+    final appDocDir = await getApplicationCacheDirectory();
+    final directory = Directory("${appDocDir.path}/images/");
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
     final filePath = "${appDocDir.path}/images/$name.jpg";
     final file = File(filePath);
+
 
     await profilePhotoRef.writeToFile(file);
     return file;

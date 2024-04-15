@@ -39,7 +39,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     });
     on<VerifyOtp>((event, emit) async {
       try {
-        await Future.delayed(const Duration(seconds: 2));
         final user = await _repository.verifyOtp(
           event.verificationId,
           event.otp,
