@@ -1,6 +1,8 @@
+import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/core/components/heading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/components/button.dart';
 import '../../core/components/label.dart';
@@ -48,6 +50,11 @@ class _DashboardBottomSheetState extends State<DashboardBottomSheet> {
           CustomButton(
             onPressed: () {
               Navigator.of(context).pop();
+              context.read<DashboardBloc>().add(
+                    SendWhatsappMessage(
+                      controller.text,
+                    ),
+                  );
             },
             title: "Send",
           ),

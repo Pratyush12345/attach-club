@@ -47,12 +47,12 @@ class NavigateToNextScreen extends AddLinkState {
 }
 
 class FetchedSocialLinks extends AddLinkState {
-  final List<SocialLink> list;
+  // final List<SocialLink> list;
 
-  const FetchedSocialLinks(this.list);
+  const FetchedSocialLinks();
 
   @override
-  List<Object?> get props => [list];
+  List<Object?> get props => [];
 }
 
 class ShowSnackBar extends AddLinkState {
@@ -62,4 +62,9 @@ class ShowSnackBar extends AddLinkState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class AddLinkLoading extends AddLinkState {
+  @override
+  List<Object?> get props => [];
 }

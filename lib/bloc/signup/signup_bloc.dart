@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:developer';
 import 'package:attach_club/bloc/signup/signup_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -12,6 +12,8 @@ part 'signup_state.dart';
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final SignupRepository _repository;
   final CoreRepository _coreRepository;
+  String verificationId = "";
+  int? resendToken;
 
   SignupBloc(
     this._repository,
@@ -27,11 +29,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     });
     on<PhoneVerificationTriggered>((event, emit) async {
       try {
+        log("proceed clicked");
         await _repository.sendOtp(
           phoneNumber: event.phoneNumber,
           verificationFailed: event.verificationFailed,
-          codeSent: event.codeSent,
+          codeSent: _codeSent,
           verificationCompleted: event.verificationCompleted,
+          resendToken: resendToken,
         );
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
@@ -40,7 +44,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<VerifyOtp>((event, emit) async {
       try {
         final user = await _repository.verifyOtp(
-          event.verificationId,
+          verificationId,
           event.otp,
         );
         if (user.user == null) {
@@ -66,5 +70,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         emit(ShowSnackBar(e.toString()));
       }
     });
+  }
+
+  void _codeSent(String newVerificationId, int? resendToken) async {
+    verificationId = newVerificationId;
+    resendToken = resendToken;
   }
 }

@@ -17,8 +17,13 @@ import 'add_images.dart';
 
 class AddProducts extends StatefulWidget {
   final Product? oldProduct;
+  final bool isOnboarding;
 
-  const AddProducts({super.key, this.oldProduct});
+  const AddProducts({
+    super.key,
+    this.oldProduct,
+    this.isOnboarding = true,
+  });
 
   @override
   State<AddProducts> createState() => _AddProductsState();
@@ -29,6 +34,7 @@ class _AddProductsState extends State<AddProducts> {
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   bool enquiry = false;
+  bool isProductDisabled = false;
   XFile? file;
   bool disabled = false;
 
@@ -41,7 +47,10 @@ class _AddProductsState extends State<AddProducts> {
       descriptionController.text = widget.oldProduct?.description ?? "";
       priceController.text = widget.oldProduct?.price ?? "";
       enquiry = widget.oldProduct?.isShowEnquiryBtn ?? false;
-      file = XFile(widget.oldProduct!.image.path);
+      if (widget.oldProduct != null) {
+        isProductDisabled = !widget.oldProduct!.isEnabled;
+      }
+      file = XFile(widget.oldProduct!.image!.path);
       disabled = _isDisabled();
     }
   }
@@ -58,6 +67,13 @@ class _AddProductsState extends State<AddProducts> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: (!widget.isOnboarding)? AppBar(
+        title: Text(
+          "${(widget.oldProduct == null) ? "Add" : "Edit"} "
+          "Product/Service",
+        ),
+        centerTitle: false,
+      ):null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -68,21 +84,30 @@ class _AddProductsState extends State<AddProducts> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    OnBoardingHero(
-                      totalBars: 4,
-                      selectedBars: 4,
-                      showBackButton: true,
-                      onBack: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    SizedBox(
-                      height: 0.0257 * height,
-                    ),
-                    const Heading(title: "Add Product/Service"),
+                    if (widget.isOnboarding)
+                      ...[
+                        OnBoardingHero(
+                          totalBars: 4,
+                          selectedBars: 4,
+                          showBackButton: true,
+                          onBack: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        SizedBox(
+                          height: 0.0257 * height,
+                        ),
+                        Heading(
+                          title:
+                          "${(widget.oldProduct == null) ? "Add" : "Edit"} "
+                              "Product/Service",
+                        ),
+
+                      ],
                     SizedBox(
                       height: 0.03433 * height,
                     ),
+
                     const Label(
                       title: "Enter your product or service details here",
                     ),
@@ -130,7 +155,7 @@ class _AddProductsState extends State<AddProducts> {
                     CustomTextField(
                       type: TextFieldType.RegularTextField,
                       controller: priceController,
-                      hintText: "Price (optional)",
+                      hintText: "Price",
                       keyboardType: TextInputType.number,
                       onChanged: (s) {
                         setState(() {
@@ -147,7 +172,7 @@ class _AddProductsState extends State<AddProducts> {
                         const Text(
                           "Show enquiry button",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: primaryTextColor,
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                           ),
@@ -162,14 +187,47 @@ class _AddProductsState extends State<AddProducts> {
                           },
                         ),
                       ],
-                    )
+                    ),
+                    SizedBox(height: 0.0048 * height),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Disable",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Switch(
+                          value: isProductDisabled,
+                          onChanged: (value) {
+                            setState(() {
+                              isProductDisabled = value;
+                              disabled = _isDisabled();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0.0068 * height),
+                    RichText(
+                      text: TextSpan(
+                          text:
+                              "Turning this option on will hide this link from your profile for all users",
+                          style: TextStyle(color: paragraphTextColor)),
+                    ),
                   ],
+                ),
+                SizedBox(
+                  height: 0.0148 * height,
                 ),
                 CustomButton(
                   onPressed: () {
                     _onPress(context);
                   },
-                  title: (widget.oldProduct != null) ? "Edit" : "Add",
+                  title: (widget.oldProduct != null) ? "Save" : "Add",
                   prefixIcon: (widget.oldProduct == null)
                       ? const Icon(
                           Icons.add,
@@ -201,6 +259,8 @@ class _AddProductsState extends State<AddProducts> {
       isShowEnquiryBtn: enquiry,
       image: File(file!.path),
       dateAdded: Timestamp.now(),
+      imageUrl: "",
+      isEnabled: !isProductDisabled,
     );
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(

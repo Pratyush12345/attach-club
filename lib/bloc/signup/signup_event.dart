@@ -12,13 +12,11 @@ class GoogleLoginTriggered extends SignupEvent {
 class PhoneVerificationTriggered extends SignupEvent {
   final String phoneNumber;
   final void Function(FirebaseAuthException) verificationFailed;
-  final void Function(String, int?) codeSent;
   final void Function(PhoneAuthCredential) verificationCompleted;
 
   const PhoneVerificationTriggered({
     required this.phoneNumber,
     required this.verificationFailed,
-    required this.codeSent,
     required this.verificationCompleted,
   });
 
@@ -27,11 +25,9 @@ class PhoneVerificationTriggered extends SignupEvent {
 }
 
 class VerifyOtp extends SignupEvent {
-  final String verificationId;
   final String otp;
 
   const VerifyOtp({
-    required this.verificationId,
     required this.otp,
   });
 

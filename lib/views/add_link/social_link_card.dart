@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +20,6 @@ class SocialLinkCard extends StatefulWidget {
 }
 
 class _SocialLinkCardState extends State<SocialLinkCard> {
-  bool visibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _SocialLinkCardState extends State<SocialLinkCard> {
                       Text(
                         widget.socialLink.title,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: primaryTextColor,
                           fontWeight: FontWeight.w400,
                           fontSize: 20,
                         ),
@@ -66,14 +66,16 @@ class _SocialLinkCardState extends State<SocialLinkCard> {
                               Colors.white,
                               BlendMode.srcIn,
                             ),
+                            width: 16,
+                            height: 16,
                           ),
                           const SizedBox(
                             width: 4,
                           ),
                           Text(
                             widget.socialLink.link,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: secondaryTextColor,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
@@ -82,16 +84,7 @@ class _SocialLinkCardState extends State<SocialLinkCard> {
                       )
                     ],
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        visibility = !visibility;
-                      });
-                    },
-                    icon: Icon(
-                      (visibility) ? Icons.visibility : Icons.visibility_off,
-                    ),
-                  )
+
                 ],
               ),
             )

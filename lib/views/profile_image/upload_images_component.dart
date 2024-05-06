@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +15,8 @@ class UploadImagesComponent extends StatefulWidget {
 }
 
 class _UploadImagesComponentState extends State<UploadImagesComponent> {
-  File? coverImage;
-  File? profilePic;
+  // File? coverImage;
+  // File? profilePic;
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +24,23 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
     final width = MediaQuery.of(context).size.width;
     return BlocConsumer<ProfileImageBloc, ProfileImageState>(
       listener: (context, state) {
-        if (state is ProfileImageUpdated) {
-          profilePic = state.file;
-        }
-        if (state is BannerImageUpdated) {
-          coverImage = state.file;
-        }
-        if (state is FetchedImages) {
-          profilePic = state.profileImage;
-          coverImage = state.bannerImage;
-        }
+        // if (state is ProfileImageUpdated) {
+        //   profilePic = state.file;
+        // }
+        // if (state is BannerImageUpdated) {
+        //   coverImage = state.file;
+        // }
+        // if (state is FetchedImages) {
+        //   profilePic = state.profileImage;
+        //   coverImage = state.bannerImage;
+        // }
       },
       builder: (context, state) {
         if (state is LoadingState) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Colors.purple,
+            ),
           );
         }
         return SizedBox(
@@ -81,14 +82,14 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
   }
 
   Widget _getCover(double height) {
-    if (coverImage != null) {
+    if (context.read<ProfileImageBloc>().bannerImage != null) {
       return SizedBox(
         width: double.infinity,
         height: 0.28751 * height,
         child: Image.file(
-                coverImage!,
-                key: UniqueKey(),
-              ),
+          context.read<ProfileImageBloc>().bannerImage!,
+          key: UniqueKey(),
+        ),
       );
     } else {
       return DottedBorder(
@@ -121,7 +122,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
   }
 
   Widget _getProfile(double width) {
-    if (profilePic != null) {
+    if (context.read<ProfileImageBloc>().profileImage != null) {
       return Container(
         width: 0.3302325581 * width,
         height: 0.3302325581 * width,
@@ -130,9 +131,9 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         ),
         child: ClipOval(
           child: Image.file(
-                  profilePic!,
-                  fit: BoxFit.fill,
-                ),
+            context.read<ProfileImageBloc>().profileImage!,
+            fit: BoxFit.fill,
+          ),
         ),
       );
     } else {

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:attach_club/bloc/connections/connections_repository.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:equatable/equatable.dart';

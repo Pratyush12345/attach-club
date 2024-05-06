@@ -19,7 +19,7 @@ class ProfileImageUpdated extends ProfileImageState {
 }
 
 class BannerImageUpdated extends ProfileImageState {
-  final File file;
+  final File? file;
 
   const BannerImageUpdated(this.file);
 

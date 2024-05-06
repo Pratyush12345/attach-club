@@ -1,29 +1,34 @@
 import 'package:attach_club/bloc/signup/signup_bloc.dart';
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/views/signup/otp_input_field.dart';
-import 'package:attach_club/views/signup/reset_text.dart';
+import 'package:attach_club/views/signup/resend_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void showOtpBottomSheet(
   BuildContext context,
-  String verificationId,
+    void Function(int) resendOtp,
+    String phoneNumber
 ) {
   showCustomModalBottomSheet(
     context: context,
     child: OtpSheet(
-      verificationId: verificationId,
+      resendOtp: resendOtp,
+        phoneNumber: phoneNumber
     ),
   );
 }
 
 class OtpSheet extends StatefulWidget {
-  final String verificationId;
+  final void Function(int) resendOtp;
+  final String phoneNumber;
 
   const OtpSheet({
     super.key,
-    required this.verificationId,
+    required this.resendOtp,
+    required this.phoneNumber,
   });
 
   @override
@@ -66,19 +71,19 @@ class _OtpSheetState extends State<OtpSheet> {
                   bottom: 8,
                 ),
                 child: const Text(
-                  "Enter your 4 digit pin",
+                  "Enter your 6 digit pin",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: primaryTextColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 30,
                   ),
                 ),
               ),
               RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   text:
-                      "Please enter X digit verification code sent to +918279******48",
-                  style: TextStyle(
+                      "Please enter 6 digit verification code sent to +91${widget.phoneNumber}",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                   ),
@@ -93,13 +98,17 @@ class _OtpSheetState extends State<OtpSheet> {
                 ),
                 child: OtpInputField(
                   controller: controller,
-                  verificationId: widget.verificationId,
+                  updateParentState: (){
+                    setState(() {});
+                  },
                 ),
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ResetText(),
+                  ResendText(
+                    resendOtp: widget.resendOtp,
+                  ),
                 ],
               ),
               Padding(
@@ -107,10 +116,10 @@ class _OtpSheetState extends State<OtpSheet> {
                 child: CustomButton(
                   onPressed: () {
                     context.read<SignupBloc>().add(VerifyOtp(
-                          verificationId: widget.verificationId,
                           otp: controller.text,
                         ));
                   },
+                  disabled: controller.text.length!=6,
                   title: "Continue",
                   assetName: "assets/svg/arrow_right.svg",
                 ),

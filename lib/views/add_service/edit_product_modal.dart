@@ -41,6 +41,7 @@ class EditProductModal extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => AddProducts(
                     oldProduct: product,
+                    isOnboarding: false,
                   ),
                 ),
               );

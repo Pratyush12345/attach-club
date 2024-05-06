@@ -7,8 +7,10 @@ class Product {
   final String description;
   final String price;
   final bool isShowEnquiryBtn;
-  final File image;
+  File? image;
   final Timestamp dateAdded;
+  String imageUrl;
+  final bool isEnabled;
 
   Product({
     required this.title,
@@ -17,9 +19,11 @@ class Product {
     required this.isShowEnquiryBtn,
     required this.image,
     required this.dateAdded,
+    required this.imageUrl,
+    required this.isEnabled,
   });
 
-  Map<String, dynamic> toMap(String imageUrl) {
+  Map<String, dynamic> toMap() {
     return {
       "title": title,
       "description": description,
@@ -27,12 +31,13 @@ class Product {
       "isShowEnquiryBtn": isShowEnquiryBtn,
       "image": imageUrl,
       "dateAdded": dateAdded,
+      "isEnabled": isEnabled,
     };
   }
 
   factory Product.fromMap({
     required Map<String, dynamic> map,
-    required File image,
+    required File? image,
     required String docId,
   }) {
     return Product(
@@ -42,6 +47,8 @@ class Product {
       isShowEnquiryBtn: map["isShowEnquiryBtn"],
       image: image,
       dateAdded: map["dateAdded"],
+      imageUrl: map["image"],
+      isEnabled: map["isEnabled"],
     );
   }
 }

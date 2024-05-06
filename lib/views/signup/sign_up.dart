@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/signup/signup_bloc.dart';
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/views/signup/otp_sheet.dart';
@@ -31,15 +34,22 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  void codeSent(String verificationId, int? resendToken) async {
-    showOtpBottomSheet(context, verificationId);
-  }
-
   void verificationCompleted(PhoneAuthCredential credential) async {
     //Android only
     final user = await FirebaseAuth.instance.signInWithCredential(credential);
     if (user.user != null && context.mounted) {
       context.read<SignupBloc>().add(CheckOnboardingStatus());
+    }
+  }
+
+  void resendOtp(int count) {
+    if (count == 0) {
+      context.read<SignupBloc>().add(
+            PhoneVerificationTriggered(
+                phoneNumber: controller.text,
+                verificationFailed: verificationFailed,
+                verificationCompleted: verificationCompleted),
+          );
     }
   }
 
@@ -51,6 +61,7 @@ class _SignUpState extends State<SignUp> {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state is GoogleLoginSuccess || state is PhoneVerificationSuccess) {
+          log("check");
           context.read<SignupBloc>().add(CheckOnboardingStatus());
         }
         if (state is ShowSnackBar) {
@@ -61,9 +72,11 @@ class _SignUpState extends State<SignUp> {
           );
         }
         if (state is NavigateToOnboarding) {
+          Navigator.of(context).popUntil((route) => false);
           Navigator.of(context).pushNamed("/onboard1");
         }
         if (state is NavigateToDashboard) {
+          Navigator.of(context).popUntil((route) => false);
           Navigator.of(context).pushNamed("/home");
         }
       },
@@ -77,33 +90,41 @@ class _SignUpState extends State<SignUp> {
                   height: 0.48 * height,
                   child: const CircleWaveRoute(),
                 ),
-                SizedBox(
+                Container(
+                  color: const Color(0xFF181B2F),
                   width: width,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // const SizedBox(height: 10,),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 0.0558 * size.width),
+                          horizontal: 0.0558 * size.width,
+                        ),
                         child: Column(
                           children: [
                             CustomTextField(
                               type: TextFieldType.PhoneNumberField,
                               controller: controller,
                               keyboardType: TextInputType.number,
+                              onChanged: (_){
+                                setState(() {});
+                              },
                             ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 16, bottom: 24),
                               child: CustomButton(
+                                disabled: controller.text.length != 10,
                                 title: "Proceed",
                                 onPressed: () {
+                                  showOtpBottomSheet(
+                                      context, resendOtp, controller.text);
                                   context.read<SignupBloc>().add(
                                         PhoneVerificationTriggered(
                                           phoneNumber: controller.text,
                                           verificationFailed:
                                               verificationFailed,
-                                          codeSent: codeSent,
                                           verificationCompleted:
                                               verificationCompleted,
                                         ),
@@ -122,7 +143,7 @@ class _SignUpState extends State<SignUp> {
                                     child: Text(
                                       "or",
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: primaryTextColor,
                                         fontSize: 16.0,
                                       ),
                                     ),
@@ -133,8 +154,12 @@ class _SignUpState extends State<SignUp> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(0.888 * size.width, 56),
-                                  backgroundColor: Colors.black),
+                                fixedSize: Size(0.888 * size.width, 56),
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                               onPressed: () {
                                 context
                                     .read<SignupBloc>()
@@ -146,7 +171,7 @@ class _SignUpState extends State<SignUp> {
                                   const Text(
                                     "Continue with",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: primaryTextColor,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 18,
                                     ),
@@ -154,7 +179,8 @@ class _SignUpState extends State<SignUp> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: Image.asset(
-                                        "assets/images/google_logo.png"),
+                                      "assets/images/google_logo.png",
+                                    ),
                                   ),
                                 ],
                               ),
@@ -163,13 +189,13 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 0.06472 * height),
+                        padding: EdgeInsets.only(top: 0.05472 * height),
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: const TextSpan(
-                              text:
-                                  "By signing in, you agree with our Terms and Condition and Privacy Policy",
-                              style: TextStyle(color: Color(0xFF676E76))),
+                            text:
+                                "By signing in, you agree with our Terms and Condition and Privacy Policy",
+                          ),
                         ),
                       )
                     ],

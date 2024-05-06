@@ -29,7 +29,11 @@ class _ProfileImageState extends State<ProfileImage> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileImageBloc>().add(FetchImages());
+    final bloc = context.read<ProfileImageBloc>();
+    if (bloc.lastUpdated == null ||
+        DateTime.now().difference(bloc.lastUpdated!).inMinutes > 2) {
+      bloc.add(FetchImages());
+    }
   }
 
   @override

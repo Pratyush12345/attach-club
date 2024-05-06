@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:attach_club/bloc/profile_privacy/profile_privacy_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/views/profile_privacy/switch_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,7 +50,7 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18,
-            color: Colors.white,
+            color: primaryTextColor,
           ),
         ),
         actions: [
@@ -74,7 +73,7 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
                       child: Text(
                     "View Profile",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: primaryTextColor,
                     ),
                   )),
                 ),
@@ -94,16 +93,29 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
       ),
       body: BlocConsumer<ProfilePrivacyBloc, ProfilePrivacyState>(
         listener: (context, state) {
+          final notifier = context.read<UserDataNotifier>();
           if (state is BasicDetailsChanged) {
+            final newUserData = notifier.userData;
+            newUserData.isBasicDetailEnabled =  state.isBasicDetailEnabled;
+            notifier.updateUserData(newUserData);
             isBasicDetailEnabled = state.isBasicDetailEnabled;
           }
           if (state is SocialLinkChanged) {
+            final newUserData = notifier.userData;
+            newUserData.isLinkEnabled =  state.isLinkEnabled;
+            notifier.updateUserData(newUserData);
             isLinkEnabled = state.isLinkEnabled;
           }
           if (state is ProductsChanged) {
+            final newUserData = notifier.userData;
+            newUserData.isProductEnabled =  state.isProductEnabled;
+            notifier.updateUserData(newUserData);
             isProductEnabled = state.isProductEnabled;
           }
           if (state is ReviewsChanged) {
+            final newUserData = notifier.userData;
+            newUserData.isReviewEnabled =  state.isReviewEnabled;
+            notifier.updateUserData(newUserData);
             isReviewEnabled = state.isReviewEnabled;
           }
           if (state is StatusChanged) {
@@ -114,6 +126,13 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
           }
         },
         builder: (context, state) {
+          if (state is LoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.purple,
+              ),
+            );
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: SingleChildScrollView(

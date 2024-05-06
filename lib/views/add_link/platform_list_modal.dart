@@ -43,7 +43,8 @@ class PlatformListModal extends StatelessWidget {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white),
+                  color: primaryTextColor,
+              ),
             ),
             SizedBox(
               height: 0.02575 * height,
@@ -88,7 +89,8 @@ class PlatformListModal extends StatelessWidget {
                           style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 12,
-                              color: Colors.white),
+                              color: primaryTextColor,
+                          ),
                         )
                       ],
                     ),

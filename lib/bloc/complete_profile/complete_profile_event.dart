@@ -19,6 +19,10 @@ class OnFieldsUpdated extends CompleteProfileEvent {
   final String profession;
   final String about;
   final int loading;
+  final String state;
+  final String city;
+  final String country;
+  final String pincode;
   final bool isUsernameUpdated;
 
   const OnFieldsUpdated({
@@ -27,11 +31,26 @@ class OnFieldsUpdated extends CompleteProfileEvent {
     required this.profession,
     required this.about,
     required this.loading,
+    required this.state,
+    required this.city,
+    required this.country,
+    required this.pincode,
     required this.isUsernameUpdated,
   });
 
   @override
-  List<Object?> get props => [username, name, profession, about];
+  List<Object?> get props => [
+        username,
+        name,
+        profession,
+        about,
+        loading,
+        state,
+        city,
+        country,
+        pincode,
+        isUsernameUpdated
+      ];
 }
 
 class NextButtonClicked extends CompleteProfileEvent {
@@ -39,13 +58,23 @@ class NextButtonClicked extends CompleteProfileEvent {
   final String name;
   final String profession;
   final String description;
+  final String state;
+  final String city;
+  final String pincode;
+  final String country;
+  final bool isVerified;
 
-  const NextButtonClicked(
-    this.username,
-    this.name,
-    this.profession,
-    this.description,
-  );
+  const NextButtonClicked({
+    required this.username,
+    required this.name,
+    required this.profession,
+    required this.description,
+    required this.state,
+    required this.city,
+    required this.pincode,
+    required this.country,
+    required this.isVerified,
+  });
 
   @override
   List<Object?> get props => [];

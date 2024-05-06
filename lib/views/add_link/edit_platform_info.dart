@@ -57,6 +57,7 @@ class EditPlatformInfo extends StatelessWidget {
               context.read<AddLinkBloc>().add(
                     DeleteSocialLink(socialLink),
                   );
+              Navigator.pop(context);
             },
             title: "Delete",
             buttonWidth: 0.425581,

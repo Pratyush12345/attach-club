@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -46,7 +47,7 @@ class LinkCard extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
-                        color: Colors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                   ),

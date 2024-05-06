@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 
 class Label extends StatelessWidget {
@@ -13,8 +14,8 @@ class Label extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: title,
-        style: const TextStyle(
-          color: Color(0xFFCED2D6),
+        style: TextStyle(
+          color: secondaryTextColor,
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),

@@ -14,12 +14,12 @@ class ProfileImageUploaded extends ProfileImageEvent {
 }
 
 class BannerImageUploaded extends ProfileImageEvent {
-  final XFile profileImage;
+  final XFile bannerImage;
 
-  const BannerImageUploaded(this.profileImage);
+  const BannerImageUploaded(this.bannerImage);
 
   @override
-  List<Object?> get props => [profileImage];
+  List<Object?> get props => [bannerImage];
 }
 
 class FetchImages extends ProfileImageEvent {

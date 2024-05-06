@@ -1,7 +1,6 @@
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AddLinkRepository {
   final CoreRepository _repository;
@@ -20,20 +19,7 @@ class AddLinkRepository {
   }
 
   Future<List<SocialLink>> getSocialLinks() async {
-    final currentUser = _repository.getCurrentUser();
-    final db = FirebaseFirestore.instance;
-    final list = <SocialLink>[];
-    final data = await db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("links")
-        .get();
-
-    for (var i in data.docs) {
-      list.add(SocialLink.fromMap(i.data()));
-    }
-
-    return list;
+    return await _repository.getSocialLinks();
   }
 
   Future<void> addToList(SocialLink socialLink) async {
@@ -50,9 +36,6 @@ class AddLinkRepository {
 
   Future<void> deleteSocialLink(SocialLink socialLink) async {
     final currentUser = _repository.getCurrentUser();
-    if (currentUser == null) {
-      throw Exception("User is not logged in");
-    }
 
     final db = FirebaseFirestore.instance;
     await db

@@ -10,7 +10,7 @@ class SocialLink {
     required this.title,
     required this.socialMedia,
     required this.link,
-    this.isEnabled = true,
+    required this.isEnabled,
   });
 
   Map<String, dynamic> toMap() {
@@ -27,6 +27,7 @@ class SocialLink {
       title: map["title"],
       socialMedia: SocialMedia.fromMap(map["socialMedia"]),
       link: map["link"],
+      isEnabled: map["isEnabled"],
     );
   }
 }

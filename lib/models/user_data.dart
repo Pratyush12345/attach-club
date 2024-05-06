@@ -27,6 +27,7 @@ class UserData {
   String purchasedPlanCode;
   String state;
   String username;
+  String? uid;
 
   UserData({
     this.accountType = "normal",
@@ -57,6 +58,7 @@ class UserData {
     this.isOnline = true,
     this.isProductEnabled = true,
     this.isReviewEnabled = true,
+    this.uid,
   });
 
   Map<String, dynamic> toMap() {
@@ -92,8 +94,12 @@ class UserData {
     };
   }
 
-  factory UserData.fromMap(Map<String, dynamic> map){
-    return UserData(accountType: map["accountType"],
+  factory UserData.fromMap({
+    required Map<String, dynamic> map,
+    String? uid,
+  }) {
+    return UserData(
+      accountType: map["accountType"],
       age: map["age"],
       bannerImageURL: map["bannerImageURL"],
       city: map["city"],
@@ -121,6 +127,7 @@ class UserData {
       purchasedPlanCode: map["purchasedPlanCode"],
       state: map["state"],
       username: map["username"],
+      uid: uid,
     );
   }
 }

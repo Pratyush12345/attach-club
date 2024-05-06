@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../constants.dart';
 
 class GradientButton extends StatelessWidget {
   final String title;
@@ -6,6 +10,7 @@ class GradientButton extends StatelessWidget {
   final Icon prefixIcon;
   final bool isGradient;
   final Color? textColor;
+  final void Function() onPressed;
 
   const GradientButton({
     super.key,
@@ -14,6 +19,7 @@ class GradientButton extends StatelessWidget {
     required this.prefixIcon,
     this.isGradient = true,
     this.textColor,
+    required this.onPressed,
   });
 
   @override
@@ -31,9 +37,11 @@ class GradientButton extends StatelessWidget {
         ),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           fixedSize: Size(0.88837 * width, 0.07725 * height),
+          // minimumSize: Size(0.88837 * width, 0.07725 * height),
+          // maximumSize: Size(0.88837 * width, 0.09725 * height),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -43,10 +51,11 @@ class GradientButton extends StatelessWidget {
               (isGradient) ? Colors.transparent : const Color(0xFF26293B),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             prefixIcon,
             const SizedBox(width: 12),
-            Expanded(
+            Flexible(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +63,7 @@ class GradientButton extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: textColor??Colors.white,
+                      color: textColor??primaryTextColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
@@ -62,10 +71,12 @@ class GradientButton extends StatelessWidget {
                   Text(
                     subTitle,
                     style: TextStyle(
-                      color: textColor??Colors.white,
+                      color: textColor??primaryTextColor,
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   )
                 ],
               ),

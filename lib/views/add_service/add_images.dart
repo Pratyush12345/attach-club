@@ -29,8 +29,8 @@ class AddImages extends StatelessWidget {
       },
       child: (file != null)
           ? SizedBox(
-        width: double.infinity,
-              height: 0.1673 * height,
+              width: double.infinity,
+              height: 0.30472103 * height,
               child: Image.file(
                 File(file!.path),
                 fit: BoxFit.fill,
@@ -44,7 +44,7 @@ class AddImages extends StatelessWidget {
               radius: const Radius.circular(8),
               child: Container(
                 width: double.infinity,
-                height: 0.1673 * height,
+                height: 0.30472103 * height,
                 color: const Color(0xFF2A2D40),
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,

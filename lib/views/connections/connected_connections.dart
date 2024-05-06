@@ -14,10 +14,11 @@ class ConnectedConnections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         children: [
-          _getListView(),
+          _getListView(width),
           const SizedBox(
             height: paddingDueToNav,
           ),
@@ -26,7 +27,7 @@ class ConnectedConnections extends StatelessWidget {
     );
   }
 
-  _getListView() {
+  _getListView(double width) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -48,6 +49,7 @@ class ConnectedConnections extends StatelessWidget {
                 child: SvgPicture.asset("assets/svg/whatsapp_connections.svg"),
               ),
             ),
+            SizedBox(width: 0.03720930233*width,),
             GestureDetector(
               onTap: () {},
               child: Container(

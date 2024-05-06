@@ -66,3 +66,8 @@ class StatusChanged extends ProfilePrivacyState {
         isReviewEnabled,
       ];
 }
+
+class LoadingState extends ProfilePrivacyState {
+  @override
+  List<Object> get props => [];
+}

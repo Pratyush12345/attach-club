@@ -1,7 +1,6 @@
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePrivacyRepository {
   final CoreRepository _repository;
@@ -36,7 +35,7 @@ class ProfilePrivacyRepository {
     final db = FirebaseFirestore.instance;
     final data = await db.collection("users").doc(currentUser.uid).get();
     if(data.exists){
-      final userData = UserData.fromMap(data.data()!);
+      final userData = UserData.fromMap(map: data.data()!);
       return userData;
     }
     throw Exception("Data not found");

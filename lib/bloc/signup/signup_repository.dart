@@ -17,6 +17,7 @@ class SignupRepository {
 
   Future<void> sendOtp({
     required String phoneNumber,
+    required int? resendToken,
     required void Function(FirebaseAuthException) verificationFailed,
     required void Function(String, int?) codeSent,
     required void Function(PhoneAuthCredential) verificationCompleted,
@@ -29,6 +30,7 @@ class SignupRepository {
       verificationFailed: verificationFailed,
       codeSent: codeSent,
       codeAutoRetrievalTimeout: (String verificationId) {},
+      forceResendingToken: resendToken
     );
   }
 

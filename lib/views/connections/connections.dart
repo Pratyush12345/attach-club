@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/text_field.dart';
-import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connected_connections.dart';
 import 'package:attach_club/views/connections/recieve_connections.dart';
 import 'package:attach_club/views/connections/sent_connections.dart';
@@ -38,21 +35,64 @@ class _ConnectionsState extends State<Connections>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return BlocBuilder<ConnectionsBloc, ConnectionsState>(
       builder: (context, state) {
         return Column(
           children: [
             Container(
+              width: width,
               color: const Color(0xFF26293B),
-              child: TabBar(
-                controller: tabController,
-                indicatorColor: Colors.blue,
-                labelColor: Colors.white,
-                tabs: const [
-                  Tab(text: "Connected"),
-                  Tab(text: "Sent"),
-                  Tab(text: "Receive"),
-                ],
+              child: Center(
+                child: TabBar(
+                  controller: tabController,
+                  indicatorColor: Colors.blue,
+                  labelColor: Colors.white,
+                  tabAlignment: TabAlignment.center,
+                  labelPadding: EdgeInsets.zero,
+                  isScrollable: true,
+                  tabs: [
+                    Tab(
+                      child: SizedBox(
+                        width: (width - 48) / 3,
+                        child: const Center(
+                          child: Text(
+                            "Connected",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: SizedBox(
+                        width: (width - 48) / 3,
+                        child: const Center(
+                          child: Text(
+                            "Sent",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: SizedBox(
+                        width: (width - 48) / 3,
+                        child: const Center(
+                          child: Text(
+                            "Received",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -65,8 +105,13 @@ class _ConnectionsState extends State<Connections>
                   type: TextFieldType.RegularTextField,
                   controller: searchController,
                   color: const Color(0xFF181B2F),
-                  prefixWidget: const Icon(Icons.search),
+                  prefixWidget: const Icon(
+                    Icons.search,
+                    color: Color(0xFF94969F),
+                  ),
                   hintText: "Search name...",
+                  height: 48,
+                  fontSize: 16,
                 ),
               ),
             ),

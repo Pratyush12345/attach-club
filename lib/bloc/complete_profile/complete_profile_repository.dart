@@ -12,8 +12,9 @@ class CompleteProfileRepository {
   Future<bool> isUsernameAvailable(String username)async{
     final db = FirebaseDatabase.instance;
     final ref = db.ref("usernames/$username");
+    final currentUser = _repository.getCurrentUser();
     final data = await ref.get();
-    if(data.exists){
+    if(data.exists && data.value != null && data.value!=currentUser.uid){
       return false;
     }
     return true;
@@ -23,6 +24,20 @@ class CompleteProfileRepository {
     final user = _repository.getCurrentUser();
     final db = FirebaseFirestore.instance;
     await db.collection("users").doc(user.uid).set(userData.toMap());
+  }
+
+  Future<void> uploadUserToRealtime(UserData user) async {
+    final db = FirebaseDatabase.instance;
+    final currentUser = _repository.getCurrentUser();
+    final ref = db.ref("usernames/${user.username}");
+    await ref.set(currentUser.uid);
+
+    final userRef = db.ref("users/${currentUser.uid}");
+    await userRef.set({
+      "name": user.name,
+      "phoneNo": user.phoneNo,
+      "profession": user.profession,
+    });
   }
 
   Future<UserData> getUserData()async {

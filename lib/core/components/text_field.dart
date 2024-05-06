@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -11,6 +12,8 @@ class CustomTextField extends StatefulWidget {
   final bool disabled;
   final Color? color;
   final TextInputType keyboardType;
+  final double height;
+  final double fontSize;
 
   const CustomTextField({
     super.key,
@@ -23,6 +26,8 @@ class CustomTextField extends StatefulWidget {
     this.prefixWidget,
     this.disabled = false,
     this.color,
+    this.height = 64,
+    this.fontSize = 20,
     this.keyboardType = TextInputType.text,
   });
 
@@ -33,6 +38,7 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
+
   @override
   void initState() {
     super.initState();
@@ -55,57 +61,73 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextStyle(
       color: color,
       fontWeight: FontWeight.w400,
-      fontSize: 20,
+      fontSize: widget.fontSize,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-        width: 0.8883 * width,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: _isFocused ? Colors.white : Colors.transparent,
-              width: 1.0,
-            ),
-            color: widget.color ?? const Color(0xFFFFFFFF).withOpacity(0.08)),
-        child: Focus(
-          onFocusChange: (hasFocus) {
-            setState(() {
-              _isFocused = hasFocus;
-            });
-          },
+      width: 0.8883 * width,
+      height: (!widget.isTextArea) ?widget.height:null,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: _isFocused ? Colors.white : Colors.transparent,
+          width: 1.0,
+        ),
+        color: widget.color ?? const Color(0xFFFFFFFF).withOpacity(0.08),
+      ),
+      child: Focus(
+        onFocusChange: (hasFocus) {
+          setState(() {
+            _isFocused = hasFocus;
+          });
+        },
+        child: Center(
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: TextField(
+              focusNode: _focusNode,
               onChanged: widget.onChanged,
               controller: widget.controller,
-              maxLines: (widget.isTextArea)?5:1,
+              maxLines: (widget.isTextArea) ? 3 : 1,
               cursorColor: Colors.white,
               decoration: InputDecoration(
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  prefixIcon: _getPrefixIcon(),
-                  prefixIconConstraints: const BoxConstraints(maxWidth: 75),
-                  hintText: _getHintText(),
-                  hintStyle: textStyle(Colors.white.withOpacity(0.5)),
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                prefixIcon: _getPrefixIcon(),
+                prefixIconConstraints: _getPrefixConstraints(),
+                hintText: _getHintText(),
+                hintStyle: textStyle(paragraphTextColor),
                 suffixIcon: widget.suffixIcon,
+                // isDense: !widget.isTextArea,
+                // contentPadding: (!widget.isTextArea)?EdgeInsets.zero:null,
               ),
-              style: textStyle(Colors.white),
+              style: textStyle(primaryTextColor),
               keyboardType: widget.keyboardType,
               readOnly: widget.disabled,
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
-  Widget? _getPrefixIcon(){
-    if(widget.type==TextFieldType.PhoneNumberField){
+  _getPrefixConstraints(){
+    if(widget.type == TextFieldType.PhoneNumberField){
+      return const BoxConstraints(maxWidth: 73);
+    }
+    if(widget.prefixWidget != null) {
+      return const BoxConstraints(maxWidth: 30);
+    }
+    return const BoxConstraints(maxWidth: 0);
+  }
+
+  Widget? _getPrefixIcon() {
+    if (widget.type == TextFieldType.PhoneNumberField) {
       return Row(
         children: [
           const Padding(
@@ -117,7 +139,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           Text(
             "91",
-            style: textStyle(Colors.white),
+            style: textStyle(primaryTextColor),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -127,15 +149,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
           )
         ],
       );
-    }else{
-      return widget.prefixWidget;
+    } else {
+      return Center(
+        child: widget.prefixWidget,
+      );
     }
   }
 
-  String? _getHintText(){
-    if(widget.type==TextFieldType.PhoneNumberField){
+  String? _getHintText() {
+    if (widget.type == TextFieldType.PhoneNumberField) {
       return "00000 00000";
-    }else{
+    } else {
       return widget.hintText;
     }
   }

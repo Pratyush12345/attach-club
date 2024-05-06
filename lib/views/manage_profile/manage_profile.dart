@@ -1,8 +1,9 @@
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/tab_data.dart';
 import 'package:attach_club/views/account/account.dart';
 import 'package:attach_club/views/add_link/add_link.dart';
 import 'package:attach_club/views/add_service/add_service_screen.dart';
-import 'package:attach_club/views/complete_profile/complete_profile.dart';
+import 'package:attach_club/views/edit_profile/edit_profile.dart';
 import 'package:attach_club/views/profile_image/profile_image.dart';
 import 'package:attach_club/views/reviews/reviews.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,13 @@ class ManageProfile extends StatefulWidget {
 
 class _ManageProfileState extends State<ManageProfile> {
   final tabs = <TabData>[
-    TabData(title: "Display", tab: const ProfileImage(isInsideManageProfile: true)),
-    TabData(title: "Profile", tab: const CompleteProfile(isInsideManageProfile: true)),
+    TabData(
+        title: "Display", tab: const ProfileImage(isInsideManageProfile: true)),
+    TabData(title: "Profile", tab: const EditProfile()),
     TabData(
         title: "Your Links", tab: const AddLink(isInsideManageProfile: true)),
-    TabData(title: "Product", tab: const AddService(isInsideManageProfile: true)),
+    TabData(
+        title: "Product", tab: const AddService(isInsideManageProfile: true)),
     TabData(title: "Reviews", tab: const Reviews()),
     TabData(title: "Account", tab: const Account()),
   ];
@@ -50,12 +53,12 @@ class _ManageProfileState extends State<ManageProfile> {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
-              color: Colors.white,
+              color: primaryTextColor,
             ),
           ),
           actions: [
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).pushNamed("/profile");
               },
               child: Padding(
@@ -66,14 +69,15 @@ class _ManageProfileState extends State<ManageProfile> {
                       border: Border.all(
                         color: Colors.blue,
                       ),
-                      borderRadius: const BorderRadius.all(Radius.circular(36))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(36))),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
                         child: Text(
                       "View Profile",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: primaryTextColor,
                       ),
                     )),
                   ),
@@ -88,9 +92,14 @@ class _ManageProfileState extends State<ManageProfile> {
               for (var i in tabs) Tab(text: i.title),
             ],
             labelStyle: const TextStyle(
-              color: Colors.white,
+              color: primaryTextColor,
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              color: primaryTextColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w400
             ),
             tabAlignment: TabAlignment.start,
           ),

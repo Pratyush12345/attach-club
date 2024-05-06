@@ -1,9 +1,10 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomButton extends StatelessWidget {
   static const textStyle = TextStyle(
-    color: Colors.white,
+    color: primaryTextColor,
     fontSize: 18,
     fontWeight: FontWeight.w600,
   );
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
   final double? buttonWidth;
   final Widget? prefixIcon;
   final double? doubleSize;
+  final ButtonType buttonType;
 
   const CustomButton({
     super.key,
@@ -27,6 +29,7 @@ class CustomButton extends StatelessWidget {
     this.buttonWidth,
     this.prefixIcon,
     this.doubleSize,
+    this.buttonType = ButtonType.LargeButton,
   });
 
   @override
@@ -35,15 +38,20 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         side: MaterialStateProperty.resolveWith<BorderSide>(
-              (Set<MaterialState> states) {
+          (Set<MaterialState> states) {
             if (states.contains(MaterialState.disabled) || isDark) {
-              return const BorderSide(color: Colors.white, width: 1); // Border width for disabled state
+              return const BorderSide(
+                  color: Colors.white,
+                  width: 1); // Border width for disabled state
             }
             return BorderSide.none; // No border for other states
           },
         ),
         fixedSize: MaterialStateProperty.resolveWith(
-          (states) => Size((buttonWidth??0.8883) * width, 64),
+          (states) => Size(
+            (buttonWidth ?? 0.8883) * width,
+            (buttonType == ButtonType.LargeButton) ? 64 : 48,
+          ),
         ),
         shape: MaterialStateProperty.resolveWith(
           (states) => RoundedRectangleBorder(
@@ -51,21 +59,20 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         backgroundColor: MaterialStateProperty.resolveWith(
-          (states){
-            if(states.contains(MaterialState.disabled) || isDark){
+          (states) {
+            if (states.contains(MaterialState.disabled) || isDark) {
               return Colors.transparent;
-            }else {
+            } else {
               return const Color(0xFF2D4CF9);
             }
           },
         ),
       ),
       onPressed: (disabled) ? null : onPressed,
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          prefixIcon??const SizedBox(),
+          prefixIcon ?? const SizedBox(),
           Text(
             title,
             style: textStyle,
@@ -74,10 +81,10 @@ class CustomButton extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 0.01 * width),
               child: SvgPicture.asset(
-                  colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  assetName ?? "assets/svg/arrow_right.svg",
-                  semanticsLabel: 'Acme Logo',
+                colorFilter:
+                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                assetName ?? "assets/svg/arrow_right.svg",
+                semanticsLabel: 'Acme Logo',
                 width: doubleSize,
                 height: doubleSize,
               ),
@@ -86,4 +93,9 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
+}
+
+enum ButtonType {
+  LargeButton,
+  ShortButton,
 }

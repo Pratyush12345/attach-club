@@ -11,19 +11,23 @@ class Settings extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: horizontalPadding,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const InfoCard(),
-                SizedBox(height: 0.02575*height,),
-                const OtherPages(),
-                const SizedBox(height: paddingDueToNav,),
-              ],
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                ),
+                child: InfoCard(),
+              ),
+              SizedBox(
+                height: 0.02575 * height,
+              ),
+              const OtherPages(),
+              const SizedBox(
+                height: paddingDueToNav,
+              ),
+            ],
           ),
         ),
       ),

@@ -1,312 +1,509 @@
+import 'dart:math';
+import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/divider.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/components/rating.dart';
 import '../../core/components/text_field.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final String? uid;
+
+  const Profile({
+    super.key,
+    this.uid,
+  });
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  // static final Product product = Product(title: "Horai CTC Tea",
-  static final _list = [
-    {
-      "name": "Whatsapp",
-      "assetName": "assets/svg/whatsapp.svg",
-    },
-    {
-      "name": "Instagram",
-      "assetName": "assets/svg/instagram.svg",
-    },
-    {
-      "name": "Facebook",
-      "assetName": "assets/svg/facebook.svg",
-    },
-    {
-      "name": "Snapchat",
-      "assetName": "assets/svg/snapchat.svg",
-    },
-    {
-      "name": "Whatsapp",
-      "assetName": "assets/svg/whatsapp.svg",
-    },
-    {
-      "name": "Instagram",
-      "assetName": "assets/svg/instagram.svg",
-    },
-    {
-      "name": "Facebook",
-      "assetName": "assets/svg/facebook.svg",
-    },
-    {
-      "name": "Snapchat",
-      "assetName": "assets/svg/snapchat.svg",
-    }
-  ];
-  final nameController = TextEditingController();
+  // final nameController = TextEditingController();
   final feedbackController = TextEditingController();
+  int selectedStars = 0;
+
+  // UserData userData = UserData(username: '');
+
+  @override
+  void initState() {
+    super.initState();
+    final bloc = context.read<ProfileBloc>();
+    if (widget.uid != bloc.uid ||
+        bloc.lastUpdated == null ||
+        bloc.lastUpdated!.difference(DateTime.now()).inMinutes > 2) {
+      if (widget.uid != null) {
+        bloc.add(GetUserData(uid: widget.uid));
+      } else {
+        bloc.userData = context.read<UserDataNotifier>().userData;
+        bloc.uid = null;
+        bloc.lastUpdated = DateTime.now();
+        bloc.add(const GetUserData());
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    // return Scaffold();
     return Scaffold(
+      appBar: AppBar(
+        title: Text(context.read<ProfileBloc>().userData.name),
+        centerTitle: false,
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 0.3841201717 * height,
-                child: Stack(
-                  children: [
-                    ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Color(0xFF181B2F),
-                          ],
-                        ).createShader(bounds);
-                      },
-                      blendMode: BlendMode.darken,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 0.3240343348 * height,
-                        child: Image.asset(
-                          "assets/images/image.jpeg",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: 147,
-                        height: 147,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(73.5),
-                        ),
-                        child: Image.asset(
-                          "assets/images/profile_logo.png",
-                        ),
-                      ),
-                    )
-                  ],
+        child: BlocConsumer<ProfileBloc, ProfileState>(
+          listener: (context, state) {
+            if (state is UserDataUpdated) {
+              // userData = state.userData;
+              context.read<UserDataNotifier>().updateUserData(state.userData);
+            }
+            // if (state is OtherUserDataUpdated) {
+            //   userData = state.userData;
+            // }
+          },
+          builder: (context, state) {
+            final userData = context.read<ProfileBloc>().userData;
+            if (userData.username.isEmpty) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.purple,
                 ),
-              ),
-              const SizedBox(height: 16),
-              const SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Text(
-                      "Nishant Singh",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      "UI/UX Designer @ Vysion Technology",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: 16),
-                    Rating(
-                      selected: 3,
-                      alignment: MainAxisAlignment.center,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "3 stars out of 5",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      "112 reviews",
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 26),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              );
+            }
+            final bloc = context.read<ProfileBloc>();
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 0.3841201717 * height,
+                    child: Stack(
                       children: [
-                        CustomButton(
-                          onPressed: () {},
-                          title: "Save Contact",
-                          assetName: "assets/svg/arrow_up_right.svg",
-                          buttonWidth: 0.4279069767,
-                          doubleSize: 10,
-                          isDark: true,
+                        ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Color(0xFF181B2F),
+                              ],
+                            ).createShader(bounds);
+                          },
+                          blendMode: BlendMode.darken,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 0.3240343348 * height,
+                            child: _getBannerImage(userData),
+                          ),
                         ),
-                        CustomButton(
-                          onPressed: () {},
-                          title: "Save Contact",
-                          buttonWidth: 0.4279069767,
-                        ),
-                      ],
-                    ),
-                    const CustomDivider(),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 30,
-                      runSpacing: 12,
-                      children: [
-                        for (var i in _list)
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 147,
+                            height: 147,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(73.5),
                             ),
-                            child: SizedBox(
-                              height: 74,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 11.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      i["assetName"]!,
-                                      width: 26,
-                                      height: 26,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6.0),
-                                      child: Text(i["name"] ?? "Whatsapp"),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(73.5),
+                              child: _getProfileImage(userData),
                             ),
-                          )
-                      ],
-                    ),
-                    const CustomDivider(),
-                    const Text(
-                      "About",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    RichText(
-                      text: TextSpan(
-                        text: lorem,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.46),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Products",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          "View All",
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blue),
+                          ),
                         )
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Wrap(
-                          spacing: 25,
-                          children: [
-                            for (var i = 0; i < 10; i++)
-                              const ProductCardWithEnquiry()
-                          ],
-                        )),
-                    const SizedBox(height: 35),
-                    const Text(
-                      "Review and Ratings",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Text(
+                          userData.name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: primaryTextColor,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        if (userData.isBasicDetailEnabled)
+                          Text(
+                            userData.profession,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: primaryTextColor,
+                            ),
+                          ),
+                        if (userData.isReviewEnabled)
+                          Column(
+                            children: [
+                              const SizedBox(height: 16),
+                              Rating(
+                                selected: bloc.rating,
+                                alignment: MainAxisAlignment.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "${bloc.rating} stars out of 5",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                "${bloc.reviewCount} reviews",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              )
+                            ],
+                          ),
+                      ],
                     ),
-                    const SizedBox(height: 25),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Rate your experienc working with Akhilesh",
-                            style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 26),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: (userData.phoneNo.isNotEmpty &&
+                                  userData.isBasicDetailEnabled)
+                              ? MainAxisAlignment.spaceBetween
+                              : MainAxisAlignment.center,
+                          children: [
+                            if (userData.phoneNo.isNotEmpty &&
+                                userData.isBasicDetailEnabled)
+                              CustomButton(
+                                onPressed: () {},
+                                title: "Save Contact",
+                                assetName: "assets/svg/arrow_up_right.svg",
+                                buttonWidth: 0.4279069767,
+                                doubleSize: 10,
+                                isDark: true,
+                              ),
+                            if (widget.uid != null)
+                              CustomButton(
+                                onPressed: () {},
+                                title: "Connect",
+                                buttonWidth: 0.4279069767,
+                              ),
+                          ],
+                        ),
+                        if (userData.isLinkEnabled)
+                          Column(
+                            children: [
+                              const CustomDivider(),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 0.06944444444 * width,
+                                  runSpacing: 12,
+                                  children: [
+                                    for (var i in context
+                                        .read<ProfileBloc>()
+                                        .socialLinksList)
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: SizedBox(
+                                          width: 74,
+                                          height: 74,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 11.0,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  (i.socialMedia.imageUrl
+                                                          .isNotEmpty)
+                                                      ? i.socialMedia.imageUrl
+                                                      : "assets/svg/whatsapp.svg",
+                                                  width: 26,
+                                                  height: 26,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 6.0,
+                                                  ),
+                                                  child: Text(
+                                                    i.title,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          const Rating(
-                            selected: 0,
-                            alignment: MainAxisAlignment.center,
-                            size: 36,
+                        const CustomDivider(),
+                        if (userData.isBasicDetailEnabled)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "About",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              RichText(
+                                text: TextSpan(
+                                  text: context
+                                      .read<UserDataNotifier>()
+                                      .userData
+                                      .description,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: paragraphTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 13),
-                          CustomTextField(
-                            type: TextFieldType.RegularTextField,
-                            controller: nameController,
-                            hintText: "Your name",
+                        if (userData.isProductEnabled)
+                          Column(
+                            children: [
+                              const SizedBox(height: 24),
+                              if (bloc.productList.isNotEmpty)
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Products",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: primaryTextColor,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .pushNamed("/profile/products");
+                                      },
+                                      child: const Text(
+                                        "View All",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: width,
+                                height: 0.3805150215 * height,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: min(5, bloc.productList.length),
+                                  itemBuilder: (context, i) {
+                                    if (bloc.productList[i].isEnabled) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 25.0,
+                                        ),
+                                        child: ProductCardWithEnquiry(
+                                          product: bloc.productList[i],
+                                        ),
+                                      );
+                                    } else {
+                                      return const SizedBox();
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                            ],
                           ),
-                          const SizedBox(height: 13),
-                          CustomTextField(
-                            type: TextFieldType.RegularTextField,
-                            controller: feedbackController,
-                            isTextArea: true,
-                            hintText: "Feedback",
-                          ),
-                          const SizedBox(height: 10),
-                          CustomButton(
-                            onPressed: () {},
-                            title: "Sent",
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+                        _getReview()
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  _getReview() {
+    final bloc = context.read<ProfileBloc>();
+    final userData = bloc.userData;
+
+    if (widget.uid == null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "User Reviews",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: primaryTextColor,
+            ),
+          ),
+          for (var i = 0; i < min(bloc.reviewsList.length, 5); i++)
+            ListTile(
+              title: Text(
+                bloc.reviewsList[i].name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                bloc.reviewsList[i].feedback,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Rating(selected: bloc.reviewsList[i].review),
+            )
+        ],
+      );
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 35),
+        const Text(
+          "Review and Ratings",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 25),
+        SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Text(
+                "Rate your experience working with ${userData.name}",
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Rating(
+                selected: selectedStars,
+                alignment: MainAxisAlignment.center,
+                size: 36,
+                onPressed: (i) {
+                  setState(() {
+                    selectedStars = i;
+                  });
+                },
+              ),
+              const SizedBox(height: 13),
+              // CustomTextField(
+              //   type: TextFieldType.RegularTextField,
+              //   controller: nameController,
+              //   hintText: "Your name",
+              //   onChanged: (s) {
+              //     setState(() {});
+              //   },
+              //   disabled: true,
+              // ),
+              const SizedBox(height: 13),
+              CustomTextField(
+                type: TextFieldType.RegularTextField,
+                controller: feedbackController,
+                isTextArea: true,
+                hintText: "Feedback",
+                onChanged: (s) {
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 10),
+              CustomButton(
+                onPressed: () {
+                  context.read<ProfileBloc>().add(
+                        ReviewSubmitted(
+                          selectedStars,
+                          userData.name,
+                          // nameController.text,
+                          feedbackController.text,
+                          userData,
+                          widget.uid!,
+                        ),
+                      );
+                },
+                title: "Send",
+                disabled: (selectedStars == 0 ||
+                    // nameController.text.isEmpty ||
+                    feedbackController.text.isEmpty),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  _getBannerImage(UserData userData) {
+    final url = userData.bannerImageURL;
+    if (url.isNotEmpty) {
+      return Image.network(
+        url,
+        fit: BoxFit.cover,
+      );
+    } else {
+      //TODO: Set new default banner image
+      return Image.asset(
+        "assets/images/image.jpeg",
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  _getProfileImage(UserData userData) {
+    final url = userData.profileImageURL;
+    if (url.isNotEmpty) {
+      return Image.network(
+        url,
+        fit: BoxFit.cover,
+      );
+    } else {
+      //TODO: Set new default profile image
+      return Image.asset(
+        "assets/images/profile_logo.png",
+      );
+    }
   }
 }

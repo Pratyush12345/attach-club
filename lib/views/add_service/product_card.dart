@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/edit_product_modal.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +35,12 @@ class ProductCard extends StatelessWidget {
               child: SizedBox(
                 width: 0.4279 * width,
                 height: 0.4279 * width,
-                child: Image.file(
-                  product.image,
-                  fit: BoxFit.fill,
-                ),
+                child: (product.image == null)
+                    ? Container()
+                    : Image.file(
+                        product.image!,
+                        fit: BoxFit.fill,
+                      ),
               ),
             ),
             const SizedBox(
@@ -48,7 +51,7 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 18,
-                color: Colors.white,
+                color: primaryTextColor,
               ),
             ),
             Text(
@@ -56,7 +59,7 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
-                color: Colors.white,
+                color: primaryTextColor,
               ),
             ),
             const SizedBox(
@@ -67,7 +70,7 @@ class ProductCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 12,
-                color: Colors.white,
+                color: primaryTextColor,
               ),
             ),
           ],

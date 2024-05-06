@@ -9,16 +9,18 @@ class SocialLinkAdded extends AddLinkEvent {
   final String link;
   final String title;
   final List<SocialLink> list;
+  final bool disabled;
 
   const SocialLinkAdded({
     required this.socialMedia,
     required this.link,
     required this.title,
     required this.list,
+    required this.disabled,
   });
 
   @override
-  List<Object?> get props => [socialMedia, link, title];
+  List<Object?> get props => [socialMedia, link, title, disabled];
 }
 
 class EditSocialLink extends AddLinkEvent {
@@ -26,16 +28,18 @@ class EditSocialLink extends AddLinkEvent {
   final SocialMedia socialMedia;
   final String link;
   final String title;
+  final bool disabled;
 
   const EditSocialLink({
     required this.oldSocialLink,
     required this.socialMedia,
     required this.link,
     required this.title,
+    required this.disabled,
   });
 
   @override
-  List<Object?> get props => [oldSocialLink, socialMedia, link, title];
+  List<Object?> get props => [oldSocialLink, socialMedia, link, title, disabled];
 }
 
 class DeleteSocialLink extends AddLinkEvent {

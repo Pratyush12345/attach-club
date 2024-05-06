@@ -1,4 +1,5 @@
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/core/components/text_field.dart';
@@ -17,7 +18,7 @@ showAddPlatformInfoModal({
 }) {
   showCustomModalBottomSheet(
     context: context,
-    sheetHeight: 0.3197,
+    sheetHeight: 0.5197,
     child: AddPlatformInfo(
       socialMedia: socialMedia,
       socialLink: socialLink,
@@ -30,7 +31,6 @@ class AddPlatformInfo extends StatefulWidget {
   final SocialMedia socialMedia;
   final SocialLink? socialLink;
   final List<SocialLink> list;
-
 
   const AddPlatformInfo({
     super.key,
@@ -45,8 +45,8 @@ class AddPlatformInfo extends StatefulWidget {
 
 class _AddPlatformInfoState extends State<AddPlatformInfo> {
   final labelController = TextEditingController();
-
   final linkController = TextEditingController();
+  bool isDisabled = false;
 
   @override
   void dispose() {
@@ -56,21 +56,67 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     labelController.text = widget.socialLink?.title ?? "";
     linkController.text = widget.socialLink?.link ?? "";
+    if(widget.socialLink != null){
+      isDisabled = !(widget.socialLink!.isEnabled);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
-          SizedBox(
-            height: 0.02896 * height,
+          Padding(
+            padding: EdgeInsets.only(
+              top: 0.01 * height,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Disable",
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Switch(
+                  value: isDisabled,
+                  onChanged: (value) {
+                    setState(() {
+                      isDisabled = value;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
+          SizedBox(height: 0.0171 * height),
+          RichText(
+            text: TextSpan(
+                text:
+                    "Turning this option on will hide this link from your profile for all users",
+                style: TextStyle(
+                  color: paragraphTextColor,
+                )),
+          ),
+          SizedBox(height: 0.0171 * height),
           CustomTextField(
             type: TextFieldType.RegularTextField,
             controller: labelController,
             hintText: "Enter title",
+            onChanged: (_) {
+              setState(() {});
+            },
           ),
           SizedBox(
             height: 0.01287 * height,
@@ -90,6 +136,9 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
                 semanticsLabel: 'link icon',
               ),
             ),
+            onChanged: (_) {
+              setState(() {});
+            },
           ),
           SizedBox(
             height: 0.0343 * height,
@@ -99,7 +148,9 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
               _onPress(context);
               Navigator.of(context).pop();
             },
-            title: (widget.socialLink != null) ? "Edit" : "Add",
+            title: (widget.socialLink != null) ? "Save" : "Add",
+            disabled:
+                linkController.text.isEmpty || labelController.text.isEmpty,
           ),
         ],
       ),
@@ -114,6 +165,7 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
               socialMedia: widget.socialMedia,
               link: linkController.text,
               title: labelController.text,
+              disabled: isDisabled,
             ),
           );
     } else {
@@ -122,7 +174,8 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
               socialMedia: widget.socialMedia,
               link: linkController.text,
               title: labelController.text,
-              list: widget.list
+              list: widget.list,
+              disabled: isDisabled,
             ),
           );
     }

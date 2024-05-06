@@ -1,14 +1,15 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpInputField extends StatelessWidget {
   final TextEditingController controller;
-  final String verificationId;
+  final void Function() updateParentState;
 
   const OtpInputField({
     super.key,
     required this.controller,
-    required this.verificationId,
+    required this.updateParentState,
   });
 
   @override
@@ -26,7 +27,7 @@ class OtpInputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         textStyle: const TextStyle(
-          color: Colors.white,
+          color: primaryTextColor,
           fontSize: 20,
           fontWeight: FontWeight.w400,
         ),
@@ -43,7 +44,7 @@ class OtpInputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         textStyle: const TextStyle(
-          color: Colors.white,
+          color: primaryTextColor,
           fontSize: 20,
           fontWeight: FontWeight.w400,
         ),
@@ -54,6 +55,9 @@ class OtpInputField extends StatelessWidget {
         //       verificationId: verificationId,
         //       otp: code,
         //     ));
+      },
+      onChanged: (_){
+        updateParentState();
       },
     );
   }

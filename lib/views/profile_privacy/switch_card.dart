@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 
 class SwitchCard extends StatelessWidget {
@@ -37,10 +38,10 @@ class SwitchCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: primaryTextColor,
                     ),
                   ),
                   Text(
@@ -48,7 +49,7 @@ class SwitchCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                      color: primaryTextColor,
                     ),
                   ),
                 ],

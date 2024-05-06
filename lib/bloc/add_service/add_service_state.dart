@@ -50,3 +50,8 @@ class ShowSnackBar extends AddServiceState {
   @override
   List<Object?> get props => [message];
 }
+
+class ShowLoading extends AddServiceState {
+  @override
+  List<Object?> get props => [];
+}

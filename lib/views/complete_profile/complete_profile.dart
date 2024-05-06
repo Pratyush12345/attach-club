@@ -5,6 +5,7 @@ import 'package:attach_club/core/components/heading.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,6 +27,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final nameController = TextEditingController();
   final professionController = TextEditingController();
   final descriptionController = TextEditingController();
+  final stateController = TextEditingController();
+  final cityController = TextEditingController();
+  final pincodeController = TextEditingController();
+  final countryController = TextEditingController();
   int loading = -1;
 
   bool disabled = true;
@@ -36,6 +41,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
     nameController.dispose();
     professionController.dispose();
     descriptionController.dispose();
+    stateController.dispose();
+    cityController.dispose();
+    pincodeController.dispose();
+    countryController.dispose();
     super.dispose();
   }
 
@@ -89,119 +98,181 @@ class _CompleteProfileState extends State<CompleteProfile> {
               padding: const EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ..._getHeader(height),
-                    SizedBox(
-                      height: 0.0343 * height,
-                    ),
-                    const Label(title: "Profile Link"),
-                    SizedBox(
-                      height: 0.0171 * height,
-                    ),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      hintText: "Enter username",
-                      suffixIcon: _getSuffixIcon(),
-                      controller: userNameController,
-                      onChanged: (s) {
-                        _sendUpdate(isUsername: true);
-                      },
-                      disabled: widget.isInsideManageProfile,
-                    ),
-                    SizedBox(
-                      height: 0.00858 * height,
-                    ),
-                    if (!widget.isInsideManageProfile)
-                      GestureDetector(
-                        child: Text(
-                          "Verify",
-                          style: _getTextStyle(
-                              const Color(0xFF4285F4), 14, FontWeight.w400),
-                        ),
-                        onTap: () {
-                          context.read<CompleteProfileBloc>().add(
-                                OnVerifyClicked(userNameController.text),
-                              );
-                        },
-                      ),
-                    SizedBox(
-                      height: 0.0343 * height,
-                    ),
-                    const Label(
-                      title: "Your profile will be available at:",
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: "www.theattachclub.com/",
-                        style: _getTextStyle(Colors.white, 20, FontWeight.w500),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextSpan(text: userNameController.text),
+                          ..._getHeader(height),
+                          SizedBox(
+                            height: 0.0257 * height,
+                          ),
+                          const Label(title: "Profile Link"),
+                          SizedBox(
+                            height: 0.0171 * height,
+                          ),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "Enter username",
+                            suffixIcon: _getSuffixIcon(),
+                            controller: userNameController,
+                            onChanged: (s) {
+                              //remove all spaces from username
+                              userNameController.text = userNameController.text
+                                  .replaceAll(RegExp(r"\s+"), "");
+                              _sendUpdate(isUsername: true);
+                            },
+                            disabled: widget.isInsideManageProfile,
+                          ),
+                          SizedBox(
+                            height: 0.00858 * height,
+                          ),
+                          if (!widget.isInsideManageProfile)
+                            GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Text(
+                                  "Verify",
+                                  style: _getTextStyle(
+                                    const Color(0xFF4285F4),
+                                    14,
+                                    FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                context.read<CompleteProfileBloc>().add(
+                                      OnVerifyClicked(
+                                        userNameController.text,
+                                      ),
+                                    );
+                              },
+                            ),
+                          SizedBox(
+                            height: 0.0343 * height,
+                          ),
+                          const Label(
+                            title: "Your profile will be available at:",
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              text: "www.theattachclub.com/",
+                              style: _getTextStyle(
+                                  primaryTextColor, 20, FontWeight.w500),
+                              children: [
+                                TextSpan(text: userNameController.text),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 0.0343 * height),
+                          const Label(title: "Basic Details"),
+                          SizedBox(height: 0.01716738197 * height),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "Name",
+                            controller: nameController,
+                            onChanged: (s) {
+                              _sendUpdate();
+                            },
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 0.01287553648 * height,
+                            ),
+                            child: CustomTextField(
+                              type: TextFieldType.RegularTextField,
+                              hintText: "Profession",
+                              controller: professionController,
+                              onChanged: (e) {
+                                _sendUpdate();
+                              },
+                            ),
+                          ),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "About yourself",
+                            isTextArea: true,
+                            controller: descriptionController,
+                            onChanged: (e) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.0343 * height),
+                          const Label(title: "Address"),
+                          SizedBox(height: 0.01716738197 * height),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "State",
+                            controller: stateController,
+                            onChanged: (e) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.01287553648*height,),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "City",
+                            controller: cityController,
+                            onChanged: (e) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.01287553648*height,),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "Pincode",
+                            controller: pincodeController,
+                            onChanged: (e) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.01287553648*height,),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "Country",
+                            controller: countryController,
+                            onChanged: (e) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.02467811159*height,),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 0.0343 * height,
-                    ),
-                    const Label(title: "Basic Details"),
-                    SizedBox(
-                      height: 0.01716738197 * height,
-                    ),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      hintText: "Name",
-                      controller: nameController,
-                      onChanged: (s) {
-                        _sendUpdate();
-                      },
-                    ),
+                  ),
+                  if (!widget.isInsideManageProfile)
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 0.01287553648 * height),
-                      child: CustomTextField(
-                        type: TextFieldType.RegularTextField,
-                        hintText: "Profession",
-                        controller: professionController,
-                        onChanged: (e) {
-                          _sendUpdate();
-                        },
+                      padding: const EdgeInsets.only(
+                        bottom: onboardingButtonBottomPadding,
                       ),
-                    ),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      hintText: "About yourself",
-                      isTextArea: true,
-                      controller: descriptionController,
-                      onChanged: (e) {
-                        _sendUpdate();
-                      },
-                    ),
-                    SizedBox(
-                      height: 0.03 * height,
-                    ),
-                    if (!widget.isInsideManageProfile)
-                      CustomButton(
+                      child: CustomButton(
                         onPressed: () {
                           context
                               .read<CompleteProfileBloc>()
                               .add(NextButtonClicked(
-                                userNameController.text,
-                                nameController.text,
-                                professionController.text,
-                                descriptionController.text,
+                                username: userNameController.text,
+                                name: nameController.text,
+                                profession: professionController.text,
+                                description: descriptionController.text,
+                                state: stateController.text,
+                                city: cityController.text,
+                                pincode: pincodeController.text,
+                                country: countryController.text,
+                                isVerified: loading == 1,
                               ));
                         },
                         title: "Next",
                         assetName: "assets/svg/arrow_right.svg",
-                        disabled: disabled,
-                      )
-                  ],
-                ),
+                        isDark: disabled,
+                      ),
+                    )
+                ],
               ),
             );
           },
@@ -218,6 +289,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
             profession: professionController.text,
             about: descriptionController.text,
             loading: loading,
+            state: stateController.text,
+            city: cityController.text,
+            country: countryController.text,
+            pincode: pincodeController.text,
             isUsernameUpdated: isUsername,
           ),
         );
@@ -226,11 +301,11 @@ class _CompleteProfileState extends State<CompleteProfile> {
   Widget? _getSuffixIcon() {
     if (loading == 0) {
       return const SizedBox(
-        width: 24,
-        height: 24,
+        width: 12,
+        height: 12,
         child: Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
+            color: Colors.purple,
           ),
         ),
       );

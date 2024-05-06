@@ -23,8 +23,6 @@ class AddLink extends StatefulWidget {
 }
 
 class _AddLinkState extends State<AddLink> {
-  List<SocialLink> list = [];
-
   _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).pushNamed("/onboard4");
   }
@@ -32,7 +30,11 @@ class _AddLinkState extends State<AddLink> {
   @override
   void initState() {
     super.initState();
-    context.read<AddLinkBloc>().add(FetchSocialLinks());
+    final bloc = context.read<AddLinkBloc>();
+    if (bloc.lastUpdated == null ||
+        DateTime.now().difference(bloc.lastUpdated!).inMinutes > 2) {
+      bloc.add(FetchSocialLinks());
+    }
   }
 
   @override
@@ -42,22 +44,9 @@ class _AddLinkState extends State<AddLink> {
       body: SafeArea(
         child: BlocConsumer<AddLinkBloc, AddLinkState>(
           listener: (context, state) {
-            if (state is AddToList) {
-              list.add(state.socialLink);
-            }
-            if (state is EditList) {
-              list.remove(state.oldSocialLink);
-              list.add(state.socialLink);
-            }
-            if (state is DeleteFromList) {
-              list.remove(state.socialLink);
-            }
-            if (state is NavigateToNextScreen) {
-              _navigateToNextScreen(context);
-            }
-            if (state is FetchedSocialLinks) {
-              list = state.list;
-            }
+            // if (state is FetchedSocialLinks) {
+            //   list = state.list;
+            // }
             if (state is ShowSnackBar) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -69,6 +58,14 @@ class _AddLinkState extends State<AddLink> {
             }
           },
           builder: (context, state) {
+            final list = context.read<AddLinkBloc>().list;
+            if (state is AddLinkLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.purple,
+                ),
+              );
+            }
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
@@ -104,19 +101,20 @@ class _AddLinkState extends State<AddLink> {
                         onPressed: () {
                           showPlatformListModal(context, list);
                         },
-                        title: "Add Links",
+                        title: "Add New Link",
                         assetName: "assets/svg/link.svg",
-                        isDark: true,
+                        // isDark: true,
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      CustomButton(
-                        onPressed: () {
-                          _navigateToNextScreen(context);
-                        },
-                        title: "Next",
-                      ),
+                      if (!widget.isInsideManageProfile)
+                        CustomButton(
+                          onPressed: () {
+                            _navigateToNextScreen(context);
+                          },
+                          title: "Next",
+                        ),
                     ],
                   ),
                 ],

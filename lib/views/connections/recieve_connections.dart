@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/connection_request.dart';
@@ -86,7 +84,7 @@ class ReceiveConnections extends StatelessWidget {
                   child: Text(
                     "Connect",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: primaryTextColor,
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
                     ),

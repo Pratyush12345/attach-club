@@ -72,5 +72,11 @@
 	</array>
 	<key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need access to save images to your photo library.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to scan QR codes</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>whatsapp</string>
+    </array>
 </dict>
 </plist>

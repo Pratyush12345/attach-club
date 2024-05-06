@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:flutter/material.dart';
 
 class Heading extends StatelessWidget {
@@ -15,7 +16,7 @@ class Heading extends StatelessWidget {
       style: const TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: primaryTextColor,
       ),
     );
   }

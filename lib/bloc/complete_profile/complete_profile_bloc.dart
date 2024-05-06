@@ -14,10 +14,15 @@ class CompleteProfileBloc
   CompleteProfileBloc(this._repository) : super(CompleteProfileInitial()) {
     on<OnVerifyClicked>(_onVerifyClicked);
     on<OnFieldsUpdated>((event, emit) async {
-      final newStatus = (event.username.isEmpty ||
+      final newStatus = (
+          event.username.isEmpty ||
           event.name.isEmpty ||
           event.profession.isEmpty ||
           event.about.isEmpty ||
+          event.state.isEmpty ||
+          event.city.isEmpty ||
+          event.country.isEmpty ||
+          event.pincode.isEmpty ||
           event.loading != 1);
       emit(ButtonStatusUpdated(newStatus));
       if (event.isUsernameUpdated) {
@@ -27,7 +32,12 @@ class CompleteProfileBloc
     });
     on<NextButtonClicked>(_onNextButtonClicked);
     on<GetUserData>((event, emit) async {
-      emit(InitialUserData(await _repository.getUserData()));
+      try {
+        emit(InitialUserData(await _repository.getUserData()));
+        emit(CompleteProfileInitial());
+      } on Exception catch (e) {
+        //user data not found
+      }
     });
   }
 
@@ -64,16 +74,28 @@ class CompleteProfileBloc
   ) async {
     try {
       if (event.username.isEmpty) {
-        throw Exception("Username empty");
+        throw ("Please enter username");
       }
       if (event.name.isEmpty) {
-        throw Exception("Name empty");
+        throw ("Please enter name");
       }
       if (event.profession.isEmpty) {
-        throw Exception("Profession empty");
+        throw ("Please enter profession");
       }
       if (event.description.isEmpty) {
-        throw Exception("Description empty");
+        throw ("Please enter description");
+      }
+      if (event.state.isEmpty) {
+        throw ("Please enter state");
+      }
+      if (event.city.isEmpty) {
+        throw ("Please enter city");
+      }
+      if (event.pincode.isEmpty) {
+        throw ("Please enter pincode");
+      }
+      if(!event.isVerified){
+        throw ("Please verify username");
       }
 
       final user = UserData(
@@ -81,11 +103,21 @@ class CompleteProfileBloc
         name: event.name,
         profession: event.profession,
         description: event.description,
+        state: event.state,
+        city: event.city,
+        pin: event.pincode,
+        country: event.country,
       );
       await _repository.uploadUserData(user);
+      await _repository.uploadUserToRealtime(user);
       emit(NavigateToNextPage());
+      emit(CompleteProfileInitial());
+    } on String catch (e) {
+      emit(ShowSnackBar(e));
+      emit(CompleteProfileInitial());
     } on Exception catch (e) {
-      emit(ShowSnackBar(e.toString()));
+      emit(ShowSnackBar("Something went wrong $e"));
+      emit(CompleteProfileInitial());
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class ConnectionCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
-                                  color: Colors.white,
+                                  color: primaryTextColor,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -60,7 +61,7 @@ class ConnectionCard extends StatelessWidget {
                         Text(
                           request.phoneNo,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: primaryTextColor,
                           ),
                           textAlign: TextAlign.start,
                         )
