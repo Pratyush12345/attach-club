@@ -2,6 +2,10 @@ import 'package:attach_club/core/components/rating.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+
+import '../../bloc/search_connections/search_connections_bloc.dart';
 
 class SearchProfileCard extends StatelessWidget {
   final UserData userData;
@@ -16,17 +20,20 @@ class SearchProfileCard extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final imageRadius = 0.2162790698 * width;
+    final check = context
+        .read<SearchConnectionsBloc>()
+        .requestsSent
+        .contains(userData.uid);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed("/profile");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => Profile(
-        //       uid: userData.uid,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Profile(
+              uid: userData.uid,
+            ),
+          ),
+        );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -127,7 +134,10 @@ class SearchProfileCard extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Rating(selected: 3),
+                          Rating(
+                            selected: 3,
+                            width: 0.1465116279 * width,
+                          ),
                         ],
                       ),
                       Padding(
@@ -140,13 +150,21 @@ class SearchProfileCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               backgroundColor: const Color(0xFF4285F4)),
-                          onPressed: () {},
-                          child: const Text(
-                            "Connect",
-                            style: TextStyle(
+                          onPressed: () {
+                            if (userData.uid != null && !check) {
+                              context
+                                  .read<SearchConnectionsBloc>()
+                                  .add(ConnectButtonClicked(userData.uid!));
+                            }
+                          },
+                          child: Text(
+                            (check) ? "Request Sent" : "Connect",
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ),
@@ -167,14 +185,18 @@ class SearchProfileCard extends StatelessWidget {
       color: Colors.black,
       size: 0.2162790698 * width,
     );
+    const loading = CircularProgressIndicator(
+      color: Colors.purple,
+    );
     return Image.network(
       userData.profileImageURL,
+      fit: BoxFit.fill,
       loadingBuilder: (BuildContext context, Widget child,
           ImageChunkEvent? loadingProgress) {
         if (loadingProgress == null) {
           return child;
         } else {
-          return person;
+          return loading;
         }
       },
       errorBuilder:

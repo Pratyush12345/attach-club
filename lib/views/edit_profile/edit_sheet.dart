@@ -38,15 +38,26 @@ class _EditSheetState extends State<EditSheet> {
     return SizedBox(
       width: double.infinity,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              "Edit ${widget.hintText}",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           CustomTextField(
             type: TextFieldType.RegularTextField,
             controller: bottomSheetController,
             hintText: widget.hintText,
           ),
           CustomButton(
-            onPressed: (){
+            onPressed: () {
               widget.onSave(bottomSheetController.text);
               Navigator.pop(context);
             },

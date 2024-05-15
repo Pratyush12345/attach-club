@@ -61,7 +61,6 @@ class _SignUpState extends State<SignUp> {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state is GoogleLoginSuccess || state is PhoneVerificationSuccess) {
-          log("check");
           context.read<SignupBloc>().add(CheckOnboardingStatus());
         }
         if (state is ShowSnackBar) {

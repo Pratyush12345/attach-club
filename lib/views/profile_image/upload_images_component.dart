@@ -24,6 +24,10 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
     final width = MediaQuery.of(context).size.width;
     return BlocConsumer<ProfileImageBloc, ProfileImageState>(
       listener: (context, state) {
+        if (state is ShowSnackBar) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
+        }
         // if (state is ProfileImageUpdated) {
         //   profilePic = state.file;
         // }

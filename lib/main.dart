@@ -7,6 +7,7 @@ import 'package:attach_club/bloc/complete_profile/complete_profile_repository.da
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/bloc/connections/connections_repository.dart';
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
+import 'package:attach_club/bloc/dashboard/dashboard_repository.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_repository.dart';
 import 'package:attach_club/bloc/home/home_bloc.dart';
@@ -27,6 +28,7 @@ import 'package:attach_club/firebase_options.dart';
 import 'package:attach_club/views/add_link/add_link.dart';
 import 'package:attach_club/views/add_service/add_service_screen.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
+import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
 import 'package:attach_club/views/edit_profile/edit_profile.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
 import 'package:attach_club/views/profile/profile.dart';
@@ -117,6 +119,7 @@ class _MyAppState extends State<MyApp> {
             RepositoryProvider(
               create: (context) => ConnectionsRepository(
                 context.read<CoreRepository>(),
+                client,
               ),
             ),
             RepositoryProvider(
@@ -148,6 +151,12 @@ class _MyAppState extends State<MyApp> {
               create: (context) => SearchConnectionsRepository(
                 context.read<CoreRepository>(),
                 client,
+              ),
+            ),
+            RepositoryProvider(
+              create: (context) => DashboardRepository(
+                context.read<CoreRepository>(),
+                context.read<Client>()
               ),
             ),
           ],
@@ -201,7 +210,7 @@ class _MyAppState extends State<MyApp> {
               ),
               BlocProvider(
                 create: (context) => DashboardBloc(
-                  context.read<CoreRepository>(),
+                  context.read<DashboardRepository>(),
                 ),
               ),
               BlocProvider(
@@ -216,8 +225,7 @@ class _MyAppState extends State<MyApp> {
               ),
               BlocProvider(
                 create: (context) => SearchConnectionsBloc(
-                  context.read<SearchConnectionsRepository>()
-                ),
+                    context.read<SearchConnectionsRepository>()),
               ),
             ],
             child: MaterialApp(
@@ -247,13 +255,14 @@ class _MyAppState extends State<MyApp> {
                 "/onboard2": (context) => const ProfileImage(),
                 "/onboard3": (context) => const AddLink(),
                 "/onboard4": (context) => const AddService(),
-                "/settings": (context) => const Settings(),
+                "/settings": (context) => const SettingsPage(),
                 "/settings/manageProfile": (context) => const ManageProfile(),
                 "/settings/profilePrivacy": (context) => const ProfilePrivacy(),
                 "/home": (context) => const HomeScreen(),
                 "/profile": (context) => const Profile(),
                 "/profile/products": (context) => const ViewAllProducts(),
                 "/qr": (context) => const QrCodeScreen(),
+                "/settings/detailedAnalytics": (context) => const DetailedAnalytics(),
               },
             ),
           ),

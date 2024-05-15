@@ -115,22 +115,22 @@ class _OtherPagesState extends State<OtherPages> {
           ),
         ),
         const LineBreak(),
-        ListTile(
-          title: const Text(
-            "Enquiries",
-            style: OtherPages._titleStyle,
-          ),
-          subtitle: Text(
-            "Check the enquires of the users",
-            style: _subTitleStyle,
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 20,
-            color: paragraphTextColor,
-          ),
-        ),
-        const LineBreak(),
+        // ListTile(
+        //   title: const Text(
+        //     "Enquiries",
+        //     style: OtherPages._titleStyle,
+        //   ),
+        //   subtitle: Text(
+        //     "Check the enquires of the users",
+        //     style: _subTitleStyle,
+        //   ),
+        //   trailing: Icon(
+        //     Icons.arrow_forward_ios,
+        //     size: 20,
+        //     color: paragraphTextColor,
+        //   ),
+        // ),
+        // const LineBreak(),
         ListTile(
           title: const Text(
             "Detailed Analytics",
@@ -145,6 +145,9 @@ class _OtherPagesState extends State<OtherPages> {
             size: 20,
             color: paragraphTextColor,
           ),
+          onTap: (){
+            Navigator.of(context).pushNamed("/settings/detailedAnalytics");
+          },
         ),
         const LineBreak(),
         ListTile(

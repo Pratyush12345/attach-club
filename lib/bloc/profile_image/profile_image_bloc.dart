@@ -36,14 +36,18 @@ class ProfileImageBloc extends Bloc<ProfileImageEvent, ProfileImageState> {
       emit(BannerImageUpdated(file));
     });
     on<FetchImages>((event, emit) async {
-      emit(LoadingState());
-      profileImage = await _repository.getProfileImage();
-      bannerImage = await _repository.getBannerImage();
-      lastUpdated = DateTime.now();
-      emit(ProfileImageUpdated(profileImage));
-      emit(BannerImageUpdated(bannerImage));
-      if (profileImage == null && bannerImage == null) {
-        emit(ProfileImageInitial());
+      try {
+        emit(LoadingState());
+        profileImage = await _repository.getProfileImage();
+        bannerImage = await _repository.getBannerImage();
+        lastUpdated = DateTime.now();
+        emit(ProfileImageUpdated(profileImage));
+        emit(BannerImageUpdated(bannerImage));
+        if (profileImage == null && bannerImage == null) {
+          emit(ProfileImageInitial());
+        }
+      } on Exception catch (e) {
+        emit(ShowSnackBar(e.toString()));
       }
     });
   }

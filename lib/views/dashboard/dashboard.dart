@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
@@ -46,7 +48,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    context.read<DashboardBloc>().add(GetData());
+    final userData = context.read<UserDataNotifier>().userData;
+    context.read<DashboardBloc>().add(GetData(userData));
   }
 
   @override
@@ -64,6 +67,14 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       builder: (context, state) {
+        if (state is DashboardLoading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.purple,
+            ),
+          );
+        }
+        final bloc = context.read<DashboardBloc>();
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,10 +125,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     LinkCard(
                       prefix: Text(
-                        context
-                            .read<DashboardBloc>()
-                            .connectionsCount
-                            .toString(),
+                        bloc.connectionsCount.toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24,
@@ -141,7 +149,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     LinkCard(
                       prefix: Text(
-                        context.read<DashboardBloc>().reviewCount.toString(),
+                        bloc.reviewCount.toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24,
@@ -204,17 +212,18 @@ class _DashboardState extends State<Dashboard> {
                         fontSize: 20,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Text(
-                        "View All",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0xFF4285F4),
+                    if (bloc.suggestedProfile.length > 5)
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Text(
+                          "View All",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Color(0xFF4285F4),
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -225,14 +234,17 @@ class _DashboardState extends State<Dashboard> {
                   spacing: 12,
                   children: [
                     const SizedBox(width: horizontalPadding - 12),
-                    for (var i = 0; i < 5; i++)
-                      const ProfileCard(
-                        name: "Shri Rash B. Rungta",
-                        description:
-                            "Joint Commissioner of Central GST(Government of India)",
-                        asset: "assets/images/image.jpeg",
-                        selected: 3,
-                      ),
+                    for (var i = 0;
+                        i < min(5, bloc.suggestedProfile.length);
+                        i++)
+                      if (bloc.suggestedProfile[i].uid != null)
+                        ProfileCard(
+                          name: bloc.suggestedProfile[i].name,
+                          description: bloc.suggestedProfile[i].description,
+                          asset: bloc.suggestedProfile[i].profileImageURL,
+                          selected: 3,
+                          uid: bloc.suggestedProfile[i].uid!,
+                        ),
                   ],
                 ),
               ),

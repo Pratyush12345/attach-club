@@ -3,6 +3,7 @@ import 'package:attach_club/models/product.dart';
 import 'package:attach_club/models/review.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/models/user_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,45 +18,53 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   int reviewCount = 0;
   String? uid;
   DateTime? lastUpdated;
-  UserData userData = UserData(username: "");
+  UserData userData = UserData(
+    username: "",
+    firstLoginDate: Timestamp.now(),
+    lastLoginDate: Timestamp.now(),
+    lastPaymentDate: Timestamp.now(),
+  );
   List<Review> reviewsList = [];
   final ProfileRepository _repository;
 
   ProfileBloc(this._repository) : super(ProfileInitial()) {
     on<GetUserData>((event, emit) async {
-      if(event.uid!=null){
-        await _repository.incrementProfileCount(event.uid!);
+      try {
+        if (event.uid != null) {
+          await _repository.incrementProfileCount(event.uid!);
+        }
+        userData = await _repository.getUserData(event.uid);
+        socialLinksList = await _repository.getSocialLinksList(event.uid);
+        productList = await _repository.getAllProducts(event.uid);
+        reviewsList = await _repository.getReviewsList(event.uid);
+        reviewCount = reviewsList.length;
+        rating = _calculateRating(reviewsList);
+        lastUpdated = DateTime.now();
+        if (event.uid == null) {
+          emit(UserDataUpdated(userData));
+          emit(ProfileInitial());
+        } else {
+          emit(const OtherUserDataUpdated());
+          emit(ProfileInitial());
+        }
+        uid = event.uid;
+        await _repository.downloadImageOfProducts(
+          list: productList,
+          onListUpdated: (list) {
+            productList = list;
+            if (event.uid == null) {
+              emit(UserDataUpdated(userData));
+              emit(ProfileInitial());
+            } else {
+              emit(const OtherUserDataUpdated());
+              emit(ProfileInitial());
+            }
+          },
+          uid: event.uid,
+        );
+      } on Exception catch (e) {
+        emit(ShowSnackBar(e.toString()));
       }
-      userData = await _repository.getUserData(event.uid);
-      socialLinksList = await _repository.getSocialLinksList(event.uid);
-      productList = await _repository.getAllProducts(event.uid);
-      reviewsList = await _repository.getReviewsList(event.uid);
-      reviewCount = reviewsList.length;
-      rating = _calculateRating(reviewsList);
-      lastUpdated = DateTime.now();
-      if(event.uid==null){
-        emit(UserDataUpdated(userData));
-        emit(ProfileInitial());
-      }else{
-        emit(const OtherUserDataUpdated());
-        emit(ProfileInitial());
-      }
-      lastUpdated = DateTime.now();
-      uid = event.uid;
-      await _repository.downloadImageOfProducts(
-        list: productList,
-        onListUpdated: (list) {
-          productList = list;
-          if(event.uid==null){
-            emit(UserDataUpdated(userData));
-            emit(ProfileInitial());
-          }else{
-            emit(const OtherUserDataUpdated());
-            emit(ProfileInitial());
-          }
-        },
-        uid: event.uid,
-      );
     });
     on<ReviewSubmitted>((event, emit) async {
       final review = Review(
@@ -66,10 +75,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
       await _repository.addReview(review, event.profileUid);
     });
+    on<ConnectButtonPressed>((event, emit) async {
+      emit(ProfileLoading());
+      await _repository.sendConnectionRequest(event.userUid);
+      emit(const OtherUserDataUpdated());
+    });
   }
 
   int _calculateRating(List<Review> list) {
-    if(list.isEmpty){
+    if (list.isEmpty) {
       return 0;
     }
     int sum = 0;

@@ -12,3 +12,12 @@ class SearchTriggered extends SearchConnectionsEvent {
   @override
   List<Object> get props => [query];
 }
+
+class ConnectButtonClicked extends SearchConnectionsEvent {
+  final String userUid;
+
+  const ConnectButtonClicked(this.userUid);
+
+  @override
+  List<Object> get props => [userUid];
+}

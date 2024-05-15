@@ -39,6 +39,7 @@ class _ProfileImageState extends State<ProfileImage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(

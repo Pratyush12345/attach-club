@@ -5,6 +5,10 @@ abstract class DashboardEvent extends Equatable {
 }
 
 class GetData extends DashboardEvent {
+  final UserData userData;
+
+  const GetData(this.userData);
+
   @override
   List<Object?> get props => [];
 }

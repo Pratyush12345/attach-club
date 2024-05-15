@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/complete_profile/complete_profile_repository.dart';
 import 'package:attach_club/models/user_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,8 +17,7 @@ class CompleteProfileBloc
   CompleteProfileBloc(this._repository) : super(CompleteProfileInitial()) {
     on<OnVerifyClicked>(_onVerifyClicked);
     on<OnFieldsUpdated>((event, emit) async {
-      final newStatus = (
-          event.username.isEmpty ||
+      final newStatus = (event.username.isEmpty ||
           event.name.isEmpty ||
           event.profession.isEmpty ||
           event.about.isEmpty ||
@@ -23,6 +25,7 @@ class CompleteProfileBloc
           event.city.isEmpty ||
           event.country.isEmpty ||
           event.pincode.isEmpty ||
+          event.phoneNo.isEmpty ||
           event.loading != 1);
       emit(ButtonStatusUpdated(newStatus));
       if (event.isUsernameUpdated) {
@@ -94,7 +97,10 @@ class CompleteProfileBloc
       if (event.pincode.isEmpty) {
         throw ("Please enter pincode");
       }
-      if(!event.isVerified){
+      if (event.phoneNo.isEmpty) {
+        throw ("Please enter phone number");
+      }
+      if (!event.isVerified) {
         throw ("Please verify username");
       }
 
@@ -107,6 +113,12 @@ class CompleteProfileBloc
         city: event.city,
         pin: event.pincode,
         country: event.country,
+        phoneNo: (event.phoneNo[1] == "+")
+            ? event.phoneNo.substring(3)
+            : event.phoneNo,
+        firstLoginDate: Timestamp.now(),
+        lastLoginDate: Timestamp.now(),
+        lastPaymentDate: Timestamp.now(),
       );
       await _repository.uploadUserData(user);
       await _repository.uploadUserToRealtime(user);

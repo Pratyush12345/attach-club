@@ -94,6 +94,9 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
 }
 
 _getProfileImage(String url) {
+  const loading = CircularProgressIndicator(
+    color: Colors.purple,
+  );
   const person = Icon(
     Icons.person,
     color: Colors.black,
@@ -109,7 +112,7 @@ _getProfileImage(String url) {
       if (loadingProgress == null) {
         return child;
       } else {
-        return person;
+        return loading;
       }
     },
     errorBuilder: (context, error, stackTrace) {

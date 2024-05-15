@@ -24,6 +24,11 @@ class _EditProfileState extends State<EditProfile> {
   final nameController = TextEditingController();
   final professionController = TextEditingController();
   final descriptionController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final stateController = TextEditingController();
+  final pinCodeController = TextEditingController();
+  final countryController = TextEditingController();
+  final cityController = TextEditingController();
 
   // bool disabled = true;
 
@@ -33,6 +38,11 @@ class _EditProfileState extends State<EditProfile> {
     nameController.dispose();
     professionController.dispose();
     descriptionController.dispose();
+    phoneNumberController.dispose();
+    stateController.dispose();
+    pinCodeController.dispose();
+    countryController.dispose();
+    cityController.dispose();
     super.dispose();
   }
 
@@ -45,10 +55,20 @@ class _EditProfileState extends State<EditProfile> {
     bloc.name = userData.name;
     bloc.profession = userData.profession;
     bloc.description = userData.description;
+    bloc.phoneNumber = userData.phoneNo;
+    bloc.stateText = userData.state;
+    bloc.pinCode = userData.pin;
+    bloc.country = userData.country;
+    bloc.city = userData.city;
     userNameController.text = bloc.username;
     nameController.text = bloc.name;
     professionController.text = bloc.profession;
     descriptionController.text = bloc.description;
+    phoneNumberController.text = bloc.phoneNumber;
+    stateController.text = bloc.stateText;
+    pinCodeController.text = bloc.pinCode;
+    countryController.text = bloc.country;
+    cityController.text = bloc.city;
   }
 
   @override
@@ -82,130 +102,108 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 0.0257 * height),
-                  const Label(title: "Profile Link"),
-                  SizedBox(height: 0.0171 * height),
-                  CustomTextField(
-                    type: TextFieldType.RegularTextField,
-                    hintText: "Enter username",
-                    suffixIcon: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Center(
-                        child: SvgPicture.asset(
-                          "assets/svg/check_circle.svg",
-                          colorFilter: const ColorFilter.mode(
-                            Colors.blue,
-                            BlendMode.srcIn,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 0.0257 * height),
+                    const Label(title: "Profile Link"),
+                    SizedBox(height: 0.0171 * height),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      hintText: "Enter username",
+                      suffixIcon: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            "assets/svg/check_circle.svg",
+                            colorFilter: const ColorFilter.mode(
+                              Colors.blue,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                       ),
+                      controller: userNameController,
+                      onChanged: (s) {
+                        //remove all spaces from username
+                        userNameController.text = userNameController.text
+                            .replaceAll(RegExp(r"\s+"), "");
+                        // _sendUpdate(isUsername: true);
+                      },
+                      disabled: true,
                     ),
-                    controller: userNameController,
-                    onChanged: (s) {
-                      //remove all spaces from username
-                      userNameController.text = userNameController.text
-                          .replaceAll(RegExp(r"\s+"), "");
-                      // _sendUpdate(isUsername: true);
-                    },
-                    disabled: true,
-                  ),
-                  SizedBox(height: 0.0243 * height),
-                  const Label(
-                    title: "Your profile will be available at:",
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: "www.theattachclub.com/",
-                      style: _getTextStyle(Colors.white, 20, FontWeight.w500),
-                      children: [
-                        TextSpan(text: userNameController.text),
-                      ],
+                    SizedBox(height: 0.0243 * height),
+                    const Label(
+                      title: "Your profile will be available at:",
                     ),
-                  ),
-                  SizedBox(
-                    height: 0.0343 * height,
-                  ),
-                  const Label(title: "Basic Details"),
-                  SizedBox(
-                    height: 0.01716738197 * height,
-                  ),
-                  GestureDetector(
-                    child: CustomContainer(
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: "www.theattachclub.com/",
+                        style: _getTextStyle(Colors.white, 20, FontWeight.w500),
+                        children: [
+                          TextSpan(text: userNameController.text),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 0.0343 * height,
+                    ),
+                    const Label(title: "Basic Details"),
+                    SizedBox(height: 0.01716738197 * height),
+                    CustomContainer(
                       title: nameController.text,
+                      hintText: "Name",
                     ),
-                    onTap: () {
-                      showCustomModalBottomSheet(
-                        context: context,
-                        sheetHeight: 0.21,
-                        child: EditSheet(
-                          initialText: nameController.text,
-                          onSave: (text) {
-                            context.read<EditProfileBloc>().add(NameUpdated(
-                                  name: text,
-                                ));
-                          },
-                          hintText: "Name",
-                        ),
-                      );
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 0.01287553648 * height,
-                    ),
-                    child: GestureDetector(
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 0.01287553648 * height,
+                      ),
                       child: CustomContainer(
                         title: professionController.text,
+                        hintText: "Profession",
                       ),
-                      onTap: () {
-                        showCustomModalBottomSheet(
-                          context: context,
-                          sheetHeight: 0.21,
-                          child: EditSheet(
-                            initialText: professionController.text,
-                            onSave: (text) {
-                              context
-                                  .read<EditProfileBloc>()
-                                  .add(ProfessionUpdated(
-                                    profession: text,
-                                  ));
-                            },
-                            hintText: "Profession",
-                          ),
-                        );
-                      },
                     ),
-                  ),
-                  GestureDetector(
-                    child: CustomContainer(
+                    CustomContainer(
+                      title: phoneNumberController.text,
+                      hintText: "Phone Number",
+                      disabled: true,
+                    ),
+                    SizedBox(height: 0.01287553648 * height),
+                    CustomContainer(
                       title: descriptionController.text,
+                      hintText: "Description",
                     ),
-                    onTap: () {
-                      showCustomModalBottomSheet(
-                        context: context,
-                        sheetHeight: 0.21,
-                        child: EditSheet(
-                          initialText: descriptionController.text,
-                          onSave: (text) {
-                            context
-                                .read<EditProfileBloc>()
-                                .add(DescriptionUpdated(
-                                  description: text,
-                                ));
-                          },
-                          hintText: "Description",
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                    SizedBox(height: 0.0343 * height),
+                    const Label(title: "Address"),
+                    SizedBox(height: 0.01716738197 * height),
+                    CustomContainer(
+                      title: stateController.text,
+                      hintText: "State",
+                    ),
+                    SizedBox(height: 0.01287553648 * height),
+                    CustomContainer(
+                      title: cityController.text,
+                      hintText: "City",
+                    ),
+                    SizedBox(height: 0.01287553648 * height),
+                    CustomContainer(
+                      title: pinCodeController.text,
+                      hintText: "Pin Code",
+                    ),
+                    SizedBox(
+                      height: 0.01287553648 * height
+                    ),
+                    CustomContainer(
+                      title: countryController.text,
+                      hintText: "Country",
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -242,7 +240,7 @@ class _EditProfileState extends State<EditProfile> {
 //       height: 12,
 //       child: Center(
 //         child: CircularProgressIndicator(
-//           color: Colors.white,
+//           color: Colors.purple,
 //         ),
 //       ),
 //     );

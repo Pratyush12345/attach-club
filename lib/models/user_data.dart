@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserData {
   String accountType;
   int age;
@@ -6,7 +10,7 @@ class UserData {
   String country;
   String description;
   String email;
-  String firstLoginDate;
+  Timestamp firstLoginDate;
   String headLineTxt;
   bool isActive;
   bool isBasicDetailEnabled;
@@ -15,8 +19,8 @@ class UserData {
   bool isOnline;
   bool isProductEnabled;
   bool isReviewEnabled;
-  String lastLoginDate;
-  String lastPaymentDate;
+  Timestamp lastLoginDate;
+  Timestamp lastPaymentDate;
   String logoImageURL;
   String name;
   String phoneNo;
@@ -37,10 +41,10 @@ class UserData {
     this.country = "",
     this.description = "",
     this.email = "",
-    this.firstLoginDate = "",
+    required this.firstLoginDate,
     this.headLineTxt = "",
-    this.lastLoginDate = "",
-    this.lastPaymentDate = "",
+    required this.lastLoginDate,
+    required this.lastPaymentDate,
     this.logoImageURL = "",
     this.name = "",
     this.phoneNo = "",
@@ -117,6 +121,53 @@ class UserData {
       isReviewEnabled: map["isReviewEnabled"],
       lastLoginDate: map["lastLoginDate"],
       lastPaymentDate: map["lastPaymentDate"],
+      logoImageURL: map["logoImageURL"],
+      name: map["name"],
+      phoneNo: map["phoneNo"],
+      pin: map["pin"],
+      profession: map["profession"],
+      profileClickCount: map["profileClickCount"],
+      profileImageURL: map["profileImageURL"],
+      purchasedPlanCode: map["purchasedPlanCode"],
+      state: map["state"],
+      username: map["username"],
+      uid: uid,
+    );
+  }
+
+  factory UserData.fromJson({required Map<String, dynamic> map, String? uid}) {
+    log(uid.toString());
+    return UserData(
+      accountType: map["accountType"],
+      age: map["age"],
+      bannerImageURL: map["bannerImageURL"],
+      city: map["city"],
+      country: map["country"],
+      description: map["description"],
+      email: map["email"],
+      firstLoginDate: Timestamp(
+        map["firstLoginDate"]["_seconds"],
+        map["firstLoginDate"]["_nanoseconds"],
+      ),
+      headLineTxt: map["headLineTxt"],
+      isActive: map["isActive"],
+      isBasicDetailEnabled: map["isBasicDetailEnabled"],
+      isEverPurchasedPremium: map["isEverPurchasedPremium"],
+      isLinkEnabled: map["isLinkEnabled"],
+      isOnline: map["isOnline"],
+      isProductEnabled: map["isProductEnabled"],
+      isReviewEnabled: map["isReviewEnabled"],
+      lastLoginDate: Timestamp(
+        map["lastLoginDate"]["_seconds"],
+        map["lastLoginDate"]["_nanoseconds"],
+      ),
+      //TODO: Not receiving this from API
+      // lastPaymentDate: Timestamp(
+      //   map["lastPaymentDate"]["_seconds"],
+      //   map["lastPaymentDate"]["_nanoseconds"],
+      // ),
+      lastPaymentDate: Timestamp.now(),
+      //TODO: Remove this line
       logoImageURL: map["logoImageURL"],
       name: map["name"],
       phoneNo: map["phoneNo"],
