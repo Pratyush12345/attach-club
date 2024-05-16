@@ -16,7 +16,6 @@ class RequestAccepted extends ConnectionsEvent {
 
   @override
   List<Object?> get props => [request];
-
 }
 
 class RequestRejected extends ConnectionsEvent {
@@ -26,7 +25,6 @@ class RequestRejected extends ConnectionsEvent {
 
   @override
   List<Object?> get props => [request];
-
 }
 
 class RequestRemoved extends ConnectionsEvent {
@@ -36,5 +34,23 @@ class RequestRemoved extends ConnectionsEvent {
 
   @override
   List<Object?> get props => [request];
+}
 
+class WhatsappIconClicked extends ConnectionsEvent {
+  // final ConnectionRequest request;
+  final String phoneNo;
+
+  const WhatsappIconClicked(this.phoneNo);
+
+  @override
+  List<Object?> get props => [phoneNo];
+}
+
+class PhoneIconClicked extends ConnectionsEvent {
+  final String phoneNo;
+
+  const PhoneIconClicked(this.phoneNo);
+
+  @override
+  List<Object?> get props => [phoneNo];
 }

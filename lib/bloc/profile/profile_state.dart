@@ -28,3 +28,17 @@ class OtherUserDataUpdated extends ProfileState {
   List<Object?> get props => [];
 
 }
+
+class ProfileLoading extends ProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class ShowSnackBar extends ProfileState {
+  final String message;
+
+  const ShowSnackBar(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

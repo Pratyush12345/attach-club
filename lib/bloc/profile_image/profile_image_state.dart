@@ -42,3 +42,12 @@ class FetchedImages extends ProfileImageState {
   @override
   List<Object?> get props => [profileImage, bannerImage];
 }
+
+class ShowSnackBar extends ProfileImageState {
+  final String message;
+
+  const ShowSnackBar(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/edit_profile/edit_profile_repository.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +15,11 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   String name = "";
   String profession = "";
   String description = "";
+  String phoneNumber = "";
+  String stateText = "";
+  String pinCode = "";
+  String country = "";
+  String city = "";
 
   EditProfileBloc(this._repository) : super(EditProfileInitial()) {
     // on<OnVerifyClicked>(_onVerifyClicked);
@@ -45,6 +52,14 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     on<NameUpdated>(_onNameUpdated);
     on<ProfessionUpdated>(_onProfessionUpdated);
     on<DescriptionUpdated>(_onDescriptionUpdated);
+    on<UpdateTriggered>(_onUserDataUpdated);
+  }
+
+  _onUserDataUpdated(
+    UpdateTriggered event,
+    Emitter<EditProfileState> emit,
+  ) {
+    log(username);
   }
 
   _onNameUpdated(

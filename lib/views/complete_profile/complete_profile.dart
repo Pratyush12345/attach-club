@@ -5,6 +5,7 @@ import 'package:attach_club/core/components/heading.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,8 +30,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final descriptionController = TextEditingController();
   final stateController = TextEditingController();
   final cityController = TextEditingController();
-  final pincodeController = TextEditingController();
+  final pinCodeController = TextEditingController();
   final countryController = TextEditingController();
+  final phoneNoController = TextEditingController();
+  bool isPhoneDisabled = false;
   int loading = -1;
 
   bool disabled = true;
@@ -43,8 +46,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
     descriptionController.dispose();
     stateController.dispose();
     cityController.dispose();
-    pincodeController.dispose();
+    pinCodeController.dispose();
     countryController.dispose();
+    phoneNoController.dispose();
     super.dispose();
   }
 
@@ -52,6 +56,11 @@ class _CompleteProfileState extends State<CompleteProfile> {
   void initState() {
     super.initState();
     context.read<CompleteProfileBloc>().add(GetUserData());
+    final user = FirebaseAuth.instance;
+    if (user.currentUser?.phoneNumber != null) {
+      phoneNoController.text = user.currentUser?.phoneNumber ?? "";
+      isPhoneDisabled = true;
+    }
   }
 
   @override
@@ -196,6 +205,16 @@ class _CompleteProfileState extends State<CompleteProfile> {
                           ),
                           CustomTextField(
                             type: TextFieldType.RegularTextField,
+                            controller: phoneNoController,
+                            hintText: "Phone No",
+                            disabled: isPhoneDisabled,
+                            onChanged: (_) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.01287553648 * height),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
                             hintText: "About yourself",
                             isTextArea: true,
                             controller: descriptionController,
@@ -214,7 +233,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
                               _sendUpdate();
                             },
                           ),
-                          SizedBox(height: 0.01287553648*height,),
+                          SizedBox(
+                            height: 0.01287553648 * height,
+                          ),
                           CustomTextField(
                             type: TextFieldType.RegularTextField,
                             hintText: "City",
@@ -223,16 +244,20 @@ class _CompleteProfileState extends State<CompleteProfile> {
                               _sendUpdate();
                             },
                           ),
-                          SizedBox(height: 0.01287553648*height,),
+                          SizedBox(
+                            height: 0.01287553648 * height,
+                          ),
                           CustomTextField(
                             type: TextFieldType.RegularTextField,
                             hintText: "Pincode",
-                            controller: pincodeController,
+                            controller: pinCodeController,
                             onChanged: (e) {
                               _sendUpdate();
                             },
                           ),
-                          SizedBox(height: 0.01287553648*height,),
+                          SizedBox(
+                            height: 0.01287553648 * height,
+                          ),
                           CustomTextField(
                             type: TextFieldType.RegularTextField,
                             hintText: "Country",
@@ -241,7 +266,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
                               _sendUpdate();
                             },
                           ),
-                          SizedBox(height: 0.02467811159*height,),
+                          SizedBox(
+                            height: 0.02467811159 * height,
+                          ),
                         ],
                       ),
                     ),
@@ -262,8 +289,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
                                 description: descriptionController.text,
                                 state: stateController.text,
                                 city: cityController.text,
-                                pincode: pincodeController.text,
+                                pincode: pinCodeController.text,
                                 country: countryController.text,
+                                phoneNo: phoneNoController.text,
                                 isVerified: loading == 1,
                               ));
                         },
@@ -292,7 +320,8 @@ class _CompleteProfileState extends State<CompleteProfile> {
             state: stateController.text,
             city: cityController.text,
             country: countryController.text,
-            pincode: pincodeController.text,
+            pincode: pinCodeController.text,
+            phoneNo: phoneNoController.text,
             isUsernameUpdated: isUsername,
           ),
         );

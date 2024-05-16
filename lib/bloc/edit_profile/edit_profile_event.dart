@@ -93,3 +93,10 @@ class DescriptionUpdated extends EditProfileEvent {
   @override
   List<Object?> get props => [description];
 }
+
+class UpdateTriggered extends EditProfileEvent {
+
+  @override
+  List<Object?> get props => [];
+
+}

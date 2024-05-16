@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:developer' as developer;
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
@@ -36,6 +37,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     final bloc = context.read<ProfileBloc>();
+    developer.log(widget.uid.toString());
     if (widget.uid != bloc.uid ||
         bloc.lastUpdated == null ||
         bloc.lastUpdated!.difference(DateTime.now()).inMinutes > 2) {
@@ -67,13 +69,17 @@ class _ProfileState extends State<Profile> {
               // userData = state.userData;
               context.read<UserDataNotifier>().updateUserData(state.userData);
             }
+            if (state is ShowSnackBar) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.message)));
+            }
             // if (state is OtherUserDataUpdated) {
             //   userData = state.userData;
             // }
           },
           builder: (context, state) {
             final userData = context.read<ProfileBloc>().userData;
-            if (userData.username.isEmpty) {
+            if (userData.username.isEmpty || state is ProfileLoading) {
               return const Center(
                 child: CircularProgressIndicator(
                   color: Colors.purple,
@@ -200,13 +206,20 @@ class _ProfileState extends State<Profile> {
                               ),
                             if (widget.uid != null)
                               CustomButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.read<ProfileBloc>().add(
+                                        ConnectButtonPressed(
+                                          widget.uid!,
+                                        ),
+                                      );
+                                },
                                 title: "Connect",
                                 buttonWidth: 0.4279069767,
                               ),
                           ],
                         ),
-                        if (userData.isLinkEnabled)
+                        if (userData.isLinkEnabled &&
+                            bloc.socialLinksList.isNotEmpty)
                           Column(
                             children: [
                               const CustomDivider(),
@@ -293,7 +306,8 @@ class _ProfileState extends State<Profile> {
                               ),
                             ],
                           ),
-                        if (userData.isProductEnabled)
+                        if (userData.isProductEnabled &&
+                            bloc.productList.isNotEmpty)
                           Column(
                             children: [
                               const SizedBox(height: 24),
@@ -349,10 +363,10 @@ class _ProfileState extends State<Profile> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 30),
                             ],
                           ),
-                        _getReview()
+                        const SizedBox(height: 20),
+                        _getReview(width)
                       ],
                     ),
                   )
@@ -365,119 +379,157 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  _getReview() {
+  _getReview(width) {
     final bloc = context.read<ProfileBloc>();
     final userData = bloc.userData;
 
-    if (widget.uid == null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "User Reviews",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: primaryTextColor,
-            ),
-          ),
-          for (var i = 0; i < min(bloc.reviewsList.length, 5); i++)
-            ListTile(
-              title: Text(
-                bloc.reviewsList[i].name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.uid != null)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // const SizedBox(height: 35),
+              const Text(
+                "Review and Ratings",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              subtitle: Text(
-                bloc.reviewsList[i].feedback,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: Rating(selected: bloc.reviewsList[i].review),
-            )
-        ],
-      );
-    }
-    return Column(
-      children: [
-        const SizedBox(height: 35),
-        const Text(
-          "Review and Ratings",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 25),
-        SizedBox(
-          width: double.infinity,
-          child: Column(
-            children: [
-              Text(
-                "Rate your experience working with ${userData.name}",
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 10),
-              Rating(
-                selected: selectedStars,
-                alignment: MainAxisAlignment.center,
-                size: 36,
-                onPressed: (i) {
-                  setState(() {
-                    selectedStars = i;
-                  });
-                },
-              ),
-              const SizedBox(height: 13),
-              // CustomTextField(
-              //   type: TextFieldType.RegularTextField,
-              //   controller: nameController,
-              //   hintText: "Your name",
-              //   onChanged: (s) {
-              //     setState(() {});
-              //   },
-              //   disabled: true,
-              // ),
-              const SizedBox(height: 13),
-              CustomTextField(
-                type: TextFieldType.RegularTextField,
-                controller: feedbackController,
-                isTextArea: true,
-                hintText: "Feedback",
-                onChanged: (s) {
-                  setState(() {});
-                },
-              ),
-              const SizedBox(height: 10),
-              CustomButton(
-                onPressed: () {
-                  context.read<ProfileBloc>().add(
-                        ReviewSubmitted(
-                          selectedStars,
-                          userData.name,
-                          // nameController.text,
-                          feedbackController.text,
-                          userData,
-                          widget.uid!,
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Rate your experience working with ${userData.name}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Rating(
+                          selected: selectedStars,
+                          alignment: MainAxisAlignment.center,
+                          size: 36,
+                          width: 0.4255813953 * width,
+                          onPressed: (i) {
+                            setState(() {
+                              selectedStars = i;
+                            });
+                          },
                         ),
-                      );
-                },
-                title: "Send",
-                disabled: (selectedStars == 0 ||
-                    // nameController.text.isEmpty ||
-                    feedbackController.text.isEmpty),
-              ),
+                      ],
+                    ),
+                    const SizedBox(height: 13),
+                    // CustomTextField(
+                    //   type: TextFieldType.RegularTextField,
+                    //   controller: nameController,
+                    //   hintText: "Your name",
+                    //   onChanged: (s) {
+                    //     setState(() {});
+                    //   },
+                    //   disabled: true,
+                    // ),
+                    const SizedBox(height: 13),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      controller: feedbackController,
+                      isTextArea: true,
+                      hintText: "Feedback",
+                      onChanged: (s) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    CustomButton(
+                      onPressed: () {
+                        context.read<ProfileBloc>().add(
+                              ReviewSubmitted(
+                                selectedStars,
+                                userData.name,
+                                // nameController.text,
+                                feedbackController.text,
+                                userData,
+                                widget.uid!,
+                              ),
+                            );
+                      },
+                      title: "Send",
+                      disabled: (selectedStars == 0 ||
+                          // nameController.text.isEmpty ||
+                          feedbackController.text.isEmpty),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
-        )
+        if (userData.isReviewEnabled)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.uid != null) const SizedBox(height: 25),
+              const Text(
+                "User Reviews",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: primaryTextColor,
+                ),
+              ),
+              for (var i = 0; i < min(bloc.reviewsList.length, 5); i++)
+                ListTile(
+                  title: Text(
+                    bloc.reviewsList[i].name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    bloc.reviewsList[i].feedback,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Rating(selected: bloc.reviewsList[i].review),
+                )
+            ],
+          )
       ],
     );
+    // if (widget.uid == null)   {
+    //   return ;
+    // }
+    // return ;
   }
 
   _getBannerImage(UserData userData) {
     final url = userData.bannerImageURL;
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          "assets/images/image.jpeg",
+          fit: BoxFit.cover,
+        );
+      },
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Colors.purple,
+          ),
+        );
+      },
+    );
     if (url.isNotEmpty) {
       return Image.network(
         url,

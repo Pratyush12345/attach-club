@@ -82,4 +82,8 @@ class ProfileRepository {
       });
     }
   }
+
+  Future<void> sendConnectionRequest(String userUid) async {
+    await _repository.sendConnectionRequest(userUid);
+  }
 }

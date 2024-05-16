@@ -6,6 +6,7 @@ class Rating extends StatelessWidget {
   final MainAxisAlignment alignment;
   final double size;
   final void Function(int)? onPressed;
+  final double width;
 
   const Rating({
     super.key,
@@ -13,44 +14,48 @@ class Rating extends StatelessWidget {
     this.alignment = MainAxisAlignment.start,
     this.size = 12,
     this.onPressed,
+    this.width = 100,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: alignment,
-      children: [
-        for (var i = 1; i <= selected; i++)
-          GestureDetector(
-            child: SvgPicture.asset(
-              "assets/svg/star_fill.svg",
-              colorFilter: const ColorFilter.mode(
-                Color(0xFFFFD16A),
-                BlendMode.srcIn,
+    return SizedBox(
+      width: width,
+      child: Row(
+        mainAxisAlignment: alignment,
+        children: [
+          for (var i = 1; i <= selected; i++)
+            GestureDetector(
+              child: SvgPicture.asset(
+                "assets/svg/star_fill.svg",
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFFFFD16A),
+                  BlendMode.srcIn,
+                ),
+                width: size,
+                height: size,
               ),
-              width: size,
-              height: size,
+              onTap: () {
+                if (onPressed != null) {
+                  onPressed!(i);
+                }
+              },
             ),
-            onTap: () {
-              if (onPressed != null) {
-                onPressed!(i);
-              }
-            },
-          ),
-        for (var i = selected + 1; i <= 5; i++)
-          GestureDetector(
-            child: SvgPicture.asset(
-              "assets/svg/star_outline.svg",
-              width: size,
-              height: size,
+          for (var i = selected + 1; i <= 5; i++)
+            GestureDetector(
+              child: SvgPicture.asset(
+                "assets/svg/star_outline.svg",
+                width: size,
+                height: size,
+              ),
+              onTap: () {
+                if (onPressed != null) {
+                  onPressed!(i);
+                }
+              },
             ),
-            onTap: () {
-              if (onPressed != null) {
-                onPressed!(i);
-              }
-            },
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -2,7 +2,11 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../bloc/connections/connections_bloc.dart';
 
 class ConnectedConnections extends StatelessWidget {
   final List<ConnectionRequest> list;
@@ -39,7 +43,11 @@ class ConnectedConnections extends StatelessWidget {
           request: list[index],
           actions: [
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                context
+                    .read<ConnectionsBloc>()
+                    .add(WhatsappIconClicked(list[index].phoneNo));
+              },
               child: Container(
                 width: 40,
                 height: 40,
@@ -49,9 +57,15 @@ class ConnectedConnections extends StatelessWidget {
                 child: SvgPicture.asset("assets/svg/whatsapp_connections.svg"),
               ),
             ),
-            SizedBox(width: 0.03720930233*width,),
+            SizedBox(
+              width: 0.03720930233 * width,
+            ),
             GestureDetector(
-              onTap: () {},
+              onTap: () async {
+                context
+                    .read<ConnectionsBloc>()
+                    .add(PhoneIconClicked(list[index].phoneNo));
+              },
               child: Container(
                 width: 40,
                 height: 40,

@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:attach_club/bloc/search_connections/search_connections_bloc.dart';
 import 'package:attach_club/constants.dart';
@@ -40,6 +41,13 @@ class _SearchConnectionsState extends State<SearchConnections> {
           },
           builder: (context, state) {
             final list = context.read<SearchConnectionsBloc>().resultsList;
+            if(state is SearchConnectionsLoading || state is ConnectionRequestLoading){
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.purple,
+                ),
+              );
+            }
             return Column(
               children: [
                 Container(
@@ -50,30 +58,30 @@ class _SearchConnectionsState extends State<SearchConnections> {
                   ),
                 ),
                 Expanded(
-                  child: (state is SearchConnectionsLoading)
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.purple,
-                          ),
-                        )
-                      : Padding(
+                        child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: horizontalPadding,
                           ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 0.02682403433 * height),
-                                for (var i = 0; i < list.length; i++)
-                                  SearchProfileCard(
-                                    userData: list[i],
-                                  ),
-                                const SizedBox(height: paddingDueToNav),
-                              ],
-                            ),
+                          // SizedBox(height: 0.02682403433 * height),
+                          // const SizedBox(height: paddingDueToNav),
+                          child: ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (context, i) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  top: (i == 0) ? 0.02682403433 * height : 0,
+                                  bottom: (i == list.length - 1)
+                                      ? paddingDueToNav
+                                      : 0,
+                                ),
+                                child: SearchProfileCard(
+                                  userData: list[i],
+                                ),
+                              );
+                            },
                           ),
                         ),
-                ),
+                      ),
                 // ElevatedButton(
                 //   onPressed: () async {
                 //     final currentUser = FirebaseAuth.instance.currentUser;

@@ -33,7 +33,7 @@ class InfoCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                   child: ClipOval(
-                      child: _getProfileImage(userData.profileImageURL),
+                    child: _getProfileImage(userData.profileImageURL),
                   ),
                 ),
                 const SizedBox(
@@ -78,7 +78,10 @@ class InfoCard extends StatelessWidget {
       size: 64,
       color: Colors.black,
     );
-    if(profileImageURL.isEmpty){
+    const loading = CircularProgressIndicator(
+      color: Colors.purple,
+    );
+    if (profileImageURL.isEmpty) {
       return person;
     }
     return Image.network(profileImageURL, fit: BoxFit.fill,
@@ -86,7 +89,7 @@ class InfoCard extends StatelessWidget {
       if (loadingProgress == null) {
         return child;
       } else {
-        return person;
+        return loading;
       }
     }, errorBuilder: (context, error, stackTrace) {
       return person;

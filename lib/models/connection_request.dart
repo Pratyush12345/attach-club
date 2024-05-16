@@ -1,14 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ConnectionRequest {
   final String phoneNo;
   final String status;
-  final String updateTime;
+  final Timestamp updateTime;
   final String uid;
+  final String name;
+  final String profession;
 
   ConnectionRequest({
     required this.phoneNo,
     required this.status,
     required this.updateTime,
     required this.uid,
+    this.name = "",
+    this.profession = "",
   });
 
   Map<String, dynamic> toMap() {
@@ -19,12 +25,18 @@ class ConnectionRequest {
     };
   }
 
-  factory ConnectionRequest.fromMap(Map<String, dynamic> map, String uid) {
+  factory ConnectionRequest.fromMap({
+    required Map<String, dynamic> connectionData,
+    required String uid,
+    required Map<String, dynamic> userData,
+  }) {
     return ConnectionRequest(
-      phoneNo: map["phoneNo"],
-      status: map["status"],
-      updateTime: map["updateTime"],
+      phoneNo: userData["phoneNo"],
+      status: connectionData["status"],
+      updateTime: connectionData["updateTime"],
       uid: uid,
+      name: userData["name"],
+      profession: userData["profession"],
     );
   }
 }

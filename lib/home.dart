@@ -10,6 +10,7 @@ import 'package:attach_club/views/dashboard/dashboard_app_bar.dart';
 import 'package:attach_club/views/search_connections/search_connections.dart';
 import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/views/settings/settings_app_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -48,14 +49,19 @@ class _HomeScreenState extends State<HomeScreen>
     NavTabData(
       label: "Settings",
       assetName: "assets/svg/settings_6_tooth.svg",
-      child: const Settings(),
+      child: const SettingsPage(),
       appBar: getSettingsAppBar,
     ),
   ];
   late AnimationController controller;
   late Animation<Offset> offsetAnimation;
   late Animation<double> maxWidthAnimation;
-  UserData userData = UserData(username: '');
+  UserData userData = UserData(
+    username: '',
+    firstLoginDate: Timestamp.now(),
+    lastLoginDate: Timestamp.now(),
+    lastPaymentDate: Timestamp.now(),
+  );
 
   @override
   void initState() {

@@ -21,7 +21,7 @@ class _QrCodeScreenState extends State<QrCodeScreen>
   int activeTabIndex = 0;
   final MobileScannerController controller = MobileScannerController(
       // formats: [BarcodeFormat.qrCode]
-    // detectionTimeoutMs: 1000,
+      // detectionTimeoutMs: 1000,
       );
   Barcode? _barcode;
   StreamSubscription<Object?>? _subscription;
@@ -43,15 +43,14 @@ class _QrCodeScreenState extends State<QrCodeScreen>
     );
   }
 
-  void _handleBarcode(BarcodeCapture barcodes)async  {
+  void _handleBarcode(BarcodeCapture barcodes) async {
     if (mounted && !isNavigated) {
       isNavigated = true;
       // _barcode = barcodes.barcodes.firstOrNull;
-      await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context){
-          return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue??"");
-        })
-      );
+      await Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue ?? "");
+      }));
     }
   }
 
@@ -82,16 +81,13 @@ class _QrCodeScreenState extends State<QrCodeScreen>
 
     switch (state) {
       case AppLifecycleState.detached:
-      break;
       case AppLifecycleState.hidden:
-      break;
       case AppLifecycleState.paused:
-        return;  
+        return;
       case AppLifecycleState.resumed:
         _subscription = controller.barcodes.listen(_handleBarcode);
-        
+
         unawaited(controller.start());
-      break;
       case AppLifecycleState.inactive:
         unawaited(_subscription?.cancel());
         _subscription = null;
@@ -124,13 +120,20 @@ class _QrCodeScreenState extends State<QrCodeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SwitchCameraButton(controller: controller),
-                  SizedBox(width: 0.03472222222*width,),
-                  ToggleFlashlightButton(controller: controller),
-                ],
+              SizedBox(
+                height: 32,
+                child: (_controller.index == 1)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SwitchCameraButton(controller: controller),
+                          SizedBox(
+                            width: 0.03472222222 * width,
+                          ),
+                          ToggleFlashlightButton(controller: controller),
+                        ],
+                      )
+                    : null,
               ),
               Container(
                 width: 0.6813953488 * width,
@@ -144,7 +147,7 @@ class _QrCodeScreenState extends State<QrCodeScreen>
                     controller: _controller,
                     children: [
                       QrImageView(
-                        data: FirebaseAuth.instance.currentUser?.uid??"null",
+                        data: FirebaseAuth.instance.currentUser?.uid ?? "null",
                         version: QrVersions.auto,
                         size: 0.6813953488 * width,
                         backgroundColor: Colors.white,

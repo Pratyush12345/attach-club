@@ -22,3 +22,8 @@ class ShowSnackBar extends DashboardState {
   @override
   List<Object?> get props => [message];
 }
+
+class DashboardLoading extends DashboardState {
+  @override
+  List<Object?> get props => [];
+}

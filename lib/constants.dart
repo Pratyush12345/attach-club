@@ -21,4 +21,8 @@ const primaryTextColor = Colors.white;
 final secondaryTextColor = Colors.white.withOpacity(0.7);
 final paragraphTextColor = Colors.white.withOpacity(0.5);
 
+const CONNECTION_RECEIVED_STATUS = "Received";
+const CONNECTION_SENT_STATUS = "Sent";
+const CONNECTION_CONNECTED_STATUS = "Connected";
+
 const lorem = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary,";

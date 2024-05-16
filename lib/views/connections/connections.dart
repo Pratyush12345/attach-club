@@ -36,8 +36,24 @@ class _ConnectionsState extends State<Connections>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return BlocBuilder<ConnectionsBloc, ConnectionsState>(
+    return BlocConsumer<ConnectionsBloc, ConnectionsState>(
+      listener: (context, state){
+        if(state is ShowSnackBar){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
+        if(state is ConnectionsLoading || state is ConnectionsInitial){
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.purple,
+            ),
+          );
+        }
         return Column(
           children: [
             Container(
@@ -57,7 +73,7 @@ class _ConnectionsState extends State<Connections>
                         width: (width - 48) / 3,
                         child: const Center(
                           child: Text(
-                            "Connected",
+                            CONNECTION_CONNECTED_STATUS,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -70,7 +86,7 @@ class _ConnectionsState extends State<Connections>
                         width: (width - 48) / 3,
                         child: const Center(
                           child: Text(
-                            "Sent",
+                            CONNECTION_SENT_STATUS,
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -83,7 +99,7 @@ class _ConnectionsState extends State<Connections>
                         width: (width - 48) / 3,
                         child: const Center(
                           child: Text(
-                            "Received",
+                            CONNECTION_RECEIVED_STATUS,
                             style: TextStyle(
                               fontSize: 16,
                             ),

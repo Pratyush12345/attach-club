@@ -31,3 +31,12 @@ class ReviewSubmitted extends ProfileEvent {
   @override
   List<Object?> get props => [selectedStars, name, feedback, userData, profileUid];
 }
+
+class ConnectButtonPressed extends ProfileEvent {
+  final String userUid;
+
+  const ConnectButtonPressed(this.userUid);
+
+  @override
+  List<Object?> get props => [userUid];
+}

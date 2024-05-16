@@ -29,3 +29,13 @@ class ShowSnackBar extends SearchConnectionsState {
   @override
   List<Object> get props => [message];
 }
+
+class ConnectionRequestLoading extends SearchConnectionsState {
+  @override
+  List<Object> get props => [];
+}
+
+class ConnectionRequestSent extends SearchConnectionsState {
+  @override
+  List<Object> get props => [];
+}
