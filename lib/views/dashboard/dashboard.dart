@@ -75,6 +75,7 @@ class _DashboardState extends State<Dashboard> {
           );
         }
         final bloc = context.read<DashboardBloc>();
+        final userData = context.read<UserDataNotifier>().userData;
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,11 +136,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     LinkCard(
                       prefix: Text(
-                        context
-                            .read<UserDataNotifier>()
-                            .userData
-                            .profileClickCount
-                            .toString(),
+                        userData.profileClickCount.toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 24,
@@ -297,9 +294,19 @@ class _DashboardState extends State<Dashboard> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: Image.asset(
-                  "assets/images/greetings.png",
-                  fit: BoxFit.fitWidth,
+                child: GestureDetector(
+                  child: Image.asset(
+                    "assets/images/greetings.png",
+                    fit: BoxFit.fitWidth,
+                  ),
+                  onTap: () {
+                    if (userData.accountType == "premium") {
+                      Navigator.of(context).pushNamed("/greetings");
+                    } else {
+                      Navigator.of(context).pushNamed("/buyPlan");
+                      // bloc.add(const TriggerPG());
+                    }
+                  },
                 ),
               ),
               SizedBox(height: 0.01716738197 * height),

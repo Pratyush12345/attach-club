@@ -56,20 +56,7 @@ class ProfileRepository {
   }
 
   Future<List<Review>> getReviewsList(String? uid) async {
-    final list = <Review>[];
-    final user = _repository.getCurrentUser();
-    final db = FirebaseFirestore.instance;
-    final data = await db
-        .collection("users")
-        .doc(uid ?? user.uid)
-        .collection("review")
-        .get();
-    for (var i in data.docs) {
-      if (i.exists) {
-        list.add(Review.fromJson(i.data()));
-      }
-    }
-    return list;
+    return await _repository.getReviewsList(uid);
   }
 
   Future<void> incrementProfileCount(String uid) async {

@@ -12,6 +12,7 @@ import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/models/product.dart';
+import 'package:attach_club/models/review.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -261,5 +262,22 @@ class CoreRepository {
       return data.value.toString();
     }
     throw Exception("Domain not found");
+  }
+
+  Future<List<Review>> getReviewsList(String? uid) async {
+    final list = <Review>[];
+    final user = getCurrentUser();
+    final db = FirebaseFirestore.instance;
+    final data = await db
+        .collection("users")
+        .doc(uid ?? user.uid)
+        .collection("review")
+        .get();
+    for (var i in data.docs) {
+      if (i.exists) {
+        list.add(Review.fromJson(i.data()));
+      }
+    }
+    return list;
   }
 }
