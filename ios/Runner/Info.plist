@@ -77,6 +77,11 @@
     <key>LSApplicationQueriesSchemes</key>
     <array>
         <string>whatsapp</string>
+        <string>phonepe</string>
+        <string>tez</string>
+        <string>paytmmp</string>
+        <string>bhim</string>
+        <string>credpay</string>
     </array>
 </dict>
 </plist>

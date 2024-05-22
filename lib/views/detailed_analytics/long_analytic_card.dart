@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class LongAnalyticCard extends StatelessWidget {
   final String title;
-  final int number;
+  final String number;
 
   const LongAnalyticCard({
     super.key,
@@ -29,7 +29,7 @@ class LongAnalyticCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 Text(
-                  "$number Star",
+                  number,
                   style: const TextStyle(
                     color: Colors.yellow,
                     fontSize: 28,

@@ -64,7 +64,7 @@ class UserData {
     required this.username,
     this.isActive = true,
     this.isBasicDetailEnabled = true,
-    this.isEverPurchasedPremium = true,
+    this.isEverPurchasedPremium = false,
     this.isLinkEnabled = true,
     this.isOnline = true,
     this.isProductEnabled = true,
@@ -156,7 +156,6 @@ class UserData {
   }
 
   factory UserData.fromJson({required Map<String, dynamic> map, String? uid}) {
-    
     return UserData(
       accountType: map["accountType"],
       age: map["age"],

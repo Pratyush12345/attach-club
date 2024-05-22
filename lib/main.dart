@@ -2,12 +2,16 @@ import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
 import 'package:attach_club/bloc/add_link/add_link_repository.dart';
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
 import 'package:attach_club/bloc/add_service/add_service_repository.dart';
+import 'package:attach_club/bloc/buy_plan/buy_plan_bloc.dart';
+import 'package:attach_club/bloc/buy_plan/buy_plan_repository.dart';
 import 'package:attach_club/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:attach_club/bloc/complete_profile/complete_profile_repository.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/bloc/connections/connections_repository.dart';
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
 import 'package:attach_club/bloc/dashboard/dashboard_repository.dart';
+import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_bloc.dart';
+import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_repository.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_repository.dart';
 import 'package:attach_club/bloc/home/home_bloc.dart';
@@ -27,9 +31,11 @@ import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/firebase_options.dart';
 import 'package:attach_club/views/add_link/add_link.dart';
 import 'package:attach_club/views/add_service/add_service_screen.dart';
+import 'package:attach_club/views/buy_plan/buy_plan.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
 import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
 import 'package:attach_club/views/edit_profile/edit_profile.dart';
+import 'package:attach_club/views/greetings/greetings.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
 import 'package:attach_club/views/profile/profile.dart';
 import 'package:attach_club/views/profile/view_all_products.dart';
@@ -40,7 +46,6 @@ import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/home.dart';
 import 'package:attach_club/views/signup/sign_up.dart';
 import 'package:attach_club/views/splash_screen/SplashScreen.dart';
-import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -155,8 +160,15 @@ class _MyAppState extends State<MyApp> {
             ),
             RepositoryProvider(
               create: (context) => DashboardRepository(
+                  context.read<CoreRepository>(), context.read<Client>()),
+            ),
+            RepositoryProvider(
+              create: (context) => BuyPlanRepository(
+                  context.read<CoreRepository>(), context.read<Client>()),
+            ),
+            RepositoryProvider(
+              create: (context) => DetailedAnalyticsRepository(
                 context.read<CoreRepository>(),
-                context.read<Client>()
               ),
             ),
           ],
@@ -227,8 +239,20 @@ class _MyAppState extends State<MyApp> {
                 create: (context) => SearchConnectionsBloc(
                     context.read<SearchConnectionsRepository>()),
               ),
+              BlocProvider(
+                create: (context) => BuyPlanBloc(
+                  context.read<BuyPlanRepository>(),
+                ),
+              ),
+              BlocProvider(
+                create: (context) => DetailedAnalyticsBloc(
+                  context.read<DetailedAnalyticsRepository>(),
+                ),
+              ),
             ],
             child: MaterialApp(
+              // locale: DevicePreview.locale(context),
+              // builder: DevicePreview.appBuilder,
               title: 'Flutter Demo',
               darkTheme: ThemeData(
                 brightness: Brightness.dark,
@@ -262,7 +286,10 @@ class _MyAppState extends State<MyApp> {
                 "/profile": (context) => const Profile(),
                 "/profile/products": (context) => const ViewAllProducts(),
                 "/qr": (context) => const QrCodeScreen(),
-                "/settings/detailedAnalytics": (context) => const DetailedAnalytics(),
+                "/settings/detailedAnalytics": (context) =>
+                    const DetailedAnalytics(),
+                "/greetings": (context) => const Greetings(),
+                "/buyPlan": (context) => const BuyPlan(),
               },
             ),
           ),
