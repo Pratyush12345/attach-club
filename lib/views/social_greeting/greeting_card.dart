@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:flutter/material.dart';
@@ -14,37 +13,16 @@ class GreetingCard extends StatelessWidget {
 
   ScreenshotController? screenshotController;
   String? imageurl;
-  GreetingCard({super.key, @required this.screenshotController, @required this.imageurl});
+  GreetingCard({super.key, @required this.screenshotController, @required this.imageurl,});
  
 
-  shareWidegt(){
-       screenshotController!.capture(delay: Duration(milliseconds: 10))
-                    .then((capturedImage) async {
-                      Directory? tempDir = await getExternalStorageDirectory();
-                      String tempPath = tempDir!.path;
-                      
-                      String filename = "image${DateTime.now().minute}.jpg";   
-                      String imagePath = '/storage/emulated/0/Download/$filename';
-                      
-                      
-                      //ShowCapturedWidget(context, capturedImage!);
-                      print("path----------$imagePath");
-                      File imageFile = File(imagePath);
-                      
-                      //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
-                      await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-                      
-                      Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
-
-                    }).catchError((onError) {
-                      print(onError);
-                    }); 
-  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+   
      
     return Column(
       children: [

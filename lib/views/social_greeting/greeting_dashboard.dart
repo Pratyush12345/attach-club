@@ -19,6 +19,32 @@ class GreetingDashboard extends StatelessWidget {
 
   ScreenshotController screenshotController = ScreenshotController();
   
+    shareWidegt(){
+      
+       screenshotController!.capture(delay: Duration(milliseconds: 10))
+                    .then((capturedImage) async {
+                      Directory? tempDir = await getExternalStorageDirectory();
+                      String tempPath = tempDir!.path;
+                      
+                      String filename = "image${DateTime.now().minute}.jpg";   
+                      String imagePath = '/storage/emulated/0/Download/$filename';
+                      
+                      
+                      //ShowCapturedWidget(context, capturedImage!);
+                      print("path----------$imagePath");
+                      File imageFile = File(imagePath);
+                      
+                      //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
+                      await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+                      
+                      Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+
+                    }).catchError((onError) {
+                      print(onError);
+                    }); 
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -30,7 +56,7 @@ class GreetingDashboard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: horizontalPadding,
                   ),
-                  child: GreetingCard(imageurl: "https://buffer.com/library/content/images/2023/10/free-images.jpg", screenshotController: screenshotController, ),
+                  child: GreetingCard(imageurl: "https://buffer.com/library/content/images/2023/10/free-images.jpg", screenshotController: screenshotController,  ),
                 ),
                 SizedBox(height: 0.01716738197 * height),
                 SizedBox(width: 0.01716738197 * height),
@@ -49,7 +75,7 @@ class GreetingDashboard extends StatelessWidget {
                           buttonType: ButtonType.ShortButton),
                       CustomButton(
                           onPressed: () {
-                             
+                             shareWidegt();
                           },
                           title: "Share",
                           buttonWidth: 0.4255813953,
