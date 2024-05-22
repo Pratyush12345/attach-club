@@ -43,21 +43,24 @@ class _DashboardBottomSheetState extends State<DashboardBottomSheet> {
           CustomTextField(
             type: TextFieldType.RegularTextField,
             controller: controller,
-            hintText: "00000 00000",
+            hintText: "+91xxxxxxxxxx",
             keyboardType: TextInputType.number,
           ),
           SizedBox(height: 0.03004291845 * height),
           CustomButton(
             onPressed: () {
+              if(controller.text.length == 10){
               Navigator.of(context).pop();
               context.read<DashboardBloc>().add(
                     SendWhatsappMessage(
                       controller.text,
                     ),
                   );
+              }
             },
             title: "Send",
           ),
+          
         ],
       ),
     );

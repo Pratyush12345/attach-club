@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:attach_club/bloc/splash_screen/splash_screen_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'splash_screen_event.dart';
@@ -21,6 +23,7 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
         await Future.delayed(const Duration(milliseconds: 500));
         if (_repository.isUserLoggedIn()) {
           final result = await _coreRepository.checkOnboardingStatus();
+
           if(result){
             return emit(NavigateToDashboard());
           }

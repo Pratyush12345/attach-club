@@ -1,6 +1,7 @@
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/connections/connected_connections.dart';
 import 'package:attach_club/views/connections/recieve_connections.dart';
 import 'package:attach_club/views/connections/sent_connections.dart';
@@ -51,7 +52,8 @@ class _ConnectionsState extends State<Connections>
         }
       },
       builder: (context, state) {
-        if(state is ConnectionsLoading || state is ConnectionsInitial){
+        if((state is ConnectionsLoading || state is ConnectionsInitial ) && !GlobalVariable.isConnectionsBuildOnce){
+          GlobalVariable.isConnectionsBuildOnce = true;
           return const Center(
             child: CircularProgressIndicator(
               color: Colors.purple,

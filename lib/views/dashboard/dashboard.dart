@@ -1,11 +1,14 @@
 import 'dart:math';
-
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
+import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/dashboard/link_card.dart';
+import 'package:attach_club/views/social_greeting/greeting_card.dart';
+import 'package:attach_club/views/social_greeting/greeting_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -67,7 +70,9 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       builder: (context, state) {
-        if (state is DashboardLoading) {
+
+        if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce ) {
+          GlobalVariable.isDashboardBuildOnce = true;
           return const Center(
             child: CircularProgressIndicator(
               color: Colors.purple,
@@ -75,12 +80,13 @@ class _DashboardState extends State<Dashboard> {
           );
         }
         final bloc = context.read<DashboardBloc>();
-        final userData = context.read<UserDataNotifier>().userData;
         return RefreshIndicator(
-          onRefresh: () async {
-            bloc.add(GetData(userData));
+          onRefresh: () async{
+             context.read<HomeBloc>().add(GetUserData());
+             final userData = context.read<UserDataNotifier>().userData;
+             context.read<DashboardBloc>().add(GetData(userData));
+             return Future<void>.delayed(const Duration(seconds: 3));
           },
-          displacement: 30,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +104,28 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
+                      child: Image.network(GlobalVariable.metaData.appBannerLink!, fit: BoxFit.fill,
+                            loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return const SizedBox(
+                              height: 20.0,
+                              width: 20.0,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.purple,
+                                ),
+                              ),
+                            );
+                          }
+                        }, errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
                         "assets/images/dashboard.png",
                         fit: BoxFit.cover,
-                      ),
+                        );
+                        })
+
                     ),
                   ),
                 ),
@@ -130,6 +154,7 @@ class _DashboardState extends State<Dashboard> {
                         width: horizontalPadding - 16,
                       ),
                       LinkCard(
+                        grp: "ANALYTICS",
                         prefix: Text(
                           bloc.connectionsCount.toString(),
                           style: const TextStyle(
@@ -140,8 +165,13 @@ class _DashboardState extends State<Dashboard> {
                         title: "Connections",
                       ),
                       LinkCard(
+                        grp: "ANALYTICS",
                         prefix: Text(
-                          userData.profileClickCount.toString(),
+                          context
+                              .read<UserDataNotifier>()
+                              .userData
+                              .profileViewCount
+                              .toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 24,
@@ -150,6 +180,7 @@ class _DashboardState extends State<Dashboard> {
                         title: "Profile Clicks",
                       ),
                       LinkCard(
+                        grp: "ANALYTICS",
                         prefix: Text(
                           bloc.reviewCount.toString(),
                           style: const TextStyle(
@@ -157,7 +188,7 @@ class _DashboardState extends State<Dashboard> {
                             fontSize: 24,
                           ),
                         ),
-                        title: "Enquiries",
+                        title: "Review",
                       ),
                     ],
                   ),
@@ -188,6 +219,7 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         for (var i in Dashboard.connectData)
                           LinkCard(
+                            grp: "CONNECTED USER",
                             prefix: SvgPicture.asset(
                               i["asset"]!,
                               width: 30,
@@ -295,48 +327,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 SizedBox(height: 0.01716738197 * height),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: horizontalPadding,
-                  ),
-                  child: GestureDetector(
-                    child: Image.asset(
-                      "assets/images/greetings.png",
-                      fit: BoxFit.fitWidth,
-                    ),
-                    onTap: () {
-                      if (userData.accountType == "premium") {
-                        Navigator.of(context).pushNamed("/greetings");
-                      } else {
-                        Navigator.of(context).pushNamed("/buyPlan");
-                        // bloc.add(const TriggerPG());
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 0.01716738197 * height),
-                SizedBox(width: 0.01716738197 * height),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: horizontalPadding,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomButton(
-                          onPressed: () {},
-                          title: "View More",
-                          isDark: true,
-                          buttonWidth: 0.4255813953,
-                          buttonType: ButtonType.ShortButton),
-                      CustomButton(
-                          onPressed: () {},
-                          title: "Share",
-                          buttonWidth: 0.4255813953,
-                          buttonType: ButtonType.ShortButton),
-                    ],
-                  ),
-                ),
+                GreetingDashboard(),
                 const SizedBox(height: paddingDueToNav)
               ],
             ),

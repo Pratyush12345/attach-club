@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
   String accountType;
+  String andrTokenid;
+  String iosTokenid;
   int age;
   String bannerImageURL;
   String city;
@@ -19,6 +21,7 @@ class UserData {
   bool isOnline;
   bool isProductEnabled;
   bool isReviewEnabled;
+  bool isShowProfileImageOnGreeting;
   Timestamp lastLoginDate;
   Timestamp lastPaymentDate;
   String logoImageURL;
@@ -27,6 +30,8 @@ class UserData {
   String pin;
   String profession;
   int profileClickCount;
+  int profileViewCount;
+  int rating;
   String profileImageURL;
   String purchasedPlanCode;
   String state;
@@ -51,6 +56,8 @@ class UserData {
     this.pin = "",
     this.profession = "",
     this.profileClickCount = 0,
+    this.profileViewCount = 0,
+    this.rating = 0,
     this.profileImageURL = "",
     this.purchasedPlanCode = "",
     this.state = "",
@@ -62,6 +69,9 @@ class UserData {
     this.isOnline = true,
     this.isProductEnabled = true,
     this.isReviewEnabled = true,
+    this.isShowProfileImageOnGreeting = true,
+    this.andrTokenid = "",
+    this.iosTokenid = "",
     this.uid,
   });
 
@@ -84,6 +94,7 @@ class UserData {
       "isProductEnabled": isProductEnabled,
       "isReviewEnabled": isReviewEnabled,
       "lastLoginDate": lastLoginDate,
+      "isShowProfileImageOnGreeting" : isShowProfileImageOnGreeting,
       "lastPaymentDate": lastPaymentDate,
       "logoImageURL": logoImageURL,
       "name": name,
@@ -91,10 +102,14 @@ class UserData {
       "pin": pin,
       "profession": profession,
       "profileClickCount": profileClickCount,
+      "profileViewCount": profileViewCount,
+      "rating" : rating,
       "profileImageURL": profileImageURL,
       "purchasedPlanCode": purchasedPlanCode,
       "state": state,
       "username": username,
+      "andrTokenid" : andrTokenid,
+      "iosTokenid" : iosTokenid,
     };
   }
 
@@ -119,6 +134,7 @@ class UserData {
       isOnline: map["isOnline"],
       isProductEnabled: map["isProductEnabled"],
       isReviewEnabled: map["isReviewEnabled"],
+      isShowProfileImageOnGreeting : map["isShowProfileImageOnGreeting"],
       lastLoginDate: map["lastLoginDate"],
       lastPaymentDate: map["lastPaymentDate"],
       logoImageURL: map["logoImageURL"],
@@ -127,10 +143,14 @@ class UserData {
       pin: map["pin"],
       profession: map["profession"],
       profileClickCount: map["profileClickCount"],
+      profileViewCount: map["profileViewCount"],
+      rating: map["rating"],
       profileImageURL: map["profileImageURL"],
       purchasedPlanCode: map["purchasedPlanCode"],
       state: map["state"],
       username: map["username"],
+      andrTokenid: map["andrTokenId"] ?? "",
+      iosTokenid: map["iosTokenId"] ?? "",
       uid: uid,
     );
   }
@@ -174,10 +194,13 @@ class UserData {
       profession: map["profession"],
       profileClickCount: map["profileClickCount"],
       profileImageURL: map["profileImageURL"],
+      rating: map["rating"],
       purchasedPlanCode: map["purchasedPlanCode"],
       state: map["state"],
       username: map["username"],
       uid: uid,
+      andrTokenid: map["andrTokenId"]?? "",
+      iosTokenid: map["iosTokenId"]??"",
     );
   }
 }
