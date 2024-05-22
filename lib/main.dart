@@ -39,7 +39,7 @@ import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
 import 'package:attach_club/views/edit_profile/edit_profile.dart';
 import 'package:attach_club/views/greetings/greetings.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
-import 'package:attach_club/views/notifications.dart';
+import 'package:attach_club/views/notifications/notifications.dart';
 import 'package:attach_club/views/profile/profile.dart';
 import 'package:attach_club/views/profile/view_all_products.dart';
 import 'package:attach_club/views/profile_image/profile_image.dart';
