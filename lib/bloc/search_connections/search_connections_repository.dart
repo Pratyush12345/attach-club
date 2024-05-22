@@ -19,10 +19,12 @@ class SearchConnectionsRepository {
     final response = await client.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
+      log(response.body);
       final List<UserData> list = [];
       for (var i in data.entries) {
         if(i.key == user.uid) continue;
-        list.add(UserData.fromMap(map: i.value, uid: i.key));
+        log(i.key);
+        list.add(UserData.fromJson(map: i.value, uid: i.key));
       }
       return list;
     }
