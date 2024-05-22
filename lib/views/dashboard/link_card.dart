@@ -1,15 +1,18 @@
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'dashboard_bottom_sheet.dart';
 
 class LinkCard extends StatelessWidget {
   final Widget prefix;
   final String title;
-
+  final String grp;
   const LinkCard({
     super.key,
+    required this.grp,
     required this.prefix,
     required this.title,
   });
@@ -20,11 +23,19 @@ class LinkCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: (){
-        showDashboardBottomSheet(context);
+        if(title == "Share on other platforms" && grp == "CONNECTED USER"){
+           String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+           Share.share(text);
+        }
+        else if(grp == "CONNECTED USER"){
+          showDashboardBottomSheet(context); 
+        }
+        
+
       },
       child: Card(
         margin: EdgeInsets.zero,
-        color: const Color(0xFF26293B),
+        color:   grp == "CONNECTED USER" ? const Color(0xFFFFD16A): const Color(0xFF26293B),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -44,10 +55,10 @@ class LinkCard extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       text: title,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
-                        color: primaryTextColor,
+                        color: grp == "CONNECTED USER" ? Colors.black: primaryTextColor,
                       ),
                     ),
                   ),
@@ -59,8 +70,8 @@ class LinkCard extends StatelessWidget {
                     "assets/svg/arrow_up_right.svg",
                     width: 15,
                     height: 15,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
+                    colorFilter: ColorFilter.mode(
+                       grp == "CONNECTED USER" ? Colors.black : Colors.white,
                       BlendMode.srcIn,
                     ),
                   ),

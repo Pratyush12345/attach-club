@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/models/product.dart';
-import 'package:attach_club/models/social_link.dart';
+import 'package:attach_club/models/metaData.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,6 +42,7 @@ class CoreRepository {
     final db = FirebaseFirestore.instance;
     final data = await db.collection("users").doc(currentUser.uid).get();
     if (data.exists) {
+      GlobalVariable.userData = UserData.fromMap(map: data.data()!,uid: currentUser.uid);
       return UserData.fromMap(map: data.data()!,uid: currentUser.uid);
     }
     throw Exception("User data not found");
@@ -243,10 +245,14 @@ class CoreRepository {
   }
 
   Future<void> sendWhatsappMessage(String phoneNumber) async {
+   
+    String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+   
+    print(text);
     var androidUrl =
-        "whatsapp://send?phone=$phoneNumber&text=Hi, I need some help";
+        "whatsapp://send?phone=$phoneNumber&text=$text";
     var iosUrl =
-        "https://wa.me/$phoneNumber?text=${Uri.parse('Hi, I need some help')}";
+        "https://wa.me/$phoneNumber?text=$text}";
     if (Platform.isIOS) {
       await launchUrl(Uri.parse(iosUrl));
     } else {
@@ -262,4 +268,6 @@ class CoreRepository {
     }
     throw Exception("Domain not found");
   }
+
+  
 }

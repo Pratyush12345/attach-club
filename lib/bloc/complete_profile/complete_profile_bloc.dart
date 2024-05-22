@@ -40,6 +40,7 @@ class CompleteProfileBloc
         emit(CompleteProfileInitial());
       } on Exception catch (e) {
         //user data not found
+        log(e.toString());
       }
     });
   }

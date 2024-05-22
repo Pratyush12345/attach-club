@@ -7,6 +7,8 @@ import '../../core/repository/user_data_notifier.dart';
 AppBar getDashboardAppBar(BuildContext context, double height) {
   final top = MediaQuery.of(context).viewInsets.top;
   final userData = context.read<UserDataNotifier>().userData;
+  int hh = DateTime.now().hour;
+  
   return AppBar(
     toolbarHeight: top + 0.080083691 * height,
     flexibleSpace: Align(
@@ -51,9 +53,9 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
                         color: primaryTextColor,
                       ),
                     ),
-                    const Text(
-                      "Good morning!",
-                      style: TextStyle(
+                    Text(
+                      hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: primaryTextColor,

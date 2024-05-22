@@ -3,9 +3,11 @@ import 'dart:developer';
 
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/models/metaData.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart';
 
 class DashboardRepository {
@@ -39,7 +41,16 @@ class DashboardRepository {
   Future<void> sendWhatsappMessage(String phoneNo) async {
     _coreRepository.sendWhatsappMessage(phoneNo);
   }
-
+ 
+  Future<AppMetaData> getMetaData() async {
+    final db = FirebaseDatabase.instance;
+    final data = await db.ref("MetaData").get();
+    if (data.exists) {
+      return AppMetaData.fromMap(data.value as Map);
+    }
+    throw Exception("Meta data not found");
+  }
+  
   Future<List<UserData>> getSuggestedProfile(UserData userData) async {
     // return [];
     final domain = await _coreRepository.getDomain();
