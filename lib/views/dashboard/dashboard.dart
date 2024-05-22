@@ -70,7 +70,6 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       builder: (context, state) {
-
         if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce ) {
           GlobalVariable.isDashboardBuildOnce = true;
           return const Center(

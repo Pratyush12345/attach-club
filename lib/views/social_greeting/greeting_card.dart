@@ -11,152 +11,188 @@ import 'package:share_plus/share_plus.dart';
 
 // ignore: must_be_immutable
 class GreetingCard extends StatelessWidget {
-
   ScreenshotController? screenshotController;
   String? imageurl;
-  GreetingCard({super.key, @required this.screenshotController, @required this.imageurl});
- 
 
-  shareWidegt(){
-       screenshotController!.capture(delay: Duration(milliseconds: 10))
-                    .then((capturedImage) async {
-                      Directory? tempDir = await getExternalStorageDirectory();
-                      String tempPath = tempDir!.path;
-                      
-                      String filename = "image${DateTime.now().minute}.jpg";   
-                      String imagePath = '/storage/emulated/0/Download/$filename';
-                      
-                      
-                      //ShowCapturedWidget(context, capturedImage!);
-                      print("path----------$imagePath");
-                      File imageFile = File(imagePath);
-                      
-                      //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
-                      await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-                      
-                      Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+  GreetingCard(
+      {super.key,
+      @required this.screenshotController,
+      @required this.imageurl});
 
-                    }).catchError((onError) {
-                      print(onError);
-                    }); 
+  shareWidegt() {
+    screenshotController!
+        .capture(delay: Duration(milliseconds: 10))
+        .then((capturedImage) async {
+      Directory? tempDir = await getExternalStorageDirectory();
+      String tempPath = tempDir!.path;
+
+      String filename = "image${DateTime.now().minute}.jpg";
+      String imagePath = '/storage/emulated/0/Download/$filename';
+
+      //ShowCapturedWidget(context, capturedImage!);
+      print("path----------$imagePath");
+      File imageFile = File(imagePath);
+
+      //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
+      await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+
+      Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-     
-    return Column(
-      children: [
-        CachedNetworkImage(
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      imageUrl: imageurl!,
-                      imageBuilder: (context, imageProvider) => Screenshot(
-                        controller: screenshotController!,
-                        child: Container(
-                        width: MediaQuery.of(context).size.width*0.97,
-                        height: MediaQuery.of(context).size.height*0.5,  
-                        
+    final userData = context.read<UserDataNotifier>().userData;
+
+    return GestureDetector(
+      onTap: (){
+        if (userData.accountType == "premium") {
+          Navigator.of(context).pushNamed("/greetings");
+        } else {
+          Navigator.of(context).pushNamed("/buyPlan");
+        }
+      },
+      child: Column(
+        children: [
+          CachedNetworkImage(
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            imageUrl: imageurl!,
+            imageBuilder: (context, imageProvider) => Screenshot(
+              controller: screenshotController!,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.97,
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 80.0,
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,  
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.white,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.topLeft,
+                          child: Icon(
+                            Icons.qr_code_2,
+                            size: 80.0,
+                            color: Colors.black,
                           ),
                         ),
-                        child:  Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 80.0,
-                                 decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(12.0),
-                                          color: Colors.white,),
-                                child: const Align(alignment: Alignment.topLeft,
-                                child: Icon(Icons.qr_code_2, size: 80.0, color: Colors.black,),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Column(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.light_mode_outlined, color: Colors.white,),
-                                          SizedBox(width: 4.0,),
-                                          Text('Powered by Attach Club\ndownload app today', style: TextStyle(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 12.0)),
-                                        ],
-                                      )),
-                                  ),
-                                  const SizedBox(height: 2.0),
-                                  Container(
-                                     height: 30.0,
-                                     decoration: const BoxDecoration(
-                                      color: Colors.white,),
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.call, color: Colors.blueAccent,),
-                                            Text('7985624428', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.wechat_sharp, color: Colors.green,),
-                                            Text('wa.me/+917985624428', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                                        ),
                       ),
                     ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.light_mode_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 4.0,
+                                    ),
+                                    Text(
+                                        'Powered by Attach Club\ndownload app today',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 12.0)),
+                                  ],
+                                )),
+                          ),
+                          const SizedBox(height: 2.0),
+                          Container(
+                            height: 30.0,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.call,
+                                      color: Colors.blueAccent,
+                                    ),
+                                    Text('7985624428',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.wechat_sharp,
+                                      color: Colors.green,
+                                    ),
+                                    Text('wa.me/+917985624428',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-                //     MaterialButton(onPressed: (){
-                  
-                //   screenshotController!.capture(delay: Duration(milliseconds: 10))
-                //     .then((capturedImage) async {
-                //       Directory? tempDir = await getExternalStorageDirectory();
-                //       String tempPath = tempDir!.path;
-                      
-                //       String filename = "image${DateTime.now().minute}.jpg";   
-                //       String imagePath = '/storage/emulated/0/Download/$filename';
-                      
-                      
-                //       //ShowCapturedWidget(context, capturedImage!);
-                //       print("path----------$imagePath");
-                //       File imageFile = File(imagePath);
-                      
-                //       //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
-                //       await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-                      
-                //       Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+          //     MaterialButton(onPressed: (){
 
-                //     }).catchError((onError) {
-                //       print(onError);
-                //     }); 
-                
-                // },
-                // child: Text("Share"),
-                // )
-      ],
+          //   screenshotController!.capture(delay: Duration(milliseconds: 10))
+          //     .then((capturedImage) async {
+          //       Directory? tempDir = await getExternalStorageDirectory();
+          //       String tempPath = tempDir!.path;
+
+          //       String filename = "image${DateTime.now().minute}.jpg";
+          //       String imagePath = '/storage/emulated/0/Download/$filename';
+
+          //       //ShowCapturedWidget(context, capturedImage!);
+          //       print("path----------$imagePath");
+          //       File imageFile = File(imagePath);
+
+          //       //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
+          //       await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+
+          //       Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+
+          //     }).catchError((onError) {
+          //       print(onError);
+          //     });
+
+          // },
+          // child: Text("Share"),
+          // )
+        ],
+      ),
     );
   }
-
 }
