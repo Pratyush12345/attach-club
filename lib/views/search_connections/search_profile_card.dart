@@ -85,7 +85,7 @@ class SearchProfileCard extends StatelessWidget {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      userData.description,
+                                      userData.profession,
                                       style: const TextStyle(
                                         fontSize: 16,
                                       ),
@@ -107,11 +107,11 @@ class SearchProfileCard extends StatelessWidget {
                               right: 10,
                             ),
                             //TODO: Replace with SVG
-                            child: Image.asset(
+                            child: (userData.accountType=="premium")?Image.asset(
                               "assets/images/premium_icon.png",
                               width: 0.06279069767 * width,
                               height: 0.06279069767 * width,
-                            ),
+                            ):null,
                           ),
                         ],
                       )

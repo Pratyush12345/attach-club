@@ -76,264 +76,270 @@ class _DashboardState extends State<Dashboard> {
         }
         final bloc = context.read<DashboardBloc>();
         final userData = context.read<UserDataNotifier>().userData;
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 0.02575107296 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Container(
-                  width: double.infinity,
-                  height: 0.160944206 * height,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+        return RefreshIndicator(
+          onRefresh: () async {
+            bloc.add(GetData(userData));
+          },
+          displacement: 30,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 0.02575107296 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      "assets/images/dashboard.png",
-                      fit: BoxFit.cover,
+                  child: Container(
+                    width: double.infinity,
+                    height: 0.160944206 * height,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 0.02575107296 * height),
-              const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Text(
-                  "Analytics",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: primaryTextColor,
-                  ),
-                ),
-              ),
-              SizedBox(height: 0.01931330472 * height),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Wrap(
-                  spacing: 16,
-                  children: [
-                    // for (var i in analyticsData)
-                    const SizedBox(
-                      width: horizontalPadding - 16,
-                    ),
-                    LinkCard(
-                      prefix: Text(
-                        bloc.connectionsCount.toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                        ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        "assets/images/dashboard.png",
+                        fit: BoxFit.cover,
                       ),
-                      title: "Connections",
                     ),
-                    LinkCard(
-                      prefix: Text(
-                        userData.profileClickCount.toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                        ),
-                      ),
-                      title: "Profile Clicks",
-                    ),
-                    LinkCard(
-                      prefix: Text(
-                        bloc.reviewCount.toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                        ),
-                      ),
-                      title: "Enquiries",
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 0.02575107296 * height),
-              const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Text(
-                  "Connect with people",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: primaryTextColor,
                   ),
                 ),
-              ),
-              SizedBox(height: 0.01931330472 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
+                SizedBox(height: 0.02575107296 * height),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Text(
+                    "Analytics",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: primaryTextColor,
+                    ),
+                  ),
                 ),
-                child: SingleChildScrollView(
+                SizedBox(height: 0.01931330472 * height),
+                SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Wrap(
                     spacing: 16,
                     children: [
-                      for (var i in Dashboard.connectData)
-                        LinkCard(
-                          prefix: SvgPicture.asset(
-                            i["asset"]!,
-                            width: 30,
-                            height: 30,
+                      // for (var i in analyticsData)
+                      const SizedBox(
+                        width: horizontalPadding - 16,
+                      ),
+                      LinkCard(
+                        prefix: Text(
+                          bloc.connectionsCount.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
                           ),
-                          title: i["title"] ?? "title",
+                        ),
+                        title: "Connections",
+                      ),
+                      LinkCard(
+                        prefix: Text(
+                          userData.profileClickCount.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                          ),
+                        ),
+                        title: "Profile Clicks",
+                      ),
+                      LinkCard(
+                        prefix: Text(
+                          bloc.reviewCount.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                          ),
+                        ),
+                        title: "Enquiries",
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 0.02575107296 * height),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Text(
+                    "Connect with people",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: primaryTextColor,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 0.01931330472 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      spacing: 16,
+                      children: [
+                        for (var i in Dashboard.connectData)
+                          LinkCard(
+                            prefix: SvgPicture.asset(
+                              i["asset"]!,
+                              width: 30,
+                              height: 30,
+                            ),
+                            title: i["title"] ?? "title",
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 0.02575107296 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Suggested Profiles",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                        ),
+                      ),
+                      if (bloc.suggestedProfile.length > 5)
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            "View All",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF4285F4),
+                            ),
+                          ),
                         ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 0.02575107296 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Suggested Profiles",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                      ),
-                    ),
-                    if (bloc.suggestedProfile.length > 5)
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          "View All",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Color(0xFF4285F4),
+                SizedBox(height: 0.01716738197 * height),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Wrap(
+                    spacing: 12,
+                    children: [
+                      const SizedBox(width: horizontalPadding - 12),
+                      for (var i = 0;
+                          i < min(5, bloc.suggestedProfile.length);
+                          i++)
+                        if (bloc.suggestedProfile[i].uid != null)
+                          ProfileCard(
+                            name: bloc.suggestedProfile[i].name,
+                            description: bloc.suggestedProfile[i].description,
+                            asset: bloc.suggestedProfile[i].profileImageURL,
+                            selected: 3,
+                            uid: bloc.suggestedProfile[i].uid!,
                           ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 0.01716738197 * height),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Wrap(
-                  spacing: 12,
-                  children: [
-                    const SizedBox(width: horizontalPadding - 12),
-                    for (var i = 0;
-                        i < min(5, bloc.suggestedProfile.length);
-                        i++)
-                      if (bloc.suggestedProfile[i].uid != null)
-                        ProfileCard(
-                          name: bloc.suggestedProfile[i].name,
-                          description: bloc.suggestedProfile[i].description,
-                          asset: bloc.suggestedProfile[i].profileImageURL,
-                          selected: 3,
-                          uid: bloc.suggestedProfile[i].uid!,
-                        ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 0.02575107296 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Social Greetings",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: primaryTextColor,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFFFB743),
-                          borderRadius: BorderRadius.circular(15)),
-                      height: 30,
-                      width: 0.2209302326 * width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/premium.png",
-                            width: 12,
-                            height: 12,
-                          ),
-                          const SizedBox(width: 4),
-                          const Text(
-                            "Premium",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: primaryTextColor,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 0.01716738197 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: GestureDetector(
-                  child: Image.asset(
-                    "assets/images/greetings.png",
-                    fit: BoxFit.fitWidth,
+                    ],
                   ),
-                  onTap: () {
-                    if (userData.accountType == "premium") {
-                      Navigator.of(context).pushNamed("/greetings");
-                    } else {
-                      Navigator.of(context).pushNamed("/buyPlan");
-                      // bloc.add(const TriggerPG());
-                    }
-                  },
                 ),
-              ),
-              SizedBox(height: 0.01716738197 * height),
-              SizedBox(width: 0.01716738197 * height),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
+                SizedBox(height: 0.02575107296 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Social Greetings",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFFFB743),
+                            borderRadius: BorderRadius.circular(15)),
+                        height: 30,
+                        width: 0.2209302326 * width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/images/premium.png",
+                              width: 12,
+                              height: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            const Text(
+                              "Premium",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: primaryTextColor,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomButton(
-                        onPressed: () {},
-                        title: "View More",
-                        isDark: true,
-                        buttonWidth: 0.4255813953,
-                        buttonType: ButtonType.ShortButton),
-                    CustomButton(
-                        onPressed: () {},
-                        title: "Share",
-                        buttonWidth: 0.4255813953,
-                        buttonType: ButtonType.ShortButton),
-                  ],
+                SizedBox(height: 0.01716738197 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: GestureDetector(
+                    child: Image.asset(
+                      "assets/images/greetings.png",
+                      fit: BoxFit.fitWidth,
+                    ),
+                    onTap: () {
+                      if (userData.accountType == "premium") {
+                        Navigator.of(context).pushNamed("/greetings");
+                      } else {
+                        Navigator.of(context).pushNamed("/buyPlan");
+                        // bloc.add(const TriggerPG());
+                      }
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: paddingDueToNav)
-            ],
+                SizedBox(height: 0.01716738197 * height),
+                SizedBox(width: 0.01716738197 * height),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomButton(
+                          onPressed: () {},
+                          title: "View More",
+                          isDark: true,
+                          buttonWidth: 0.4255813953,
+                          buttonType: ButtonType.ShortButton),
+                      CustomButton(
+                          onPressed: () {},
+                          title: "Share",
+                          buttonWidth: 0.4255813953,
+                          buttonType: ButtonType.ShortButton),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: paddingDueToNav)
+              ],
+            ),
           ),
         );
       },
