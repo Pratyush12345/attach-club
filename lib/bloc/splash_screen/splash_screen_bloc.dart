@@ -20,7 +20,7 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
   ) : super(SplashScreenInitial()) {
     on<CheckLoginStatus>((event, emit) async {
       try {
-        await Future.delayed(const Duration(milliseconds: 500));
+        //await Future.delayed(const Duration(milliseconds: 500));
         if (_repository.isUserLoggedIn()) {
           final result = await _coreRepository.checkOnboardingStatus();
 

@@ -1,5 +1,6 @@
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/views/settings/gradient_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ class OtherPages extends StatefulWidget {
     fontSize: 18,
     color: primaryTextColor,
   );
-
 
   const OtherPages({super.key});
 
@@ -145,7 +145,7 @@ class _OtherPagesState extends State<OtherPages> {
             size: 20,
             color: paragraphTextColor,
           ),
-          onTap: (){
+          onTap: () {
             Navigator.of(context).pushNamed("/settings/detailedAnalytics");
           },
         ),
@@ -169,6 +169,27 @@ class _OtherPagesState extends State<OtherPages> {
           },
         ),
         const LineBreak(),
+        if (context.read<UserDataNotifier>().userData.accountType != "premium")
+          ListTile(
+            title: const Text(
+              "Upgrade Your Plan",
+              style: OtherPages._titleStyle,
+            ),
+            subtitle: Text(
+              "Upgrade your plan to get access to amazing features",
+              style: _subTitleStyle,
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 20,
+              color: paragraphTextColor,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed("/buyPlan");
+            },
+          ),
+        if (context.read<UserDataNotifier>().userData.accountType != "premium")
+          const LineBreak(),
         GradientButton(
           title: "Refer to a friend",
           subTitle: "Refer to a friend and earn boogies",

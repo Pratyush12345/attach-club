@@ -1,4 +1,5 @@
 import 'package:attach_club/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,13 +65,18 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 48,
-                child: SvgPicture.asset(
-                  "assets/svg/bell.svg",
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).pushNamed('/notifications');
+                },
+                child: SizedBox(
+                  width: 48,
+                  child: SvgPicture.asset(
+                    "assets/svg/bell.svg",
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),

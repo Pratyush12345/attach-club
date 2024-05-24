@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../core/components/rating.dart';
@@ -18,6 +20,26 @@ class ProfileCard extends StatelessWidget {
     required this.asset,
     required this.uid,
   });
+
+  _getImage(height) {
+    final staticImage = Image.asset(
+      "assets/images/image.jpeg",
+      height: 0.1942060086 * height,
+      width: double.infinity,
+      fit: BoxFit.fill,
+    );
+    if(asset.isEmpty){
+      return staticImage;
+    }
+    return Image.network(
+      asset,
+      fit: BoxFit.fill,
+      height: 0.1942060086 * height,
+      errorBuilder: (context, error, stackTrace) {
+        return staticImage;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +68,7 @@ class ProfileCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  asset,
-                  fit: BoxFit.fill,
-                  height: 0.1942060086 * height,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      "assets/images/image.jpeg",
-                      height: 0.1942060086 * height,
-                      width: double.infinity,
-                      fit: BoxFit.fill,
-                    );
-                  },
-                ),
+                child: _getImage(height),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 4.0),

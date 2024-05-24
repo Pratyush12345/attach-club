@@ -14,6 +14,8 @@ import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_bloc.dart
 import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_repository.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:attach_club/bloc/edit_profile/edit_profile_repository.dart';
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart';
+import 'package:attach_club/bloc/greetings/greetings_repository.dart';
 import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/bloc/home/home_repository.dart';
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
@@ -35,8 +37,9 @@ import 'package:attach_club/views/buy_plan/buy_plan.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
 import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
 import 'package:attach_club/views/edit_profile/edit_profile.dart';
-import 'package:attach_club/views/greetings/greetings.dart';
+import 'package:attach_club/views/social_greeting/greetings.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
+import 'package:attach_club/views/notifications/notifications.dart';
 import 'package:attach_club/views/profile/profile.dart';
 import 'package:attach_club/views/profile/view_all_products.dart';
 import 'package:attach_club/views/profile_image/profile_image.dart';
@@ -81,6 +84,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     client = Client();
+    //context.read<SplashScreenBloc>().add(CheckLoginStatus());
   }
 
   @override
@@ -171,6 +175,9 @@ class _MyAppState extends State<MyApp> {
                 context.read<CoreRepository>(),
               ),
             ),
+            RepositoryProvider(
+              create: (context) => GreetingsRepository(),
+            ),
           ],
           child: MultiBlocProvider(
             providers: [
@@ -249,6 +256,11 @@ class _MyAppState extends State<MyApp> {
                   context.read<DetailedAnalyticsRepository>(),
                 ),
               ),
+              BlocProvider(
+                create: (context) => GreetingsBloc(
+                  context.read<GreetingsRepository>(),
+                ),
+              ),
             ],
             child: MaterialApp(
               // locale: DevicePreview.locale(context),
@@ -290,6 +302,7 @@ class _MyAppState extends State<MyApp> {
                     const DetailedAnalytics(),
                 "/greetings": (context) => const Greetings(),
                 "/buyPlan": (context) => const BuyPlan(),
+                "/notifications": (context) => const Notifications(),
               },
             ),
           ),

@@ -42,6 +42,12 @@ class ToggleFlashlightButton extends StatelessWidget {
               Icons.no_flash,
               color: Colors.grey,
             );
+          case TorchState.auto:
+            return const Icon(
+              size: 32.0,
+              Icons.flash_auto,
+              color: Colors.grey,
+            );
         }
       },
     );

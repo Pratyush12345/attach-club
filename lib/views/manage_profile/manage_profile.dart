@@ -24,14 +24,14 @@ class _ManageProfileState extends State<ManageProfile> {
         title: "Your Links", tab: const AddLink(isInsideManageProfile: true)),
     TabData(
         title: "Product", tab: const AddService(isInsideManageProfile: true)),
-    TabData(title: "Reviews", tab: const Reviews()),
-    TabData(title: "Account", tab: const Account()),
+    // TabData(title: "Reviews", tab: const Reviews()),
+    // TabData(title: "Account", tab: const Account()),
   ];
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
@@ -101,7 +101,8 @@ class _ManageProfileState extends State<ManageProfile> {
               fontSize: 16,
               fontWeight: FontWeight.w400
             ),
-            tabAlignment: TabAlignment.start,
+            // tabAlignment: TabAlignment.start,
+            tabAlignment: TabAlignment.center,
           ),
         ),
         body: SafeArea(

@@ -26,6 +26,7 @@ class Plan {
   });
 
   factory Plan.fromSnapshot(DataSnapshot json) {
+
     return Plan(
       currency: json.child("currency").value.toString(),
       description: json.child("description").value.toString(),

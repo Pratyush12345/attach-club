@@ -34,6 +34,10 @@ class _ConnectionsState extends State<Connections>
     super.dispose();
   }
 
+  Future<void> _onRefresh() async {
+    context.read<ConnectionsBloc>().add(FetchConnections());
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -56,106 +60,109 @@ class _ConnectionsState extends State<Connections>
             ),
           );
         }
-        return Column(
-          children: [
-            Container(
-              width: width,
-              color: const Color(0xFF26293B),
-              child: Center(
-                child: TabBar(
-                  controller: tabController,
-                  indicatorColor: Colors.blue,
-                  labelColor: Colors.white,
-                  tabAlignment: TabAlignment.center,
-                  labelPadding: EdgeInsets.zero,
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child: const Center(
-                          child: Text(
-                            CONNECTION_CONNECTED_STATUS,
-                            style: TextStyle(
-                              fontSize: 16,
+        return RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: Column(
+            children: [
+              Container(
+                width: width,
+                color: const Color(0xFF26293B),
+                child: Center(
+                  child: TabBar(
+                    controller: tabController,
+                    indicatorColor: Colors.blue,
+                    labelColor: Colors.white,
+                    tabAlignment: TabAlignment.center,
+                    labelPadding: EdgeInsets.zero,
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        child: SizedBox(
+                          width: (width - 48) / 3,
+                          child: const Center(
+                            child: Text(
+                              CONNECTION_CONNECTED_STATUS,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child: const Center(
-                          child: Text(
-                            CONNECTION_SENT_STATUS,
-                            style: TextStyle(
-                              fontSize: 16,
+                      Tab(
+                        child: SizedBox(
+                          width: (width - 48) / 3,
+                          child: const Center(
+                            child: Text(
+                              CONNECTION_SENT_STATUS,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child: const Center(
-                          child: Text(
-                            CONNECTION_RECEIVED_STATUS,
-                            style: TextStyle(
-                              fontSize: 16,
+                      Tab(
+                        child: SizedBox(
+                          width: (width - 48) / 3,
+                          child: const Center(
+                            child: Text(
+                              CONNECTION_RECEIVED_STATUS,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              color: const Color(0xFF26293B),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: horizontalPadding, vertical: 13),
-                child: CustomTextField(
-                  type: TextFieldType.RegularTextField,
-                  controller: searchController,
-                  color: const Color(0xFF181B2F),
-                  prefixWidget: const Icon(
-                    Icons.search,
-                    color: Color(0xFF94969F),
+                    ],
                   ),
-                  hintText: "Search name...",
-                  height: 48,
-                  fontSize: 16,
                 ),
               ),
-            ),
-            const SizedBox(height: 22),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                ),
-                child: TabBarView(
-                  controller: tabController,
-                  children: [
-                    ConnectedConnections(
-                      list: context.read<ConnectionsBloc>().connectedList,
+              Container(
+                width: double.infinity,
+                color: const Color(0xFF26293B),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: 13),
+                  child: CustomTextField(
+                    type: TextFieldType.RegularTextField,
+                    controller: searchController,
+                    color: const Color(0xFF181B2F),
+                    prefixWidget: const Icon(
+                      Icons.search,
+                      color: Color(0xFF94969F),
                     ),
-                    SentConnections(
-                      list: context.read<ConnectionsBloc>().sentList,
-                    ),
-                    ReceiveConnections(
-                      list: context.read<ConnectionsBloc>().receivedList,
-                    ),
-                  ],
+                    hintText: "Search name...",
+                    height: 48,
+                    fontSize: 16,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 22),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      ConnectedConnections(
+                        list: context.read<ConnectionsBloc>().connectedList,
+                      ),
+                      SentConnections(
+                        list: context.read<ConnectionsBloc>().sentList,
+                      ),
+                      ReceiveConnections(
+                        list: context.read<ConnectionsBloc>().receivedList,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

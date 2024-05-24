@@ -19,6 +19,13 @@ class ConnectedConnections extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    if (list.isEmpty) {
+      return const Center(
+        child: Text(
+          "No Connections to show",
+        ),
+      );
+    }
     return SingleChildScrollView(
       child: Column(
         children: [

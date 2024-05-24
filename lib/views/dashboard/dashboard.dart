@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
 import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
@@ -53,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     final userData = context.read<UserDataNotifier>().userData;
     context.read<DashboardBloc>().add(GetData(userData));
+    context.read<gbloc.GreetingsBloc>().add(const gbloc.GetGreetings());
   }
 
   @override
@@ -70,7 +72,6 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       builder: (context, state) {
-
         if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce ) {
           GlobalVariable.isDashboardBuildOnce = true;
           return const Center(
@@ -125,7 +126,7 @@ class _DashboardState extends State<Dashboard> {
                         fit: BoxFit.cover,
                         );
                         })
-                      
+
                     ),
                   ),
                 ),
@@ -271,7 +272,7 @@ class _DashboardState extends State<Dashboard> {
                       for (var i = 0;
                           i < min(5, bloc.suggestedProfile.length);
                           i++)
-                        if (bloc.suggestedProfile[i].uid != null)     
+                        if (bloc.suggestedProfile[i].uid != null)
                           ProfileCard(
                             name: bloc.suggestedProfile[i].name,
                             description: bloc.suggestedProfile[i].description,
@@ -327,7 +328,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 SizedBox(height: 0.01716738197 * height),
-                GreetingDashboard(),
+                GreetingDashboard( imagelink:  context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "link" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].link),
                 const SizedBox(height: paddingDueToNav)
               ],
             ),
