@@ -8,10 +8,14 @@ class GreetingsRepository {
     final db = FirebaseFirestore.instance;
     final topicList = await db.collection('socialGreetings').get();
     final List<GreetingTopic> list = [];
+    
+    topicList.docs.map((e) => e.data() );
+
     for(var greetingTopic in topicList.docs) {
       final greeting = await db.collection('socialGreetings').doc(greetingTopic.id).collection('templates').get();
       list.add(GreetingTopic.fromMap(greetingTopic.data(), greeting));
     }
     return list;
   }
+
 }

@@ -22,29 +22,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: BlocListener<SplashScreenBloc, SplashScreenState>(
-        listener: (context, state) {
-          if (state is ShowSnackBar) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
-          }
-          if(state is NavigateToOnboarding){
-            _navigate("/onboard1");
-          }
-          if(state is NavigateToDashboard){
-            _navigate("/home");
-          }
-          if(state is NavigateToSignup){
-            _navigate("/signup");
-          }
-        },
-        child: const Center(
-          child: Text("Splash Screen"),
-        ),
+          listener: (context, state) {
+            if (state is ShowSnackBar) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+            if(state is NavigateToOnboarding){
+              _navigate("/onboard1");
+            }
+            if(state is NavigateToDashboard){
+              _navigate("/home");
+            }
+            if(state is NavigateToSignup){
+              _navigate("/signup");
+            }
+          },
+          child: Center(
+            child: Image.asset("assets/images/splash.png")
+          ),
       ),
     );
   }

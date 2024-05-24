@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
 import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
@@ -32,11 +33,11 @@ class Dashboard extends StatefulWidget {
   // ];
   static const connectData = [
     {
-      "asset": "assets/svg/whatsapp.svg",
+      "asset": "assets/svg/share-whatsapp.svg",
       "title": "Share your profile on whatsapp",
     },
     {
-      "asset": "assets/svg/whatsapp.svg",
+      "asset": "assets/svg/otherPlatforms.svg",
       "title": "Share on other platforms",
     }
   ];
@@ -53,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     final userData = context.read<UserDataNotifier>().userData;
     context.read<DashboardBloc>().add(GetData(userData));
+    context.read<gbloc.GreetingsBloc>().add(const gbloc.GetGreetings());
   }
 
   @override
@@ -326,7 +328,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 SizedBox(height: 0.01716738197 * height),
-                GreetingDashboard(),
+                GreetingDashboard( imagelink:  context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "link" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].link),
                 const SizedBox(height: paddingDueToNav)
               ],
             ),
