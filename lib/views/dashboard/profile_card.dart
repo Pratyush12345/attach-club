@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:attach_club/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/components/rating.dart';
@@ -22,22 +24,42 @@ class ProfileCard extends StatelessWidget {
   });
 
   _getImage(height) {
-    final staticImage = Image.asset(
-      "assets/images/image.jpeg",
+
+    final staticImage = SizedBox(
       height: 0.1942060086 * height,
       width: double.infinity,
-      fit: BoxFit.fill,
+      child: Icon(
+        Icons.person, 
+        size: 0.1242060086 * height,
+      ),
     );
+    
     if(asset.isEmpty){
       return staticImage;
     }
-    return Image.network(
-      asset,
-      fit: BoxFit.fill,
+    return  SizedBox(
       height: 0.1942060086 * height,
-      errorBuilder: (context, error, stackTrace) {
-        return staticImage;
-      },
+      width: double.infinity,
+      child: CachedNetworkImage(
+                  placeholder: (context, url) {
+                    return const SizedBox(
+                                  height: 10.0,
+                                  width: 10.0,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.purple,
+                                    ),
+                                  ),
+                                );
+                  },
+                  imageUrl: asset,
+                  fit: BoxFit.fill,
+                  height: 0.1942060086 * height,
+      
+                  errorWidget: (context, error, stackTrace) {
+                    return staticImage;
+                  },
+          ),
     );
   }
 
@@ -51,6 +73,7 @@ class ProfileCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => Profile(
+              buttonTitle: "My Profile" ,
               uid: uid,
             ),
           ),
@@ -64,6 +87,7 @@ class ProfileCard extends StatelessWidget {
         child: SizedBox(
           width: 0.39069 * width,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(

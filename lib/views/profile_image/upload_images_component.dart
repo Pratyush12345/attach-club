@@ -93,6 +93,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         child: Image.file(
           context.read<ProfileImageBloc>().bannerImage!,
           key: UniqueKey(),
+          fit: BoxFit.fill,
         ),
       );
     } else {

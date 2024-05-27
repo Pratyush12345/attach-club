@@ -12,6 +12,7 @@ part 'signup_state.dart';
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final SignupRepository _repository;
   final CoreRepository _coreRepository;
+  bool isContinuePressed = false;
   String verificationId = "";
   int? resendToken;
 
@@ -36,6 +37,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           codeSent: _codeSent,
           verificationCompleted: event.verificationCompleted,
           resendToken: resendToken,
+          autoRetrieve: _autoRetrieve
         );
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
@@ -75,5 +77,9 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   void _codeSent(String newVerificationId, int? resendToken) async {
     verificationId = newVerificationId;
     resendToken = resendToken;
+  }
+
+  void _autoRetrieve(String newVerificationId) async {
+    verificationId = newVerificationId;
   }
 }

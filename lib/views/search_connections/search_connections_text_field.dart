@@ -24,14 +24,24 @@ class SearchConnectionsTextField extends StatelessWidget {
         type: TextFieldType.RegularTextField,
         controller: controller,
         hintText: "Search name...",
+        
         color: const Color(0xFF181B2F),
         height: 48,
         fontSize: 16,
-        suffixIcon: IconButton(
-          onPressed: () {
+        onSubmitted: (String val) {
+          if(controller.text.isNotEmpty){
             context
                 .read<SearchConnectionsBloc>()
                 .add(SearchTriggered(controller.text));
+          }
+          },
+        suffixIcon: IconButton(
+          onPressed: () {
+           if(controller.text.isNotEmpty){
+            context
+                .read<SearchConnectionsBloc>()
+                .add(SearchTriggered(controller.text));
+          }
           },
           icon: const Icon(
             Icons.search,

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:attach_club/bloc/connections/connections_bloc.dart'as cbloc;
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
 import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
 import 'package:attach_club/bloc/home/home_bloc.dart';
@@ -55,6 +56,7 @@ class _DashboardState extends State<Dashboard> {
     final userData = context.read<UserDataNotifier>().userData;
     context.read<DashboardBloc>().add(GetData(userData));
     context.read<gbloc.GreetingsBloc>().add(const gbloc.GetGreetings());
+    context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
   }
 
   @override
@@ -125,7 +127,8 @@ class _DashboardState extends State<Dashboard> {
                         "assets/images/dashboard.png",
                         fit: BoxFit.cover,
                         );
-                        })
+                        }
+                        )
 
                     ),
                   ),

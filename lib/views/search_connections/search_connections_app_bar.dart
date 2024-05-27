@@ -7,7 +7,7 @@ AppBar getSearchConnectionsAppBar(BuildContext context, double height) {
     backgroundColor: const Color(0xFF26293B),
     toolbarHeight: top + 0.05364806867 * height,
     title: const Text(
-      "Search Connection",
+      "Search Connections",
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w500,

@@ -47,6 +47,7 @@ class ConnectedConnections extends StatelessWidget {
         int index,
       ) {
         return ConnectionCard(
+          page: "Disconnect",
           request: list[index],
           actions: [
             GestureDetector(

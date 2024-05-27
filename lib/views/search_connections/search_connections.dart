@@ -64,7 +64,9 @@ class _SearchConnectionsState extends State<SearchConnections> {
                           ),
                           // SizedBox(height: 0.02682403433 * height),
                           // const SizedBox(height: paddingDueToNav),
-                          child: ListView.builder(
+                          child: 
+                          list.isEmpty? const Center(child: Text("No Data Found"),):
+                          ListView.builder(
                             itemCount: list.length,
                             itemBuilder: (context, i) {
                               return Padding(

@@ -1,3 +1,5 @@
+import 'package:attach_club/bloc/connections/connections_bloc.dart';
+import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/rating.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/profile.dart';
@@ -30,6 +32,7 @@ class SearchProfileCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => Profile(
+              buttonTitle:  context.read<ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == userData.uid) ==-1?  (check) ? "Request Sent" : "Connect": "Connected",
               uid: userData.uid,
             ),
           ),
@@ -127,15 +130,15 @@ class SearchProfileCard extends StatelessWidget {
                       Row(
                         children: [
                           SizedBox(width: 0.04418604651 * width),
-                          const Text(
-                            "3 out of 5 stars",
-                            style: TextStyle(
+                          Text(
+                            "${userData.rating} out of 5 stars",
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(width: 5),
                           Rating(
-                            selected: 3,
+                            selected: userData.rating,
                             width: 0.1465116279 * width,
                           ),
                         ],
@@ -151,14 +154,16 @@ class SearchProfileCard extends StatelessWidget {
                               ),
                               backgroundColor: const Color(0xFF4285F4)),
                           onPressed: () {
+                            if(context.read<ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == userData.uid) ==-1){
                             if (userData.uid != null && !check) {
                               context
                                   .read<SearchConnectionsBloc>()
                                   .add(ConnectButtonClicked(userData.uid!));
                             }
+                            }
                           },
                           child: Text(
-                            (check) ? "Request Sent" : "Connect",
+                            context.read<ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == userData.uid) ==-1?  (check) ? "Request Sent" : "Connect": "Connected",
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,

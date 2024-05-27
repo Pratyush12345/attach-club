@@ -8,10 +8,12 @@ import 'package:flutter/widgets.dart';
 class ConnectionCard extends StatelessWidget {
   final List<Widget> actions;
   final ConnectionRequest request;
+  final String page;
 
   const ConnectionCard({
     super.key,
     required this.request,
+    required this.page,
     this.actions = const [],
   });
 
@@ -23,6 +25,7 @@ class ConnectionCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => Profile(
+              buttonTitle: page ,
               uid: request.uid,
             ),
           ),

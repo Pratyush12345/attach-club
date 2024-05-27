@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final bool isTextArea;
   final TextEditingController controller;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
   final Widget? prefixWidget;
   final bool disabled;
   final Color? color;
@@ -23,6 +24,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.isTextArea = false,
     this.onChanged,
+    this.onSubmitted,
     this.prefixWidget,
     this.disabled = false,
     this.color,
@@ -70,7 +72,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-      width: 0.8883 * width,
+      width: 0.883 * width,
       height: (!widget.isTextArea) ?widget.height:null,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -92,6 +94,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             child: TextField(
               focusNode: _focusNode,
               onChanged: widget.onChanged,
+              onSubmitted: widget.onSubmitted,
               controller: widget.controller,
               maxLines: (widget.isTextArea) ? 3 : 1,
               cursorColor: Colors.white,
@@ -131,22 +134,23 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return Row(
         children: [
           const Padding(
-            padding: EdgeInsets.only(right: 9.0),
+            padding: EdgeInsets.only(right: 4.0),
             child: Icon(
               Icons.phone,
               color: Colors.white,
             ),
           ),
           Text(
-            "91",
+            "+91",
             style: textStyle(primaryTextColor),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            width: 1,
-            color: Colors.white,
-            height: 20,
-          )
+          const SizedBox(width: 4.0,),
+          // Container(
+          //   // margin: const EdgeInsets.symmetric(horizontal: 2.0),
+          //   width: 1,
+          //   color: Colors.white,
+          //   height: 20,
+          // ),
         ],
       );
     } else {

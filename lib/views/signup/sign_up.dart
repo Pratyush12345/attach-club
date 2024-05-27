@@ -69,6 +69,8 @@ class _SignUpState extends State<SignUp> {
               content: Text(state.message),
             ),
           );
+          
+          
         }
         if (state is NavigateToOnboarding) {
           Navigator.of(context).popUntil((route) => false);
@@ -106,6 +108,7 @@ class _SignUpState extends State<SignUp> {
                               type: TextFieldType.PhoneNumberField,
                               controller: controller,
                               keyboardType: TextInputType.number,
+                              
                               onChanged: (_){
                                 setState(() {});
                               },
@@ -126,6 +129,7 @@ class _SignUpState extends State<SignUp> {
                                               verificationFailed,
                                           verificationCompleted:
                                               verificationCompleted,
+
                                         ),
                                       );
                                 },

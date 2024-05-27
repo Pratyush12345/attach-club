@@ -31,7 +31,25 @@ class CircleWaveRouteState extends State<CircleWaveRoute>
       }
     });
   }
-
+ 
+ Align getAalignWidget(double x, double y, String name, String desc, String asset){
+  return Align(
+          alignment: Alignment(x, y),
+          child: SizedBox(
+            height: 100.0,
+            width: 100.0,
+            child: Column(
+              children: [
+                Image.asset(asset,
+                height: 58.0,
+                width: 58.0,
+                ),
+                Text(name, style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold ),),
+                Text(desc, style: const TextStyle(fontSize: 10.0),),
+              ],
+            ),
+          ), );
+ }
   @override
   Widget build(BuildContext context) {
     _animation = Tween(begin: 0.0, end: waveGap).animate(controller)
@@ -56,7 +74,14 @@ class CircleWaveRouteState extends State<CircleWaveRoute>
               color: Colors.white
             ),
           ),
+          
         ),
+        
+        getAalignWidget(-0.7, -0.6, "Sanaya", "I am an artist", "assets/images/person1.png"),
+        getAalignWidget(0.7, -0.3, "Amyra", "I am a shopkeeper", "assets/images/person2.png"),
+        getAalignWidget(-0.7, 0.6, "Vikas", "I am a developer", "assets/images/person3.png"),
+        getAalignWidget(0.9, 0.6, "Neel", "I am a chemist", "assets/images/person4.png"),
+        
       ],
     );
   }

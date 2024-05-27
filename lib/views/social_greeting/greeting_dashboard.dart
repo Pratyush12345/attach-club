@@ -21,7 +21,7 @@ class GreetingDashboard extends StatelessWidget {
   ScreenshotController screenshotController = ScreenshotController();
   
   shareWidget(){
-       screenshotController!.capture(delay: Duration(milliseconds: 10))
+       screenshotController.capture(delay: Duration(milliseconds: 10))
               .then((capturedImage) async {
                 //Directory? tempDir = await getExternalStorageDirectory();
                 //String tempPath = tempDir!.path;
@@ -32,7 +32,8 @@ class GreetingDashboard extends StatelessWidget {
                 //ShowCapturedWidget(context, capturedImage!);
                 print("path----------$imagePath");
                 File imageFile = File(imagePath);
-
+                
+                print(capturedImage);
                 //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
                 await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
 

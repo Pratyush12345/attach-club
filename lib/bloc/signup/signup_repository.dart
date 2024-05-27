@@ -20,16 +20,17 @@ class SignupRepository {
     required int? resendToken,
     required void Function(FirebaseAuthException) verificationFailed,
     required void Function(String, int?) codeSent,
+    required void Function(String) autoRetrieve,
     required void Function(PhoneAuthCredential) verificationCompleted,
   }) async {
     final auth = FirebaseAuth.instance;
 
     await auth.verifyPhoneNumber(
-      phoneNumber: "+91 $phoneNumber",
+      phoneNumber: "+91$phoneNumber",
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeAutoRetrievalTimeout: autoRetrieve,
       forceResendingToken: resendToken
     );
   }
