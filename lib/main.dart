@@ -30,6 +30,7 @@ import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:attach_club/bloc/signup/signup_repository.dart';
 import 'package:attach_club/bloc/splash_screen/splash_screen_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/core/repository/firebase_api.dart';
 import 'package:attach_club/firebase_options.dart';
 import 'package:attach_club/views/add_link/add_link.dart';
 import 'package:attach_club/views/add_service/add_service_screen.dart';
@@ -48,7 +49,7 @@ import 'package:attach_club/views/qr_code/qr_code_screen.dart';
 import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/home.dart';
 import 'package:attach_club/views/signup/sign_up.dart';
-import 'package:attach_club/views/splash_screen/SplashScreen.dart';
+import 'package:attach_club/views/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,12 +60,15 @@ import 'package:provider/provider.dart';
 import 'bloc/splash_screen/splash_screen_bloc.dart';
 import 'core/repository/user_data_notifier.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions().currentPlatform,
   );
+  await FirebaseAPi().initNotifications();
   runApp(
     const MyApp(),
   );
@@ -262,6 +266,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ],
             child: MaterialApp(
+              navigatorKey: navigatorKey,
               // locale: DevicePreview.locale(context),
               // builder: DevicePreview.appBuilder,
               title: 'Flutter Demo',

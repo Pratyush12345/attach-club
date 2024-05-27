@@ -19,6 +19,7 @@ import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CoreRepository {
+  Future<void> uploadFcmToken() async {
+    final user = getCurrentUser();
+    final db = FirebaseFirestore.instance;
+    log("uid: ${user.uid}");
+    final token = await FirebaseMessaging.instance.getToken();
+    await db.collection("users").doc(user.uid).update({"fcm_token": token});
+  }
+
   Future<bool> checkOnboardingStatus() async {
     final db = FirebaseFirestore.instance;
     final currentUser = getCurrentUser();
@@ -43,8 +52,9 @@ class CoreRepository {
     final db = FirebaseFirestore.instance;
     final data = await db.collection("users").doc(currentUser.uid).get();
     if (data.exists) {
-      GlobalVariable.userData = UserData.fromMap(map: data.data()!,uid: currentUser.uid);
-      return UserData.fromMap(map: data.data()!,uid: currentUser.uid);
+      GlobalVariable.userData =
+          UserData.fromMap(map: data.data()!, uid: currentUser.uid);
+      return UserData.fromMap(map: data.data()!, uid: currentUser.uid);
     }
     throw Exception("User data not found");
   }
@@ -246,14 +256,12 @@ class CoreRepository {
   }
 
   Future<void> sendWhatsappMessage(String phoneNumber) async {
-   
-    String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
-   
+    String text =
+        "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+
     print(text);
-    var androidUrl =
-        "whatsapp://send?phone=$phoneNumber&text=$text";
-    var iosUrl =
-        "https://wa.me/$phoneNumber?text=$text}";
+    var androidUrl = "whatsapp://send?phone=$phoneNumber&text=$text";
+    var iosUrl = "https://wa.me/$phoneNumber?text=$text}";
     if (Platform.isIOS) {
       await launchUrl(Uri.parse(iosUrl));
     } else {
