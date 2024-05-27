@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: tabs[_selectedIndex].appBar(context, height),
         // appBar: getAppBar(),
         body: SafeArea(

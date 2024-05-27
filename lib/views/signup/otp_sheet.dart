@@ -37,7 +37,7 @@ class OtpSheet extends StatefulWidget {
 
 class _OtpSheetState extends State<OtpSheet> {
   final controller = TextEditingController();
-
+  
   @override
   void dispose() {
     controller.dispose();
@@ -58,6 +58,10 @@ class _OtpSheetState extends State<OtpSheet> {
                 content: Text(state.message),
               ),
             );
+            context.read<SignupBloc>().isContinuePressed = false;
+            setState(() {
+              
+            });
           }
         },
         child: SizedBox(
@@ -113,8 +117,24 @@ class _OtpSheetState extends State<OtpSheet> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 0.0579 * height),
-                child: CustomButton(
+                child: 
+                 context.read<SignupBloc>().isContinuePressed ?
+                 const  Center(
+                  child: SizedBox(
+                                height: 20.0,
+                                width: 20.0,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ),
+                ):
+                CustomButton(
                   onPressed: () {
+                    context.read<SignupBloc>().isContinuePressed = true;
+                    setState(() {
+                    });
                     context.read<SignupBloc>().add(VerifyOtp(
                           otp: controller.text,
                         ));

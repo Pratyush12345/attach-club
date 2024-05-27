@@ -38,6 +38,7 @@ class ReceiveConnections extends StatelessWidget {
         int index,
       ) {
         return ConnectionCard(
+          page: "Recieved",
           request: list[index],
           actions: [
             GestureDetector(

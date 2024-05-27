@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/globalVariable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -84,13 +88,19 @@ class GreetingCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12.0),
                               color: Colors.white,
                             ),
-                            child: const Align(
+                            child: Align(
                               alignment: Alignment.topLeft,
-                              child: Icon(
-                                Icons.qr_code_2,
-                                size: 80.0,
-                                color: Colors.black,
-                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: QrImageView(
+                                        data: "${GlobalVariable.metaData.webURL}${GlobalVariable.userData.username}",
+                                        version: QrVersions.auto,
+                                        //size: 0.6813953488 * width,
+                                        size: 80.0,
+                                        backgroundColor: Colors.white,
+                                      ),
+                              ), 
+                              
                             ),
                           ),
                         ),
@@ -98,20 +108,21 @@ class GreetingCard extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: Column(
                             children: [
-                              const Padding(
+                               Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.light_mode_outlined,
-                                          color: Colors.white,
-                                        ),
                                         SizedBox(
+                                          height: 24.0,
+                                          width: 24.0,
+                                          child: Image.asset("assets/images/splash.png",)),
+                                        
+                                        const SizedBox(
                                           width: 4.0,
                                         ),
-                                        Text(
+                                        const Text(
                                             'Powered by Attach Club\ndownload app today',
                                             style: TextStyle(
                                                 color: Colors.white,
@@ -126,31 +137,32 @@ class GreetingCard extends StatelessWidget {
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                 ),
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(
+                                        if(GlobalVariable.userData.phoneNo.isNotEmpty)
+                                        const Icon(
                                           Icons.call,
                                           color: Colors.blueAccent,
                                         ),
-                                        Text('7985624428',
-                                            style: TextStyle(
+                                        Text(GlobalVariable.userData.phoneNo,
+                                            style:  const TextStyle(
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold)),
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.w400)),
                                       ],
                                     ),
                                     Row(
                                       children: [
-                                        Icon(
-                                          Icons.wechat_sharp,
-                                          color: Colors.green,
-                                        ),
-                                        Text('wa.me/+917985624428',
-                                            style: TextStyle(
+                                       SvgPicture.asset("assets/svg/share-whatsapp.svg", width: 24.0,height: 24.0,),
+                                       
+                                        Text('wa.me/${GlobalVariable.userData.phoneNo}',
+                                            style: const TextStyle(
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold)),
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.w400)),
                                       ],
                                     ),
                                   ],

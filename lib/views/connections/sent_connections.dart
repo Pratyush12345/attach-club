@@ -40,6 +40,7 @@ class SentConnections extends StatelessWidget {
         int index,
       ) {
         return ConnectionCard(
+          page: "Request Sent",
           request: list[index],
           actions: [
             ElevatedButton(
@@ -50,7 +51,7 @@ class SentConnections extends StatelessWidget {
                     .add(RequestRemoved(list[index]));
               },
               child: const Text(
-                "Remove",
+                "Unsend request",
                 style: TextStyle(
                   color: primaryTextColor,
                 ),

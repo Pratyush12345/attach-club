@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:attach_club/constants.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/profile/profile.dart';
 import 'package:attach_club/views/qr_code/scanner_error_widget.dart';
 import 'package:attach_club/views/qr_code/switch_camera_button.dart';
@@ -49,7 +51,7 @@ class _QrCodeScreenState extends State<QrCodeScreen>
       // _barcode = barcodes.barcodes.firstOrNull;
       await Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
-        return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue ?? "");
+        return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue ?? "", buttonTitle: "Connect" ,);
       }));
     }
   }
@@ -147,7 +149,7 @@ class _QrCodeScreenState extends State<QrCodeScreen>
                     controller: _controller,
                     children: [
                       QrImageView(
-                        data: FirebaseAuth.instance.currentUser?.uid ?? "null",
+                        data: "${GlobalVariable.metaData.webURL}${GlobalVariable.userData.username}",
                         version: QrVersions.auto,
                         size: 0.6813953488 * width,
                         backgroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:developer' as developer;
+import 'package:attach_club/bloc/connections/connections_bloc.dart' as cbloc;
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
@@ -16,10 +17,12 @@ import '../../core/components/text_field.dart';
 
 class Profile extends StatefulWidget {
   final String? uid;
+  final String? buttonTitle;
 
   const Profile({
     super.key,
     this.uid,
+    this.buttonTitle,
   });
 
   @override
@@ -30,12 +33,13 @@ class _ProfileState extends State<Profile> {
   // final nameController = TextEditingController();
   final feedbackController = TextEditingController();
   int selectedStars = 0;
-
+  String buttonTitle = "";
   // UserData userData = UserData(username: '');
 
   @override
   void initState() {
     super.initState();
+    buttonTitle = widget.buttonTitle!;
     final bloc = context.read<ProfileBloc>();
     developer.log(widget.uid.toString());
     if (widget.uid != bloc.uid ||
@@ -58,10 +62,10 @@ class _ProfileState extends State<Profile> {
     final width = MediaQuery.of(context).size.width;
     // return Scaffold();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.read<ProfileBloc>().userData.name),
-        centerTitle: false,
-      ),
+      // appBar: AppBar(
+      //   title: Text(context.read<ProfileBloc>().userData.name),
+      //   centerTitle: false,
+      // ),
       body: SafeArea(
         child: BlocConsumer<ProfileBloc, ProfileState>(
           listener: (context, state) {
@@ -90,11 +94,13 @@ class _ProfileState extends State<Profile> {
             return SingleChildScrollView(
               child: Column(
                 children: [
+                  
                   SizedBox(
                     width: double.infinity,
                     height: 0.3841201717 * height,
                     child: Stack(
                       children: [
+                        
                         ShaderMask(
                           shaderCallback: (Rect bounds) {
                             return const LinearGradient(
@@ -111,6 +117,15 @@ class _ProfileState extends State<Profile> {
                             width: double.infinity,
                             height: 0.3240343348 * height,
                             child: _getBannerImage(userData),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
                           ),
                         ),
                         Align(
@@ -207,14 +222,46 @@ class _ProfileState extends State<Profile> {
                             if (widget.uid != null)
                               CustomButton(
                                 onPressed: () {
-                                  context.read<ProfileBloc>().add(
+                                   if(buttonTitle == "Disconnect"){
+                                      int index = context.read<cbloc.ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == widget.uid);
+                                      if(index!=-1){
+                                      context
+                                      .read<cbloc.ConnectionsBloc>()
+                                      .add(cbloc.RequestRemoved(context.read<cbloc.ConnectionsBloc>().connectedList[index]));
+                                      
+                                      context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
+                                      
+                                      buttonTitle = "Connect";
+                                      setState(() {
+                                        
+                                      });
+                                      }
+                                   }
+                                   else if(buttonTitle == "Connect"){
+                                    context.read<ProfileBloc>().add(
                                         ConnectButtonPressed(
                                           widget.uid!,
                                         ),
                                       );
+                                     buttonTitle = "Request Sent"; 
+                                      context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
+                                     setState(() {
+                                        
+                                      });
+                                   }
+                                   else if(buttonTitle == "Request Sent"){
+                                    
+                                   }
+                                   else if(buttonTitle == "Request Recieved"){
+
+                                   }
+
+
+                                  
                                 },
-                                title: "Connect",
+                                title:  buttonTitle,
                                 buttonWidth: 0.4279069767,
+                    
                               ),
                           ],
                         ),
@@ -482,6 +529,19 @@ class _ProfileState extends State<Profile> {
                   color: primaryTextColor,
                 ),
               ),
+               const SizedBox(height: 8),
+              if(bloc.reviewsList.isEmpty)
+              Center(
+                child: RichText(
+                                  text: TextSpan(
+                                    text: "No reviews found",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: paragraphTextColor,
+                                    ),
+                                  ),
+                                ),
+              ),
               for (var i = 0; i < min(bloc.reviewsList.length, 5); i++)
                 ListTile(
                   title: Text(
@@ -497,7 +557,9 @@ class _ProfileState extends State<Profile> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   trailing: Rating(selected: bloc.reviewsList[i].review),
-                )
+                ),
+
+                const SizedBox(height: 8),
             ],
           )
       ],
@@ -512,11 +574,11 @@ class _ProfileState extends State<Profile> {
     final url = userData.bannerImageURL;
     return Image.network(
       url,
-      fit: BoxFit.cover,
+      fit: BoxFit.fill,
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(
           "assets/images/image.jpeg",
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         );
       },
       loadingBuilder: (context, child, loadingProgress) {
