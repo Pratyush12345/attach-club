@@ -23,6 +23,7 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
         await Future.delayed(const Duration(milliseconds: 500));
         if (_repository.isUserLoggedIn()) {
           final result = await _coreRepository.checkOnboardingStatus();
+          await _coreRepository.uploadFcmToken();
 
           if(result){
             return emit(NavigateToDashboard());

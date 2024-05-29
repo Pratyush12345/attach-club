@@ -56,12 +56,16 @@ dependencies:
   qr_flutter: ^4.1.0
   mobile_scanner: ^5.0.1
   camera: ^0.10.5+9
-  awesome_notifications: ^0.9.3+1
   share_plus:
   cached_network_image: ^3.3.1
   screenshot:
   url_launcher: ^6.2.6
   flutter_cashfree_pg_sdk: ^2.1.1+31
+  firebase_messaging: ^14.9.3
+  flutter_local_notifications: ^17.1.2
+#  awesome_notifications_core: ^0.9.3
+#  awesome_notifications: any
+#  awesome_notifications_fcm: any
 
 dev_dependencies:
   flutter_test:
