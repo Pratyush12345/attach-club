@@ -42,27 +42,32 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
                 width: 6,
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      userData.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: primaryTextColor,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed('/profile');
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        userData.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: primaryTextColor,
+                        ),
                       ),
-                    ),
-                    Text(
-                      hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: primaryTextColor,
-                      ),
-                    )
-                  ],
+                      Text(
+                        hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: primaryTextColor,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               GestureDetector(

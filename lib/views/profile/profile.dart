@@ -29,8 +29,11 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   // final nameController = TextEditingController();
+  @override
+  bool get wantKeepAlive => true;
+
   final feedbackController = TextEditingController();
   int selectedStars = 0;
   String buttonTitle = "";
@@ -58,6 +61,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // return Scaffold();
@@ -215,8 +220,8 @@ class _ProfileState extends State<Profile> {
                                 onPressed: () {},
                                 title: "Save Contact",
                                 assetName: "assets/svg/arrow_up_right.svg",
-                                buttonWidth: 0.4279069767,
-                                doubleSize: 10,
+                                buttonWidth: 0.4379069767,
+                                doubleSize: 15,
                                 isDark: true,
                               ),
                             if (widget.uid != null)
@@ -252,7 +257,7 @@ class _ProfileState extends State<Profile> {
                                    else if(buttonTitle == "Request Sent"){
                                     
                                    }
-                                   else if(buttonTitle == "Request Recieved"){
+                                   else if(buttonTitle == "Received"){
 
                                    }
 

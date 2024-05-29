@@ -17,11 +17,14 @@ class Connections extends StatefulWidget {
   State<Connections> createState() => _ConnectionsState();
 }
 
-class _ConnectionsState extends State<Connections>
-    with SingleTickerProviderStateMixin {
+class _ConnectionsState extends State<Connections> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  
   late TabController tabController;
   final searchController = TextEditingController();
 
+  @override
+  bool get wantKeepAlive => true;
+  
   @override
   void initState() {
     super.initState();
@@ -54,6 +57,8 @@ class _ConnectionsState extends State<Connections>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    
     final width = MediaQuery.of(context).size.width;
     return BlocConsumer<ConnectionsBloc, ConnectionsState>(
       listener: (context, state){

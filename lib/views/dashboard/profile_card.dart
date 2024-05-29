@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/components/rating.dart';
 import '../profile/profile.dart';
@@ -69,11 +71,22 @@ class ProfileCard extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () {
+        String title = "Connect";
+        
+        int index1 = context.read<ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == uid);
+        
+        if(index1 !=-1){
+         title = "Connected";
+        }
+        else{
+          title = context.read<ConnectionsBloc>().sentList.indexWhere((element) => element.uid == uid)!=-1 ? "Request Sent" : 
+          context.read<ConnectionsBloc>().receivedList.indexWhere((element) => element.uid == uid)!=-1 ? "Received" : "Connect";
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Profile(
-              buttonTitle: "My Profile" ,
+              buttonTitle: title,
               uid: uid,
             ),
           ),

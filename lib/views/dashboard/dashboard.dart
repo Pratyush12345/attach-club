@@ -51,11 +51,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixin {
-   @override
+  
+  @override
   bool get wantKeepAlive => true;
+  
   @override
   void initState() {
-    print("---------init intialized----");
     super.initState();
     final userData = context.read<UserDataNotifier>().userData;
     context.read<DashboardBloc>().add(GetData(userData));
@@ -259,7 +260,9 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                       ),
                       if (bloc.suggestedProfile.length > 5)
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            
+                          },
                           child: const Text(
                             "View All",
                             style: TextStyle(
