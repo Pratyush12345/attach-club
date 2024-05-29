@@ -294,7 +294,7 @@ class _MyAppState extends State<MyApp> {
                 "/settings/manageProfile": (context) => const ManageProfile(),
                 "/settings/profilePrivacy": (context) => const ProfilePrivacy(),
                 "/home": (context) => const HomeScreen(),
-                "/profile": (context) => const Profile(),
+                "/profile": (context) => const Profile(buttonTitle: "My Profile",),
                 "/profile/products": (context) => const ViewAllProducts(),
                 "/qr": (context) => const QrCodeScreen(),
                 "/settings/detailedAnalytics": (context) =>

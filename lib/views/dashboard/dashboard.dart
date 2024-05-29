@@ -6,6 +6,7 @@ import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/home.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/dashboard/link_card.dart';
@@ -49,18 +50,23 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixin {
+   @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
+    print("---------init intialized----");
     super.initState();
     final userData = context.read<UserDataNotifier>().userData;
     context.read<DashboardBloc>().add(GetData(userData));
     context.read<gbloc.GreetingsBloc>().add(const gbloc.GetGreetings());
     context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return BlocConsumer<DashboardBloc, DashboardState>(
@@ -91,6 +97,7 @@ class _DashboardState extends State<Dashboard> {
              return Future<void>.delayed(const Duration(seconds: 3));
           },
           child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -1,4 +1,8 @@
+import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
 import 'package:attach_club/bloc/home/home_bloc.dart';
+
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
+import 'package:attach_club/bloc/connections/connections_bloc.dart'as cbloc;
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/nav_tab_data.dart';
@@ -11,7 +15,10 @@ import 'package:attach_club/views/search_connections/search_connections.dart';
 import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/views/settings/settings_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,9 +31,21 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+late ScrollController scrollController;
+
+  
 class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  
   int _selectedIndex = 0;
+
+  final List<Widget> _children = [
+    const Dashboard(),
+    const SearchConnections(),
+    const Connections(),
+    const SettingsPage()
+  ];
+
   final tabs = <NavTabData>[
     NavTabData(
       label: "Home",
@@ -56,6 +75,10 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController controller;
   late Animation<Offset> offsetAnimation;
   late Animation<double> maxWidthAnimation;
+  
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
+
   UserData userData = UserData(
     username: '',
     firstLoginDate: Timestamp.now(),
@@ -85,11 +108,47 @@ class _HomeScreenState extends State<HomeScreen>
         userData = notifier.userData;
       });
     });
+   scrollController = ScrollController();
+   
+
+   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       scrollController.addListener(_scrollListener);
+    });
+     _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _animation = Tween<Offset>(
+      begin: const Offset(0, 0),
+      end: const  Offset(0, 1),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+    void _scrollListener() {
+
+    if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+       _animationController.reverse();
+      });
+    } else if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+        _animationController.forward();
+      });
+    }
+    
   }
 
   @override
   void dispose() {
     controller.dispose();
+     scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+     _animationController.dispose();
+
     //remove notifier listener
     // context.read<UserDataNotifier>().removeListener(_handleUserDataChange);
     super.dispose();
@@ -99,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+   
     maxWidthAnimation = Tween<double>(
       begin: 52,
       end: width - (2 * horizontalPadding) - ((tabs.length - 1) * (52)),
@@ -117,91 +177,99 @@ class _HomeScreenState extends State<HomeScreen>
         body: SafeArea(
           child: Stack(
             children: [
-              SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-                child: tabs[_selectedIndex].child,
+            SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: _children
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 24,
-                  ),
-                  child: Container(
-                    width: width - (2 * horizontalPadding),
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2D4CF9),
-                      borderRadius: BorderRadius.circular(32),
+            ),
+              
+             
+              SlideTransition(
+                position: _animation ,
+                child:  Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 24,
                     ),
-                    child: AnimatedBuilder(
-                      animation: maxWidthAnimation,
-                      builder: (context, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            for (var i = 0; i < tabs.length; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedIndex = i;
-                                    controller.reset();
-                                    controller.forward();
-                                  });
-                                },
-                                child: Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(18),
-                                    color: (i == _selectedIndex)
-                                        ? Colors.black.withOpacity(0.34)
-                                        : Colors.transparent,
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxWidth: maxWidthAnimation.value,
-                                    minWidth: 52,
-                                  ),
-                                  height: 36,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        width: 12,
-                                      ),
-                                      SvgPicture.asset(
-                                        tabs[i].assetName,
-                                        colorFilter: const ColorFilter.mode(
-                                          Colors.white,
-                                          BlendMode.srcIn,
+                    child: Container(
+                      width: width - (2 * horizontalPadding),
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2D4CF9),
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: AnimatedBuilder(
+                        animation: maxWidthAnimation,
+                        builder: (context, _) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              for (var i = 0; i < tabs.length; i++)
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedIndex = i;
+                                      controller.reset();
+                                      controller.forward();
+                                    });
+                                  },
+                                  child: Container(
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color: (i == _selectedIndex)
+                                          ? Colors.black.withOpacity(0.34)
+                                          : Colors.transparent,
+                                    ),
+                                    constraints: BoxConstraints(
+                                      maxWidth: maxWidthAnimation.value,
+                                      minWidth: 52,
+                                    ),
+                                    height: 36,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          width: 12,
                                         ),
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                      if (i == _selectedIndex)
-                                        const SizedBox(width: 4),
-                                      if (i == _selectedIndex)
-                                        Flexible(
-                                          child: Transform.translate(
-                                            offset: offsetAnimation.value,
-                                            child: Text(
-                                              tabs[i].label,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                        SvgPicture.asset(
+                                          tabs[i].assetName,
+                                          colorFilter: const ColorFilter.mode(
+                                            Colors.white,
+                                            BlendMode.srcIn,
+                                          ),
+                                          width: 24,
+                                          height: 24,
+                                        ),
+                                        if (i == _selectedIndex)
+                                          const SizedBox(width: 4),
+                                        if (i == _selectedIndex)
+                                          Flexible(
+                                            child: Transform.translate(
+                                              offset: offsetAnimation.value,
+                                              child: Text(
+                                                tabs[i].label,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      const SizedBox(
-                                        width: 12,
-                                      )
-                                    ],
+                                        const SizedBox(
+                                          width: 12,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )
-                          ],
-                        );
-                      },
+                                )
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

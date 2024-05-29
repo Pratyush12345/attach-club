@@ -14,7 +14,9 @@ class SearchConnections extends StatefulWidget {
   State<SearchConnections> createState() => _SearchConnectionsState();
 }
 
-class _SearchConnectionsState extends State<SearchConnections> {
+class _SearchConnectionsState extends State<SearchConnections> with AutomaticKeepAliveClientMixin {
+   @override
+  bool get wantKeepAlive => true;
   final controller = TextEditingController();
 
   @override
@@ -25,6 +27,7 @@ class _SearchConnectionsState extends State<SearchConnections> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(

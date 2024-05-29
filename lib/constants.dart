@@ -17,7 +17,7 @@ final socialMediaList = <SocialMedia>[
   SocialMedia(imageUrl: "assets/svg/snapchat.svg", name: "Snapchat"),
 ];
 
-const double paddingDueToNav = 110;
+const double paddingDueToNav = 30;
 
 const primaryTextColor = Colors.white;
 final secondaryTextColor = Colors.white.withOpacity(0.7);
