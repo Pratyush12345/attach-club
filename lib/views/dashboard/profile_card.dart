@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../core/components/rating.dart';
 import '../profile/profile.dart';
@@ -13,6 +15,7 @@ class ProfileCard extends StatelessWidget {
   final int selected;
   final String name;
   final String description;
+  final String accountType;
   final String asset;
   final String uid;
 
@@ -21,6 +24,7 @@ class ProfileCard extends StatelessWidget {
     required this.selected,
     required this.name,
     required this.description,
+    required this.accountType,
     required this.asset,
     required this.uid,
   });
@@ -30,9 +34,24 @@ class ProfileCard extends StatelessWidget {
     final staticImage = SizedBox(
       height: 0.1942060086 * height,
       width: double.infinity,
-      child: Icon(
-        Icons.person, 
-        size: 0.1242060086 * height,
+      child: Stack(
+        children: [
+          Center(
+            child: Icon(
+              Icons.person, 
+              size: 0.1242060086 * height,
+            ),
+          ),
+          accountType.toLowerCase() == "premium"?  Align(
+                         alignment: Alignment.bottomLeft,
+                         child :SizedBox(
+                                          height: 40.0,
+                                          width: 40.0,
+                                          child: Image.asset("assets/images/premium_icon.png",
+                                          )),
+                                         
+                        ) : const SizedBox(),
+        ],
       ),
     );
     
@@ -43,16 +62,37 @@ class ProfileCard extends StatelessWidget {
       height: 0.1942060086 * height,
       width: double.infinity,
       child: CachedNetworkImage(
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                        decoration: BoxDecoration(
+                        image: DecorationImage( 
+                         image: imageProvider,
+                         fit: BoxFit.fill,
+                        ),
+                        
+                       ),
+                       child: accountType.toLowerCase() == "premium"?  Align(
+                         alignment: Alignment.bottomLeft,
+                         child :SizedBox(
+                                          height: 40.0,
+                                          width: 40.0,
+                                          child: Image.asset("assets/images/premium_icon.png",
+                                          )),
+                                         
+                        ) : const SizedBox(),
+                        
+                       );
+                     },
                   placeholder: (context, url) {
-                    return const SizedBox(
-                                  height: 10.0,
-                                  width: 10.0,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.purple,
-                                    ),
-                                  ),
-                                );
+                   return Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+                            
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              );
                   },
                   imageUrl: asset,
                   fit: BoxFit.fill,

@@ -6,6 +6,7 @@ import 'package:attach_club/bloc/buy_plan/buy_plan_bloc.dart';
 import 'package:attach_club/bloc/buy_plan/buy_plan_repository.dart';
 import 'package:attach_club/bloc/complete_profile/complete_profile_bloc.dart';
 import 'package:attach_club/bloc/complete_profile/complete_profile_repository.dart';
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/bloc/connections/connections_repository.dart';
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
@@ -24,6 +25,7 @@ import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
 import 'package:attach_club/bloc/profile_image/profile_image_repository.dart';
 import 'package:attach_club/bloc/profile_privacy/profile_privacy_bloc.dart';
 import 'package:attach_club/bloc/profile_privacy/profile_privacy_repository.dart';
+import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/bloc/search_connections/search_connections_bloc.dart';
 import 'package:attach_club/bloc/search_connections/search_connections_repository.dart';
 import 'package:attach_club/bloc/signup/signup_bloc.dart';
@@ -52,6 +54,7 @@ import 'package:attach_club/views/signup/sign_up.dart';
 import 'package:attach_club/views/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -61,6 +64,7 @@ import 'bloc/splash_screen/splash_screen_bloc.dart';
 import 'core/repository/user_data_notifier.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
+
 
 void main() async {
   await dotenv.load();
@@ -98,12 +102,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return ChangeNotifierProvider(
       create: (context) => UserDataNotifier(),
       child: Provider(
         create: (context) => client,
         child: MultiRepositoryProvider(
           providers: [
+            ChangeNotifierProvider(create: (context)=> ChangeScreenProvider(),),
+            ChangeNotifierProvider(create: (context)=> ChangeConnectionScreenProvider(),),
             RepositoryProvider(
               create: (context) => CoreRepository(),
             ),
@@ -182,6 +190,7 @@ class _MyAppState extends State<MyApp> {
               create: (context) => GreetingsRepository(),
             ),
           ],
+          
           child: MultiBlocProvider(
             providers: [
               BlocProvider(

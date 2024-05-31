@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'search_connections_event.dart';
 part 'search_connections_state.dart';
-
+ 
 class SearchConnectionsBloc extends Bloc<SearchConnectionsEvent, SearchConnectionsState> {
   final SearchConnectionsRepository _repository;
   List<UserData> resultsList = [];

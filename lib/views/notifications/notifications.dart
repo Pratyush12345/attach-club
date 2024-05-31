@@ -8,16 +8,14 @@ class Notifications extends StatefulWidget {
   State<Notifications> createState() => _NotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> with AutomaticKeepAliveClientMixin {
+class _NotificationsState extends State<Notifications>  {
 
-  @override
-  bool get wantKeepAlive => true;
+  
 
   @override
   Widget build(BuildContext context) {
     
-    super.build(context);
-
+  
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),

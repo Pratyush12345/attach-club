@@ -1,14 +1,16 @@
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/home.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/connections/connections_bloc.dart';
 
-class ConnectedConnections extends StatelessWidget {
+class ConnectedConnections extends StatefulWidget {
   final List<ConnectionRequest> list;
 
   const ConnectedConnections({
@@ -17,9 +19,45 @@ class ConnectedConnections extends StatelessWidget {
   });
 
   @override
+  State<ConnectedConnections> createState() => _ConnectedConnectionsState();
+}
+
+class _ConnectedConnectionsState extends State<ConnectedConnections> {
+ 
+  ScrollController scrollController = ScrollController();
+  
+   @override
+  void dispose() {
+     scrollController.removeListener(_scrollListener);
+     scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       scrollController.addListener(_scrollListener);
+    });
+    super.initState();
+  }
+
+  void _scrollListener() {
+
+    if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+       animationController.reverse();
+      });
+    } else if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+       animationController.forward();
+      });
+     }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    if (list.isEmpty) {
+    if (widget.list.isEmpty) {
       return const Center(
         child: Text(
           "No Connections to show",
@@ -27,6 +65,7 @@ class ConnectedConnections extends StatelessWidget {
       );
     }
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(
         children: [
           _getListView(width),
@@ -48,13 +87,13 @@ class ConnectedConnections extends StatelessWidget {
       ) {
         return ConnectionCard(
           page: "Disconnect",
-          request: list[index],
+          request: widget.list[index],
           actions: [
             GestureDetector(
               onTap: () {
                 context
                     .read<ConnectionsBloc>()
-                    .add(WhatsappIconClicked(list[index].phoneNo));
+                    .add(WhatsappIconClicked(widget.list[index].phoneNo));
               },
               child: Container(
                 width: 40,
@@ -72,7 +111,7 @@ class ConnectedConnections extends StatelessWidget {
               onTap: () async {
                 context
                     .read<ConnectionsBloc>()
-                    .add(PhoneIconClicked(list[index].phoneNo));
+                    .add(PhoneIconClicked(widget.list[index].phoneNo));
               },
               child: Container(
                 width: 40,
@@ -87,7 +126,7 @@ class ConnectedConnections extends StatelessWidget {
           ],
         );
       },
-      itemCount: list.length,
+      itemCount: widget.list.length,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/rating.dart';
@@ -6,6 +7,7 @@ import 'package:attach_club/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 import '../../bloc/search_connections/search_connections_bloc.dart';
 
@@ -159,6 +161,8 @@ class SearchProfileCard extends StatelessWidget {
                               context
                                   .read<SearchConnectionsBloc>()
                                   .add(ConnectButtonClicked(userData.uid!));
+
+                              Provider.of<ChangeConnectionScreenProvider>(context, listen: false).changeScreenIndex("connections");
                             }
                             }
                           },
@@ -191,7 +195,7 @@ class SearchProfileCard extends StatelessWidget {
       size: 0.2162790698 * width,
     );
     const loading = CircularProgressIndicator(
-      color: Colors.purple,
+      color: Colors.grey,
     );
     return Image.network(
       userData.profileImageURL,

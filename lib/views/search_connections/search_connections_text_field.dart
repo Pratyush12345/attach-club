@@ -28,11 +28,21 @@ class SearchConnectionsTextField extends StatelessWidget {
         color: const Color(0xFF181B2F),
         height: 48,
         fontSize: 16,
+        onChanged: (String val){
+          if(val.isEmpty){
+            context
+                .read<SearchConnectionsBloc>().resultsList = [];
+          }
+        },
         onSubmitted: (String val) {
           if(controller.text.isNotEmpty){
             context
                 .read<SearchConnectionsBloc>()
                 .add(SearchTriggered(controller.text));
+          }
+          else{
+            context
+                .read<SearchConnectionsBloc>().resultsList = [];
           }
           },
         suffixIcon: IconButton(

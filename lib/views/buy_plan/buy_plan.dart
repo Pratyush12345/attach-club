@@ -80,7 +80,9 @@ class _BuyPlanState extends State<BuyPlan> {
           builder: (context, state) {
             if (state is BuyPlanLoading) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.grey,
+                ),
               );
             }
             final list = context.read<BuyPlanBloc>().list;

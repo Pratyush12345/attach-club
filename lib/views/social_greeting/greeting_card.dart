@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class GreetingCard extends StatelessWidget {
@@ -42,25 +43,25 @@ class GreetingCard extends StatelessWidget {
             SizedBox(
                width: width * 0.8837209302,
                height: width * 0.8837209302,
-              child:  imageurl == "link" ? const SizedBox(
-                                height: 20.0,
-                                width: 20.0,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.purple,
-                                  ),
+              child:  imageurl == "link" ? Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+                            
+                                child: Container(
+                                  color: Colors.white,
                                 ),
                               ):
               
               CachedNetworkImage(
                 placeholder: (context, url) {
-                  return const SizedBox(
-                                height: 20.0,
-                                width: 20.0,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.purple,
-                                  ),
+                  return Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+                            
+                                child: Container(
+                                  color: Colors.white,
                                 ),
                               );
                 },

@@ -8,10 +8,13 @@ import 'package:attach_club/core/components/divider.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
+import 'package:attach_club/views/profile/profileShimmerLoader.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:shimmer/shimmer.dart';
 import '../../core/components/rating.dart';
 import '../../core/components/text_field.dart';
 
@@ -43,6 +46,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     buttonTitle = widget.buttonTitle!;
+    context.read<ProfileBloc>().init();
     final bloc = context.read<ProfileBloc>();
     developer.log(widget.uid.toString());
     if (widget.uid != bloc.uid ||
@@ -89,11 +93,12 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
           builder: (context, state) {
             final userData = context.read<ProfileBloc>().userData;
             if (userData.username.isEmpty || state is ProfileLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.purple,
-                ),
-              );
+              // return const Center(
+              //   child: CircularProgressIndicator(
+              //     color: Colors.purple,
+              //   ),
+              // );
+              return const ProfileShimmerLoader();
             }
             final bloc = context.read<ProfileBloc>();
             return SingleChildScrollView(
@@ -139,6 +144,10 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             width: 147,
                             height: 147,
                             decoration: BoxDecoration(
+                              border:  Border.all(
+                                color: Colors.white,
+                                width: 2.5,
+                              ),
                               borderRadius: BorderRadius.circular(73.5),
                             ),
                             child: ClipRRect(
@@ -258,10 +267,10 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     
                                    }
                                    else if(buttonTitle == "Received"){
-
+            
                                    }
-
-
+            
+            
                                   
                                 },
                                 title:  buttonTitle,
@@ -573,30 +582,40 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     //   return ;
     // }
     // return ;
-  }
+  } 
 
   _getBannerImage(UserData userData) {
     final url = userData.bannerImageURL;
-    return Image.network(
-      url,
+    return CachedNetworkImage(
+      imageBuilder: (context, imageProvider) {
+                    return Container(
+                        decoration: BoxDecoration(
+                        image: DecorationImage(
+                         image: imageProvider,
+                         fit: BoxFit.fill,
+                        ),
+                       ));
+                     },
+      imageUrl:  url,
       fit: BoxFit.fill,
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset(
-          "assets/images/image.jpeg",
-          fit: BoxFit.fill,
+      errorWidget: (context, error, stackTrace) {
+        return Image.asset( 
+          "assets/images/banner.jpeg",
+          fit: BoxFit.cover,
         );
       },
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
-        return const Center(
-          child: CircularProgressIndicator(
-            color: Colors.purple,
+      placeholder: (context, child,) {
+        return Shimmer.fromColors(
+          direction: ShimmerDirection.ltr,
+            baseColor:  Colors.grey[800]!,
+            highlightColor: Colors.grey[600]!,
+      
+          child: Container(
+            color: Colors.white,
           ),
         );
       },
-    );
+    ); 
     if (url.isNotEmpty) {
       return Image.network(
         url,
@@ -614,14 +633,25 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   _getProfileImage(UserData userData) {
     final url = userData.profileImageURL;
     if (url.isNotEmpty) {
-      return Image.network(
-        url,
+      return CachedNetworkImage(
+        imageUrl: url,
+        imageBuilder: (context, imageProvider) {
+                    return Container(
+                        decoration: BoxDecoration(
+                        image: DecorationImage(
+                         image: imageProvider,
+                         fit: BoxFit.cover,
+                        ),
+                       ));
+                     },
         fit: BoxFit.cover,
       );
     } else {
       //TODO: Set new default profile image
-      return Image.asset(
-        "assets/images/profile_logo.png",
+      return const Icon(
+        Icons.person, 
+        size: 140,
+        // size: 0.1242060086 * height,
       );
     }
   }

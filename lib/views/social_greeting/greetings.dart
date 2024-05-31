@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Greetings extends StatefulWidget {
   const Greetings({super.key});
@@ -77,7 +78,7 @@ class _GreetingsState extends State<Greetings> {
             if (state is GreetingsLoading || bloc.filteredList.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.purple,
+                  color: Colors.grey,
                 ),
               );
             }
@@ -302,16 +303,25 @@ class _GreetingsState extends State<Greetings> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: CachedNetworkImage(
-                                        placeholder: (context, url) {
-                                          return const SizedBox(
-                                              height: 10.0,
-                                              width: 10.0,
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  color: Colors.purple,
-                                                ),
+                                        imageBuilder: (context, imageProvider) {
+                                          return Container(
+                                              decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fill,
                                               ),
-                                            );
+                                            ));
+                                          },
+                                        placeholder: (context, url) {
+                                          return Shimmer.fromColors(
+                                            direction: ShimmerDirection.ltr,
+                                              baseColor:  Colors.grey[800]!,
+                                              highlightColor: Colors.grey[600]!,
+                                        
+                                            child: Container(
+                                              color: Colors.white,
+                                            ),
+                                          );
                                         },
                                         imageUrl: bloc
                                             .filteredList[selectedTopic]
