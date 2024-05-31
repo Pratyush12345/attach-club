@@ -2,13 +2,15 @@ import 'dart:developer';
 
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/home.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'connection_card.dart';
 
-class SentConnections extends StatelessWidget {
+class SentConnections extends StatefulWidget {
   final List<ConnectionRequest> list;
 
   const SentConnections({
@@ -16,6 +18,43 @@ class SentConnections extends StatelessWidget {
     required this.list,
   });
 
+  @override
+  State<SentConnections> createState() => _SentConnectionsState();
+}
+
+class _SentConnectionsState extends State<SentConnections> {
+  
+    ScrollController scrollController = ScrollController();
+  
+   @override
+  void dispose() {
+     scrollController.removeListener(_scrollListener);
+     scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       scrollController.addListener(_scrollListener);
+    });
+    super.initState();
+  }
+
+  void _scrollListener() {
+
+    if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+       animationController.reverse();
+      });
+    } else if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+       animationController.forward();
+      });
+     }
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -34,20 +73,20 @@ class SentConnections extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: list.length,
+      itemCount: widget.list.length,
       itemBuilder: (
         BuildContext context,
         int index,
       ) {
         return ConnectionCard(
           page: "Request Sent",
-          request: list[index],
+          request: widget.list[index],
           actions: [
             ElevatedButton(
               onPressed: () {
                 context
                     .read<ConnectionsBloc>()
-                    .add(RequestRemoved(list[index]));
+                    .add(RequestRemoved(widget.list[index]));
               },
               child: const Text(
                 "Unsend request",

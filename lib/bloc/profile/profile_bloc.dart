@@ -26,10 +26,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   );
   List<Review> reviewsList = [];
   final ProfileRepository _repository;
-
+  
+  init(){
+   userData = UserData(
+    username: "",
+    firstLoginDate: Timestamp.now(),
+    lastLoginDate: Timestamp.now(),
+    lastPaymentDate: Timestamp.now(),
+  );
+  
+  }
   ProfileBloc(this._repository) : super(ProfileInitial()) {
     on<GetUserData>((event, emit) async {
       try {
+        init();
         if (event.uid != null) {
           await _repository.incrementProfileCount(event.uid!);
         }

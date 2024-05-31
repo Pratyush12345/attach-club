@@ -1,4 +1,5 @@
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
+import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/models/globalVariable.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class Connections extends StatefulWidget {
   const Connections({super.key});
@@ -17,11 +19,14 @@ class Connections extends StatefulWidget {
   State<Connections> createState() => _ConnectionsState();
 }
 
-class _ConnectionsState extends State<Connections>
-    with SingleTickerProviderStateMixin {
+class _ConnectionsState extends State<Connections> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  
   late TabController tabController;
   final searchController = TextEditingController();
 
+  @override
+  bool get wantKeepAlive => true;
+  
   @override
   void initState() {
     super.initState();
@@ -54,6 +59,8 @@ class _ConnectionsState extends State<Connections>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    
     final width = MediaQuery.of(context).size.width;
     return BlocConsumer<ConnectionsBloc, ConnectionsState>(
       listener: (context, state){
@@ -70,7 +77,7 @@ class _ConnectionsState extends State<Connections>
           GlobalVariable.isConnectionsBuildOnce = true;
           return const Center(
             child: CircularProgressIndicator(
-              color: Colors.purple,
+              color: Colors.grey,
             ),
           );
         }
@@ -158,50 +165,54 @@ class _ConnectionsState extends State<Connections>
                 padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPadding,
                 ),
-                child: TabBarView(
-                  controller: tabController,
-                  children: [
-                    RefreshIndicator(
-
-                      onRefresh: () async{
-                        context.read<ConnectionsBloc>().add(FetchConnections());
-                        return Future<void>.delayed(const Duration(seconds: 3));
-                        }, 
-                      child: ListView(
-                        children: [
-                          ConnectedConnections(
-                            list: context.read<ConnectionsBloc>().connectedList,
+                child: Consumer<ChangeScreenProvider>(
+                  builder: (context, model, child) {
+                    return TabBarView(
+                      controller: tabController,
+                      children: [
+                        RefreshIndicator(
+                    
+                          onRefresh: () async{
+                            context.read<ConnectionsBloc>().add(FetchConnections());
+                            return Future<void>.delayed(const Duration(seconds: 3));
+                            }, 
+                          child: ListView(
+                            children: [
+                              ConnectedConnections(
+                                list: context.read<ConnectionsBloc>().connectedList,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    RefreshIndicator(
-                      onRefresh: () async{
-                        context.read<ConnectionsBloc>().add(FetchConnections());
-                        return Future<void>.delayed(const Duration(seconds: 3));
-                        }, 
-                      child: ListView(
-                        children: [
-                          SentConnections(
-                            list: context.read<ConnectionsBloc>().sentList,
+                        ),
+                        RefreshIndicator(
+                          onRefresh: () async{
+                            context.read<ConnectionsBloc>().add(FetchConnections());
+                            return Future<void>.delayed(const Duration(seconds: 3));
+                            }, 
+                          child: ListView(
+                            children: [
+                              SentConnections(
+                                list: context.read<ConnectionsBloc>().sentList,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    RefreshIndicator(
-                      onRefresh: () async{
-                        context.read<ConnectionsBloc>().add(FetchConnections());
-                        return Future<void>.delayed(const Duration(seconds: 3));
-                        }, 
-                      child: ListView(
-                        children: [
-                          ReceiveConnections(
-                            list: context.read<ConnectionsBloc>().receivedList,
+                        ),
+                        RefreshIndicator(
+                          onRefresh: () async{
+                            context.read<ConnectionsBloc>().add(FetchConnections());
+                            return Future<void>.delayed(const Duration(seconds: 3));
+                            }, 
+                          child: ListView(
+                            children: [
+                              ReceiveConnections(
+                                list: context.read<ConnectionsBloc>().receivedList,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      ],
+                    );
+                  }
                 ),
               ),
             ),

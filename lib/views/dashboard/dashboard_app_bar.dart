@@ -1,4 +1,5 @@
 import 'package:attach_club/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,27 +43,32 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
                 width: 6,
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      userData.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: primaryTextColor,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed('/profile');
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        userData.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: primaryTextColor,
+                        ),
                       ),
-                    ),
-                    Text(
-                      hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: primaryTextColor,
-                      ),
-                    )
-                  ],
+                      Text(
+                        hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: primaryTextColor,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               GestureDetector(
@@ -103,7 +109,7 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
 
 _getProfileImage(String url) {
   const loading = CircularProgressIndicator(
-    color: Colors.purple,
+    color: Colors.grey,
   );
   const person = Icon(
     Icons.person,
@@ -113,17 +119,23 @@ _getProfileImage(String url) {
   if(url.isEmpty){
     return person;
   }
-  return Image.network(
-    url,
+  return CachedNetworkImage(
+    imageUrl:  url,
+    imageBuilder: (context, imageProvider) {
+                    return Container(
+                        decoration: BoxDecoration(
+                        image: DecorationImage(
+                         image: imageProvider,
+                         fit: BoxFit.fill,
+                        ),
+                       ));
+                     },
     fit: BoxFit.fill,
-    loadingBuilder: (context, child, loadingProgress) {
-      if (loadingProgress == null) {
-        return child;
-      } else {
+    placeholder: (context, child, ) {
+      print("profile placholder-------------------");
         return loading;
-      }
     },
-    errorBuilder: (context, error, stackTrace) {
+    errorWidget: (context, error, stackTrace) {
       return person;
     },
   );

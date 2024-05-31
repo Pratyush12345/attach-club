@@ -1,17 +1,56 @@
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/home.dart';
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ReceiveConnections extends StatelessWidget {
+class ReceiveConnections extends StatefulWidget {
   final List<ConnectionRequest> list;
 
   const ReceiveConnections({
     super.key,
     required this.list,
   });
+
+  @override
+  State<ReceiveConnections> createState() => _ReceiveConnectionsState();
+}
+
+class _ReceiveConnectionsState extends State<ReceiveConnections> {
+  
+  
+    ScrollController scrollController = ScrollController();
+  
+   @override
+  void dispose() {
+     scrollController.removeListener(_scrollListener);
+     scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       scrollController.addListener(_scrollListener);
+    });
+    super.initState();
+  }
+
+  void _scrollListener() {
+
+    if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+       animationController.reverse();
+      });
+    } else if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+       animationController.forward();
+      });
+     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +71,20 @@ class ReceiveConnections extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: list.length,
+      itemCount: widget.list.length,
       itemBuilder: (
         BuildContext context,
         int index,
       ) {
         return ConnectionCard(
-          page: "Recieved",
-          request: list[index],
+          page: "Received",
+          request: widget.list[index],
           actions: [
             GestureDetector(
               onTap: () {
                 context
                     .read<ConnectionsBloc>()
-                    .add(RequestRejected(list[index]));
+                    .add(RequestRejected(widget.list[index]));
               },
               child: Container(
                 width: 0.1860465116 * width,

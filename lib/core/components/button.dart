@@ -6,7 +6,7 @@ class CustomButton extends StatelessWidget {
   static const textStyle = TextStyle(
     color: primaryTextColor,
     fontSize: 18,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w400,
   );
 
   final bool isDark;
@@ -79,7 +79,7 @@ class CustomButton extends StatelessWidget {
           ),
           if (assetName != null)
             Padding(
-              padding: EdgeInsets.only(left: 0.01 * width),
+              padding: EdgeInsets.only(left: 1.8),
               child: SvgPicture.asset(
                 colorFilter:
                     const ColorFilter.mode(Colors.white, BlendMode.srcIn),

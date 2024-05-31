@@ -34,6 +34,8 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
@@ -92,4 +94,5 @@ class _NotificationsState extends State<Notifications> {
       ),
     );
   }
+
 }
