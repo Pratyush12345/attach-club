@@ -32,3 +32,8 @@ class ShowSnackBar extends SplashScreenState {
   @override
   List<Object?> get props => [message];
 }
+
+class NavigateToVerifyPhone extends SplashScreenState {
+  @override
+  List<Object?> get props => [];
+}

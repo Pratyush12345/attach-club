@@ -48,3 +48,8 @@ class ShowBottomSheetSnackBar extends SignupState {
   List<Object?> get props => [message];
 
 }
+
+class NavigateToPhoneVerification extends SignupState {
+  @override
+  List<Object?> get props => [];
+}

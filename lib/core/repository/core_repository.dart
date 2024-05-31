@@ -30,7 +30,6 @@ class CoreRepository {
   Future<void> uploadFcmToken() async {
     final user = getCurrentUser();
     final db = FirebaseFirestore.instance;
-    log("uid: ${user.uid}");
     final token = await FirebaseMessaging.instance.getToken();
     await db.collection("users").doc(user.uid).update({"fcm_token": token});
   }
@@ -294,4 +293,42 @@ class CoreRepository {
     }
     return list;
   }
+
+  Future<void> sendOtp({
+    required String phoneNumber,
+    required int? resendToken,
+    required void Function(FirebaseAuthException) verificationFailed,
+    required void Function(String, int?) codeSent,
+    required void Function(String) autoRetrieve,
+    required void Function(PhoneAuthCredential) verificationCompleted,
+  }) async {
+    final auth = FirebaseAuth.instance;
+
+    await auth.verifyPhoneNumber(
+        phoneNumber: "+91$phoneNumber",
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: autoRetrieve,
+        forceResendingToken: resendToken);
+  }
+
+  Future<UserCredential> verifyOtp(
+    String verificationId,
+    String otp,
+  ) async {
+    final auth = FirebaseAuth.instance;
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+    return await auth.signInWithCredential(credential);
+  }
+
+  Future<void> updatePhoneNo(String phoneNo) async {
+    final user = getCurrentUser();
+    final db = FirebaseFirestore.instance;
+    await db.collection("users").doc(user.uid).update({"phoneNo": phoneNo});
+  }
+
 }

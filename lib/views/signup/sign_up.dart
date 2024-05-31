@@ -60,8 +60,11 @@ class _SignUpState extends State<SignUp> {
     final height = size.height;
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
-        if (state is GoogleLoginSuccess || state is PhoneVerificationSuccess) {
+        if (state is PhoneVerificationSuccess) {
           context.read<SignupBloc>().add(CheckOnboardingStatus());
+        }
+        if (state is GoogleLoginSuccess) {
+          context.read<SignupBloc>().add(const CheckPhoneNumberValidity());
         }
         if (state is ShowSnackBar) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -69,8 +72,6 @@ class _SignUpState extends State<SignUp> {
               content: Text(state.message),
             ),
           );
-          
-          
         }
         if (state is NavigateToOnboarding) {
           Navigator.of(context).popUntil((route) => false);
@@ -79,6 +80,10 @@ class _SignUpState extends State<SignUp> {
         if (state is NavigateToDashboard) {
           Navigator.of(context).popUntil((route) => false);
           Navigator.of(context).pushNamed("/home");
+        }
+        if (state is NavigateToPhoneVerification) {
+          Navigator.of(context).popUntil((route) => false);
+          Navigator.of(context).pushNamed("/verifyPhone");
         }
       },
       child: Scaffold(
@@ -108,8 +113,7 @@ class _SignUpState extends State<SignUp> {
                               type: TextFieldType.PhoneNumberField,
                               controller: controller,
                               keyboardType: TextInputType.number,
-                              
-                              onChanged: (_){
+                              onChanged: (_) {
                                 setState(() {});
                               },
                             ),
@@ -121,7 +125,10 @@ class _SignUpState extends State<SignUp> {
                                 title: "Proceed",
                                 onPressed: () {
                                   showOtpBottomSheet(
-                                      context, resendOtp, controller.text);
+                                    context,
+                                    resendOtp,
+                                    controller.text,
+                                  );
                                   context.read<SignupBloc>().add(
                                         PhoneVerificationTriggered(
                                           phoneNumber: controller.text,
@@ -129,7 +136,6 @@ class _SignUpState extends State<SignUp> {
                                               verificationFailed,
                                           verificationCompleted:
                                               verificationCompleted,
-
                                         ),
                                       );
                                 },

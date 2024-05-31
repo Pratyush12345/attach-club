@@ -1,15 +1,10 @@
-part of 'signup_bloc.dart';
+part of 'verify_phone_bloc.dart';
 
-abstract class SignupEvent extends Equatable {
-  const SignupEvent();
+sealed class VerifyPhoneEvent extends Equatable {
+  const VerifyPhoneEvent();
 }
 
-class GoogleLoginTriggered extends SignupEvent {
-  @override
-  List<Object?> get props => [];
-}
-
-class PhoneVerificationTriggered extends SignupEvent {
+class PhoneVerificationTriggered extends VerifyPhoneEvent {
   final String phoneNumber;
   final void Function(FirebaseAuthException) verificationFailed;
   final void Function(PhoneAuthCredential) verificationCompleted;
@@ -24,7 +19,7 @@ class PhoneVerificationTriggered extends SignupEvent {
   List<Object?> get props => [phoneNumber];
 }
 
-class VerifyOtp extends SignupEvent {
+class VerifyOtp extends VerifyPhoneEvent {
   final String otp;
 
   const VerifyOtp({
@@ -35,15 +30,7 @@ class VerifyOtp extends SignupEvent {
   List<Object?> get props => [otp];
 }
 
-class CheckOnboardingStatus extends SignupEvent {
-  @override
-  List<Object?> get props => [];
-}
-
-class CheckPhoneNumberValidity extends SignupEvent {
-
-  const CheckPhoneNumberValidity();
-
+class CheckOnboardingStatus extends VerifyPhoneEvent {
   @override
   List<Object?> get props => [];
 }

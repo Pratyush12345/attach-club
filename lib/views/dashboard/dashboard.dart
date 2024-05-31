@@ -1,8 +1,9 @@
 import 'dart:math';
-import 'package:attach_club/bloc/connections/connections_bloc.dart'as cbloc;
+import 'package:attach_club/bloc/connections/connections_bloc.dart' as cbloc;
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
-import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart' as gbloc;
 import 'package:attach_club/bloc/home/home_bloc.dart';
+import 'package:attach_club/bloc/profile/profile_bloc.dart' as profileBloc;
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
@@ -57,6 +58,9 @@ class _DashboardState extends State<Dashboard> {
     context.read<DashboardBloc>().add(GetData(userData));
     context.read<gbloc.GreetingsBloc>().add(const gbloc.GetGreetings());
     context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
+    context
+        .read<profileBloc.ProfileBloc>()
+        .add(const profileBloc.GetUserData());
   }
 
   @override
@@ -74,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
         }
       },
       builder: (context, state) {
-        if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce ) {
+        if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce) {
           GlobalVariable.isDashboardBuildOnce = true;
           return const Center(
             child: CircularProgressIndicator(
@@ -84,11 +88,11 @@ class _DashboardState extends State<Dashboard> {
         }
         final bloc = context.read<DashboardBloc>();
         return RefreshIndicator(
-          onRefresh: () async{
-             context.read<HomeBloc>().add(GetUserData());
-             final userData = context.read<UserDataNotifier>().userData;
-             context.read<DashboardBloc>().add(GetData(userData));
-             return Future<void>.delayed(const Duration(seconds: 3));
+          onRefresh: () async {
+            context.read<HomeBloc>().add(GetUserData());
+            final userData = context.read<UserDataNotifier>().userData;
+            context.read<DashboardBloc>().add(GetData(userData));
+            return Future<void>.delayed(const Duration(seconds: 3));
           },
           child: SingleChildScrollView(
             child: Column(
@@ -106,8 +110,10 @@ class _DashboardState extends State<Dashboard> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(GlobalVariable.metaData.appBannerLink!, fit: BoxFit.fill,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                            GlobalVariable.metaData.appBannerLink!,
+                            fit: BoxFit.fill,
                             loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
                             return child;
@@ -124,13 +130,10 @@ class _DashboardState extends State<Dashboard> {
                           }
                         }, errorBuilder: (context, error, stackTrace) {
                           return Image.asset(
-                        "assets/images/dashboard.png",
-                        fit: BoxFit.cover,
-                        );
-                        }
-                        )
-
-                    ),
+                            "assets/images/dashboard.png",
+                            fit: BoxFit.cover,
+                          );
+                        })),
                   ),
                 ),
                 SizedBox(height: 0.02575107296 * height),
@@ -331,7 +334,15 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 SizedBox(height: 0.01716738197 * height),
-                GreetingDashboard( imagelink:  context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "link" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].link),
+                GreetingDashboard(
+                    imagelink:
+                        context.read<gbloc.GreetingsBloc>().filteredList.isEmpty
+                            ? "link"
+                            : context
+                                .read<gbloc.GreetingsBloc>()
+                                .filteredList[0]
+                                .templates[0]
+                                .link),
                 const SizedBox(height: paddingDueToNav)
               ],
             ),

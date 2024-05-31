@@ -56,12 +56,6 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController controller;
   late Animation<Offset> offsetAnimation;
   late Animation<double> maxWidthAnimation;
-  UserData userData = UserData(
-    username: '',
-    firstLoginDate: Timestamp.now(),
-    lastLoginDate: Timestamp.now(),
-    lastPaymentDate: Timestamp.now(),
-  );
 
   @override
   void initState() {
@@ -76,15 +70,6 @@ class _HomeScreenState extends State<HomeScreen>
     ).animate(controller);
     controller.forward();
     context.read<HomeBloc>().add(GetUserData());
-
-    final notifier = context.read<UserDataNotifier>();
-    notifier.addListener(() {
-      if (!mounted) return;
-      setState(() {
-        final notifier = context.read<UserDataNotifier>();
-        userData = notifier.userData;
-      });
-    });
   }
 
   @override

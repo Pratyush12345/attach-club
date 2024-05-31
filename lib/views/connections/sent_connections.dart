@@ -45,7 +45,6 @@ class SentConnections extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                log("clicked");
                 context
                     .read<ConnectionsBloc>()
                     .add(RequestRemoved(list[index]));
