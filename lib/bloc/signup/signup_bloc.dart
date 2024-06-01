@@ -22,7 +22,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   ) : super(SignupInitial()) {
     on<GoogleLoginTriggered>((event, emit) async {
       try {
-        await _repository.signInWithGoogle();
+        final check = await _repository.signInWithGoogle();
         emit(GoogleLoginSuccess());
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
@@ -30,7 +30,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     });
     on<PhoneVerificationTriggered>((event, emit) async {
       try {
-        log("proceed clicked");
         await _repository.sendOtp(
           phoneNumber: event.phoneNumber,
           verificationFailed: event.verificationFailed,
@@ -61,17 +60,29 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       }
     });
     on<CheckOnboardingStatus>((event, emit) async {
-      try {
-        final result = await _coreRepository.checkOnboardingStatus();
-        if (result) {
-          emit(NavigateToDashboard());
-        } else {
-          emit(NavigateToOnboarding());
-        }
-      } on Exception catch (e) {
-        emit(ShowSnackBar(e.toString()));
+      _checkOnboardingStatus(emit);
+    });
+    on<CheckPhoneNumberValidity>((event, emit) async {
+      final userData = await _coreRepository.getUserData();
+      if(userData.phoneNo.isEmpty){
+        emit(NavigateToPhoneVerification());
+      }else{
+        _checkOnboardingStatus(emit);
       }
     });
+  }
+
+  void _checkOnboardingStatus(Emitter<SignupState> emit) async {
+    try {
+      final result = await _coreRepository.checkOnboardingStatus();
+      if (result) {
+        emit(NavigateToDashboard());
+      } else {
+        emit(NavigateToOnboarding());
+      }
+    } on Exception catch (e) {
+      emit(ShowSnackBar(e.toString()));
+    }
   }
 
   void _codeSent(String newVerificationId, int? resendToken) async {

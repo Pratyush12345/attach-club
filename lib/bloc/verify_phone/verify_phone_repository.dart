@@ -1,24 +1,11 @@
-import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class SignupRepository {
+import '../../core/repository/core_repository.dart';
+
+class VerifyPhoneRepository {
   final CoreRepository _repository;
 
-  SignupRepository(this._repository);
-
-  Future<UserCredential> signInWithGoogle() async {
-    final googleUser = await GoogleSignIn().signIn();
-
-    final googleAuth = await googleUser?.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
+  VerifyPhoneRepository(this._repository);
 
   Future<void> sendOtp({
     required String phoneNumber,
@@ -42,6 +29,20 @@ class SignupRepository {
     String verificationId,
     String otp,
   ) async {
-    return await _repository.verifyOtp(verificationId, otp);
+    final auth = FirebaseAuth.instance;
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+    final creds =  await auth.currentUser!.linkWithCredential(credential);
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser!=null && currentUser.phoneNumber!=null){
+      await _repository.updatePhoneNo(currentUser.phoneNumber!);
+    }
+    return creds;
+  }
+
+  Future<bool> checkOnboardingStatus() async {
+    return await _repository.checkOnboardingStatus();
   }
 }

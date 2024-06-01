@@ -59,9 +59,7 @@ class _OtpSheetState extends State<OtpSheet> {
               ),
             );
             context.read<SignupBloc>().isContinuePressed = false;
-            setState(() {
-              
-            });
+            setState(() {});
           }
         },
         child: SizedBox(
@@ -133,8 +131,7 @@ class _OtpSheetState extends State<OtpSheet> {
                 CustomButton(
                   onPressed: () {
                     context.read<SignupBloc>().isContinuePressed = true;
-                    setState(() {
-                    });
+                    setState(() {});
                     context.read<SignupBloc>().add(VerifyOtp(
                           otp: controller.text,
                         ));

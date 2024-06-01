@@ -86,7 +86,6 @@ class _SentConnectionsState extends State<SentConnections> {
           actions: [
             ElevatedButton(
               onPressed: () {
-                log("clicked");
                 context
                     .read<ConnectionsBloc>()
                     .add(RequestRemoved(widget.list[index]));

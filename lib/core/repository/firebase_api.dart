@@ -92,7 +92,6 @@ class FirebaseAPi {
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
-    log("token is here $fcmToken");
     initPushNotifications();
     initLocalNotifications();
     //eh8nYTpAQeO4jyXkwg4fPx:APA91bF-pm3HJmDe_W20fbF0x51hPBnK0znUxfS4Z_9DeRRzBtzpzj1XtWZudM-CAYia4tcZqNctI5PpLrAnlGIRLTSxcObgDQZ1R3RD8CgbCs9390QQT1KR9gJcNdBHd3xe1U97-dW9

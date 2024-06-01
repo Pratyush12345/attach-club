@@ -19,6 +19,8 @@ import 'package:attach_club/bloc/greetings/greetings_bloc.dart';
 import 'package:attach_club/bloc/greetings/greetings_repository.dart';
 import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/bloc/home/home_repository.dart';
+import 'package:attach_club/bloc/notifications/notifications_bloc.dart';
+import 'package:attach_club/bloc/notifications/notifications_repository.dart';
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/bloc/profile/profile_repository.dart';
 import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
@@ -31,6 +33,8 @@ import 'package:attach_club/bloc/search_connections/search_connections_repositor
 import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:attach_club/bloc/signup/signup_repository.dart';
 import 'package:attach_club/bloc/splash_screen/splash_screen_repository.dart';
+import 'package:attach_club/bloc/verify_phone/verify_phone_bloc.dart';
+import 'package:attach_club/bloc/verify_phone/verify_phone_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/core/repository/firebase_api.dart';
 import 'package:attach_club/firebase_options.dart';
@@ -53,6 +57,8 @@ import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/home.dart';
 import 'package:attach_club/views/signup/sign_up.dart';
 import 'package:attach_club/views/splash_screen/splash_screen.dart';
+import 'package:attach_club/views/verify_otp/verify_otp.dart';
+import 'package:attach_club/views/verify_phone/verify_phone.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -119,7 +125,9 @@ class _MyAppState extends State<MyApp> {
               create: (context) => CoreRepository(),
             ),
             RepositoryProvider(
-              create: (context) => SignupRepository(),
+              create: (context) => SignupRepository(
+                context.read<CoreRepository>(),
+              ),
             ),
             RepositoryProvider(
               create: (context) => CompleteProfileRepository(
@@ -191,6 +199,16 @@ class _MyAppState extends State<MyApp> {
             ),
             RepositoryProvider(
               create: (context) => GreetingsRepository(),
+            ),
+            RepositoryProvider(
+              create: (context) => VerifyPhoneRepository(
+                context.read<CoreRepository>(),
+              ),
+            ),
+            RepositoryProvider(
+              create: (context) => NotificationsRepository(
+                context.read<CoreRepository>()
+              ),
             ),
           ],
           
@@ -276,6 +294,15 @@ class _MyAppState extends State<MyApp> {
                   context.read<GreetingsRepository>(),
                 ),
               ),
+              BlocProvider(
+                create: (context) => VerifyPhoneBloc(
+                  context.read<VerifyPhoneRepository>(),
+                ),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    NotificationsBloc(context.read<NotificationsRepository>()),
+              ),
             ],
             child: MaterialApp(
               navigatorKey: navigatorKey,
@@ -319,6 +346,7 @@ class _MyAppState extends State<MyApp> {
                 "/greetings": (context) => const Greetings(),
                 "/buyPlan": (context) => const BuyPlan(),
                 "/notifications": (context) => const Notifications(),
+                "/verifyPhone": (context) => const VerifyPhone(),
               },
             ),
           ),

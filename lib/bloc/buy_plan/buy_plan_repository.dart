@@ -31,7 +31,6 @@ class BuyPlanRepository {
   Future<String> placeOrder() async {
     final currentUser = _coreRepository.getCurrentUser();
     final uid = currentUser.uid;
-    log(uid);
     final response = await _client.post(
       Uri.parse(
         "https://us-central1-attach-club.cloudfunctions.net/createOrder?userid=$uid",
@@ -62,7 +61,6 @@ class BuyPlanRepository {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> map = jsonDecode(response.body);
-      log(map["message"]["order_status"]);
       return map["message"]["order_status"] == "PAID";
     }
     throw Exception("Error verifying payment");

@@ -41,6 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
             if(state is NavigateToSignup){
               _navigate("/signup");
             }
+            if(state is NavigateToVerifyPhone){
+              _navigate("/verifyPhone");
+            }
           },
           child: Center(
             child: Image.asset("assets/images/splash.png")

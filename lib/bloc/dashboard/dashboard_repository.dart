@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/metaData.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart';
 

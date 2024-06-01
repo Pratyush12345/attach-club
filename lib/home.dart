@@ -40,9 +40,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin {
-  
+
   int _selectedIndex = 0;
- 
+
   final List<Widget> _children = [
     const Dashboard(),
     const SearchConnections(),
@@ -86,15 +86,8 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController controller;
   late Animation<Offset> offsetAnimation;
   late Animation<double> maxWidthAnimation;
-  
-  late Animation<Offset> _animation;
 
-  UserData userData = UserData(
-    username: '',
-    firstLoginDate: Timestamp.now(),
-    lastLoginDate: Timestamp.now(),
-    lastPaymentDate: Timestamp.now(),
-  );
+  late Animation<Offset> _animation;
 
   @override
   void initState() {
@@ -110,15 +103,6 @@ class _HomeScreenState extends State<HomeScreen>
     controller.forward();
     context.read<HomeBloc>().add(GetUserData());
 
-    final notifier = context.read<UserDataNotifier>();
-    notifier.addListener(() {
-      if (!mounted) return;
-      setState(() {
-        final notifier = context.read<UserDataNotifier>();
-        userData = notifier.userData;
-      });
-    });
-
      animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -133,13 +117,13 @@ class _HomeScreenState extends State<HomeScreen>
     ));
   }
 
-  
+
 
   @override
   void dispose() {
     print("-----------------init initalized---------------");
     controller.dispose();
-     animationController.dispose();
+    animationController.dispose();
 
     //remove notifier listener
     // context.read<UserDataNotifier>().removeListener(_handleUserDataChange);
@@ -150,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-   
+
     maxWidthAnimation = Tween<double>(
       begin: 52,
       end: width - (2 * horizontalPadding) - ((tabs.length - 1) * (52)),
@@ -166,10 +150,10 @@ class _HomeScreenState extends State<HomeScreen>
 
         builder: (context, model, child) {
                  print(model.selectedIndex);
-                 _selectedIndex = model.selectedIndex;                  
+                 _selectedIndex = model.selectedIndex;
                  controller.reset();
                  controller.forward();
-          
+
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _childrenAppbar[_selectedIndex](context, height),
@@ -184,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen>
                     children: _children
                   ),
                 ),
-                  
-                 
+
+
                   SlideTransition(
                     position: _animation ,
                     child:  Align(

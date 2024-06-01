@@ -1,14 +1,8 @@
-import 'dart:io';
 import 'package:attach_club/bloc/dashboard/dashboard_repository.dart';
-import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/user_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../constants.dart';
 
 part 'dashboard_event.dart';
 

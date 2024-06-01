@@ -20,7 +20,6 @@ class GreetingTopic {
     Map<String, dynamic> map,
     QuerySnapshot<Map<String, dynamic>> greetingMap,
   ) {
-    log(map["categoryName"]);
     return GreetingTopic(
       categoryDescription: map['categoryDescription'],
       categoryName: map['categoryName'],

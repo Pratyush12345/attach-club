@@ -1,10 +1,11 @@
 import 'dart:math';
-import 'package:attach_club/bloc/connections/connections_bloc.dart'as cbloc;
+import 'package:attach_club/bloc/connections/connections_bloc.dart' as cbloc;
 import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart';
-import 'package:attach_club/bloc/greetings/greetings_bloc.dart'  as gbloc;
+import 'package:attach_club/bloc/greetings/greetings_bloc.dart' as gbloc;
 import 'package:attach_club/bloc/home/home_bloc.dart';
 import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/bloc/search_connections/search_connections_bloc.dart' as searchbloc;
+import 'package:attach_club/bloc/profile/profile_bloc.dart' as profileBloc;
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
@@ -83,6 +84,9 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
        } );
       
     });
+    context
+        .read<profileBloc.ProfileBloc>()
+        .add(const profileBloc.GetUserData());
   }
 
   @override
@@ -90,7 +94,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     super.dispose();
      scrollController.removeListener(_scrollListener);
      scrollController.dispose();
-    
+
   }
   
     void _scrollListener() {
@@ -122,17 +126,17 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
         }
       },
       builder: (context, state) {
-        if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce ) {
+        if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce) {
           GlobalVariable.isDashboardBuildOnce = true;
           return const DashboardShimmer();
         }
         final bloc = context.read<DashboardBloc>();
         return RefreshIndicator(
-          onRefresh: () async{
-             context.read<HomeBloc>().add(GetUserData());
-             final userData = context.read<UserDataNotifier>().userData;
-             context.read<DashboardBloc>().add(GetData(userData));
-             return Future<void>.delayed(const Duration(seconds: 3));
+          onRefresh: () async {
+            context.read<HomeBloc>().add(GetUserData());
+            final userData = context.read<UserDataNotifier>().userData;
+            context.read<DashboardBloc>().add(GetData(userData));
+            return Future<void>.delayed(const Duration(seconds: 3));
           },
           child: SingleChildScrollView(
               controller: scrollController,
@@ -175,15 +179,15 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                                 direction: ShimmerDirection.ltr,
                                   baseColor:  Colors.grey[800]!,
                                   highlightColor: Colors.grey[600]!,
-                            
+
                                 child: Container(
                                   color: Colors.white,
                                 ),
                               );
-                            
+
                           } ,
-                         ), 
-                        
+                         ),
+
                         // Image.network(GlobalVariable.metaData.appBannerLink!, fit: BoxFit.fill,
                         //       loadingBuilder: (context, child, loadingProgress) {
                         //     if (loadingProgress == null) {
@@ -206,7 +210,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                         //   );
                         //   }
                         //   )
-            
+
                       ),
                     ),
                   ),
@@ -416,7 +420,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                 ],
               ),
             ),
-          
+
         );
       },
     );
