@@ -74,6 +74,17 @@ class UserData {
     this.iosTokenid = "",
     this.uid,
   });
+  
+   // Override the == operator and hashCode for comparison based on ID
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserData &&
+          runtimeType == other.runtimeType &&
+          uid == other.uid;
+
+  @override
+  int get hashCode => uid.hashCode;
 
   Map<String, dynamic> toMap() {
     return {
@@ -115,6 +126,48 @@ class UserData {
 
   factory UserData.fromMap({
     required Map<String, dynamic> map,
+    String? uid,
+  }) {
+    return UserData(
+      accountType: map["accountType"],
+      age: map["age"],
+      bannerImageURL: map["bannerImageURL"],
+      city: map["city"],
+      country: map["country"],
+      description: map["description"],
+      email: map["email"],
+      firstLoginDate: map["firstLoginDate"],
+      headLineTxt: map["headLineTxt"],
+      isActive: map["isActive"],
+      isBasicDetailEnabled: map["isBasicDetailEnabled"],
+      isEverPurchasedPremium: map["isEverPurchasedPremium"],
+      isLinkEnabled: map["isLinkEnabled"],
+      isOnline: map["isOnline"],
+      isProductEnabled: map["isProductEnabled"],
+      isReviewEnabled: map["isReviewEnabled"],
+      isShowProfileImageOnGreeting : map["isShowProfileImageOnGreeting"],
+      lastLoginDate: map["lastLoginDate"],
+      lastPaymentDate: map["lastPaymentDate"],
+      logoImageURL: map["logoImageURL"],
+      name: map["name"],
+      phoneNo: map["phoneNo"],
+      pin: map["pin"],
+      profession: map["profession"],
+      profileClickCount: map["profileClickCount"],
+      profileViewCount: map["profileViewCount"],
+      rating: map["rating"],
+      profileImageURL: map["profileImageURL"],
+      purchasedPlanCode: map["purchasedPlanCode"],
+      state: map["state"],
+      username: map["username"],
+      andrTokenid: map["andrTokenId"] ?? "",
+      iosTokenid: map["iosTokenId"] ?? "",
+      uid: uid,
+    );
+  }
+
+  factory UserData.fromMapDynamic({
+    required Map<dynamic, dynamic> map,
     String? uid,
   }) {
     return UserData(

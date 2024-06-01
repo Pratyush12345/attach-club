@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:http/http.dart';
 
@@ -12,8 +13,8 @@ class SearchConnectionsRepository {
 
   Future<List<UserData>> getSearchResult(String query) async {
     final user = _repository.getCurrentUser();
-    final domain = await _repository.getDomain();
-
+    //final domain = await _repository.getDomain();
+    final domain = GlobalVariable.metaData.apiURL;
     final url =
         "$domain/searchUser?searchText=$query&uid=${user.uid}";
     final response = await client.get(Uri.parse(url));

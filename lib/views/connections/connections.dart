@@ -1,3 +1,4 @@
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/constants.dart';
@@ -87,55 +88,59 @@ class _ConnectionsState extends State<Connections> with SingleTickerProviderStat
               width: width,
               color: const Color(0xFF26293B),
               child: Center(
-                child: TabBar(
-                  controller: tabController,
-                  indicatorColor: Colors.blue,
-                  labelColor: Colors.white,
-                  tabAlignment: TabAlignment.center,
-                  labelPadding: EdgeInsets.zero,
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child: Center(
-                          child: Text(
-                            "$CONNECTION_CONNECTED_STATUS ${context.read<ConnectionsBloc>().connectedList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().connectedList.length)})'}",
-                            
-                            style: const TextStyle(
-                              fontSize: 16,
+                child: Consumer<ChangeConnectionScreenProvider>(
+                  builder: (context, model, widget) {
+                    return TabBar(
+                      controller: tabController,
+                      indicatorColor: Colors.blue,
+                      labelColor: Colors.white,
+                      tabAlignment: TabAlignment.center,
+                      labelPadding: EdgeInsets.zero,
+                      isScrollable: true,
+                      tabs: [
+                        Tab(
+                          child: SizedBox(
+                            width: (width - 48) / 3,
+                            child: Center(
+                              child: Text(
+                                "$CONNECTION_CONNECTED_STATUS ${context.read<ConnectionsBloc>().connectedList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().connectedList.length)})'}",
+                                
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child:  Center(
-                          child: Text(
-                            "$CONNECTION_SENT_STATUS ${context.read<ConnectionsBloc>().sentList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().sentList.length)})'}",
-                            style: const TextStyle(
-                              fontSize: 16,
+                        Tab(
+                          child: SizedBox(
+                            width: (width - 48) / 3,
+                            child:  Center(
+                              child: Text(
+                                "$CONNECTION_SENT_STATUS ${context.read<ConnectionsBloc>().sentList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().sentList.length)})'}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Tab(
-                      child: SizedBox(
-                        width: (width - 48) / 3,
-                        child: Center(
-                          child: Text(
-                            "$CONNECTION_RECEIVED_STATUS ${context.read<ConnectionsBloc>().receivedList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().receivedList.length)})'}",
-                             style: const TextStyle(
-                              fontSize: 16,
+                        Tab(
+                          child: SizedBox(
+                            width: (width - 48) / 3,
+                            child: Center(
+                              child: Text(
+                                "$CONNECTION_RECEIVED_STATUS ${context.read<ConnectionsBloc>().receivedList.isEmpty?'': '(${getCount(context.read<ConnectionsBloc>().receivedList.length)})'}",
+                                 style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  }
                 ),
               ),
             ),

@@ -6,6 +6,7 @@ class ConnectionRequest {
   final Timestamp updateTime;
   final String uid;
   final String name;
+  final String url;
   final String profession;
 
   ConnectionRequest({
@@ -13,6 +14,7 @@ class ConnectionRequest {
     required this.status,
     required this.updateTime,
     required this.uid,
+    this.url = "",
     this.name = "",
     this.profession = "",
   });
@@ -31,6 +33,7 @@ class ConnectionRequest {
     required Map<String, dynamic> userData,
   }) {
     return ConnectionRequest(
+      url : userData["profileImageURL"],
       phoneNo: userData["phoneNo"],
       status: connectionData["status"],
       updateTime: connectionData["updateTime"],

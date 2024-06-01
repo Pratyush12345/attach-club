@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/home.dart';
@@ -7,6 +8,7 @@ import 'package:attach_club/models/connection_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import 'connection_card.dart';
 
@@ -88,6 +90,7 @@ class _SentConnectionsState extends State<SentConnections> {
                 context
                     .read<ConnectionsBloc>()
                     .add(RequestRemoved(widget.list[index]));
+                 Provider.of<ChangeSearchScreenProvider>(context, listen: false).changeSearchScreenIndex("");    
               },
               child: const Text(
                 "Unsend request",

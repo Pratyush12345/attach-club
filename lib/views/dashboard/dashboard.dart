@@ -15,6 +15,7 @@ import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/dashboard/dashboard_app_bar.dart';
 import 'package:attach_club/views/dashboard/dashboard_shimmer.dart';
 import 'package:attach_club/views/dashboard/link_card.dart';
+import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
 import 'package:attach_club/views/social_greeting/greeting_dashboard.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -76,6 +77,11 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        scrollController.addListener(_scrollListener);
+       Future.delayed(Duration(milliseconds: 2000),(){
+        
+       Provider.of<ChangeSettingScreenProvider>(context, listen: false).changeSettingScreenIndex("Settings");
+       } );
+      
     });
   }
 
@@ -121,7 +127,6 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
           return const DashboardShimmer();
         }
         final bloc = context.read<DashboardBloc>();
-        
         return RefreshIndicator(
           onRefresh: () async{
              context.read<HomeBloc>().add(GetUserData());
@@ -325,7 +330,6 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                         if (bloc.suggestedProfile.length > 5)
                           GestureDetector(
                             onTap: () {
-                             context.read<searchbloc.SearchConnectionsBloc>().resultsList = bloc.suggestedProfile;
                              Provider.of<ChangeScreenProvider>(context, listen: false).changeScreenIndex(1);
                             },
                             child: const Text(

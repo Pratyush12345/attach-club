@@ -28,11 +28,11 @@ class SearchConnectionsBloc extends Bloc<SearchConnectionsEvent, SearchConnectio
     on<ConnectButtonClicked>((event, emit) async {
       try {
         // requestsLoading.add(event.userUid);
-        emit(ConnectionRequestLoading());
+        //emit(ConnectionRequestLoading());
         await _repository.sendConnectionRequest(event.userUid);
         // requestsLoading.remove(event.userUid);
         requestsSent.add(event.userUid);
-        emit(ConnectionRequestSent());
+        //emit(ConnectionRequestSent());
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
       }

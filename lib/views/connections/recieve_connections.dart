@@ -1,4 +1,6 @@
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
+import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/home.dart';
 import 'package:attach_club/models/connection_request.dart';
@@ -6,6 +8,7 @@ import 'package:attach_club/views/connections/connection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class ReceiveConnections extends StatefulWidget {
   final List<ConnectionRequest> list;
@@ -85,6 +88,7 @@ class _ReceiveConnectionsState extends State<ReceiveConnections> {
                 context
                     .read<ConnectionsBloc>()
                     .add(RequestRejected(widget.list[index]));
+                Provider.of<ChangeSearchScreenProvider>(context, listen: false).changeSearchScreenIndex("");    
               },
               child: Container(
                 width: 0.1860465116 * width,
@@ -112,6 +116,7 @@ class _ReceiveConnectionsState extends State<ReceiveConnections> {
                         index,
                       ),
                     );
+                Provider.of<ChangeSearchScreenProvider>(context, listen: false).changeSearchScreenIndex("");    
               },
               child: Container(
                 width: 0.1860465116 * width,

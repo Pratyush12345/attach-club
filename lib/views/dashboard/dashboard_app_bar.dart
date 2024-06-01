@@ -1,16 +1,18 @@
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import '../../core/repository/user_data_notifier.dart';
 
 AppBar getDashboardAppBar(BuildContext context, double height) {
   final top = MediaQuery.of(context).viewInsets.top;
-  final userData = context.read<UserDataNotifier>().userData;
+  final userData = context.read<UserDataNotifier>().userData; 
   int hh = DateTime.now().hour;
-  
+        
   return AppBar(
     toolbarHeight: top + 0.080083691 * height,
     flexibleSpace: Align(

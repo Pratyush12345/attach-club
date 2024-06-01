@@ -75,7 +75,7 @@ class _ProfileImageState extends State<ProfileImage> {
   _getHeader(BuildContext context, double height) {
     if (!widget.isInsideManageProfile) {
       return [
-        OnBoardingHero(
+        OnBoardingHero( 
           totalBars: 4,
           selectedBars: 2,
           showSkipButton: true,

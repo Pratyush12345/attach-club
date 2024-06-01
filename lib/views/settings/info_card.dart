@@ -11,6 +11,7 @@ class InfoCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final userData = context.read<UserDataNotifier>().userData;
+    print("info build");
     return Padding(
       padding: EdgeInsets.only(top: 0.0268 * height),
       child: SizedBox(
@@ -53,7 +54,6 @@ class InfoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        //TODO: Not visible
                         userData.phoneNo,
                         style: const TextStyle(
                           fontSize: 14,

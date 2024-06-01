@@ -1,10 +1,13 @@
 
+import 'package:attach_club/bloc/dashboard/dashboard_bloc.dart' as dbloc;
 import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/bloc/search_connections/search_connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/home.dart';
+import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/search_connections/search_connections_text_field.dart';
 import 'package:attach_club/views/search_connections/search_profile_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +55,15 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
       });
      }
   }
+
+  List<UserData> removeLists(List<UserData> list1, List<UserData> list2) {
+    
+   Set<String> set2 = list2.map((item) =>item.uid! ).toSet();
+   List<UserData> listcopy = List<UserData>.from(list1);
+   // Remove items from the first list where the ID is in the second list
+  listcopy.removeWhere((item) => set2.contains(item.uid));
+  return listcopy;
+}
   
   @override
   Widget build(BuildContext context) {
@@ -73,7 +85,8 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                 }
               },
               builder: (context, state) {
-                final list = context.read<SearchConnectionsBloc>().resultsList;
+                final list = removeLists(context.read<dbloc.DashboardBloc>().suggestedProfile, context.read<SearchConnectionsBloc>().resultsList);
+                
                 if(state is SearchConnectionsLoading || state is ConnectionRequestLoading){
                   return const Center(
                     child: CircularProgressIndicator(
@@ -90,34 +103,115 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                         controller: controller,
                       ),
                     ),
-                    Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: horizontalPadding,
+                     const SizedBox(height: 10.0,),
+                     const Padding(
+                       padding:  EdgeInsets.symmetric(
+                               horizontal: horizontalPadding,
                               ),
-                              // SizedBox(height: 0.02682403433 * height),
-                              // const SizedBox(height: paddingDueToNav),
-                              child: 
-                              list.isEmpty? const Center(child: Text("No Data Found"),):
-                              ListView.builder(
-                                controller: scrollController,
-                                itemCount: list.length,
-                                itemBuilder: (context, i) {
-                                  return Padding(
+                       child:  Align(
+                         alignment: Alignment.centerLeft,
+                        child: Text("Recent Searches")),
+                     ),
+                     const SizedBox(height: 10.0,),
+                     
+                     Expanded(
+                       child: Padding(
+                         padding: const EdgeInsets.symmetric(
+                               horizontal: horizontalPadding,
+                              ),
+                         child: CustomScrollView(
+                            controller: scrollController,
+                            slivers: [
+                                SliverFixedExtentList(
+                                itemExtent: context.read<SearchConnectionsBloc>().resultsList.isEmpty? 100 : 188,
+                                delegate: SliverChildListDelegate(
+                                [ 
+                                  if(context.read<SearchConnectionsBloc>().resultsList.isEmpty)
+                                  const Center(
+                                    child: Text("No recent search found")),
+                                  
+                                  if(context.read<SearchConnectionsBloc>().resultsList.isNotEmpty)
+                                  for (var i = 0 ; i < context.read<SearchConnectionsBloc>().resultsList.length;i++)
+                                  Padding(
                                     padding: EdgeInsets.only(
                                       top: (i == 0) ? 0.02682403433 * height : 0,
                                       bottom: (i == list.length - 1)
                                           ? paddingDueToNav
                                           : 0,
                                     ),
-                                    child: SearchProfileCard(
-                                      userData: list[i],
-                                    ),
-                                  );
-                                },
+                                  child: SearchProfileCard(
+                                    key: ValueKey(context.read<SearchConnectionsBloc>().resultsList[i].uid),
+                                    userData: context.read<SearchConnectionsBloc>().resultsList[i],
+                                  ),
+                                  )
+                                ]
                               ),
-                            ),
+                                ),
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, i) {
+                                   if(i==0){
+                                     return Column(
+                                       children: [
+                                         const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text("Suggested Profiles")),
+                                         Padding(
+                                          padding: EdgeInsets.only(
+                                            top: (i == 0) ? 0.02682403433 * height : 0,
+                                            bottom: (i == list.length - 1)
+                                                ? paddingDueToNav
+                                                : 0,
+                                          ),
+                                          child: SearchProfileCard(
+                                            key: ValueKey(i),
+                                            userData: list[i],
+                                          ),
+                                                                             ),
+                                       ],
+                                     );
+                                   }
+                                   else{ 
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        top: (i == 0) ? 0.02682403433 * height : 0,
+                                        bottom: (i == list.length - 1)
+                                            ? paddingDueToNav
+                                            : 0,
+                                      ),
+                                      child: SearchProfileCard(
+                                        key: ValueKey(i),
+                                        userData: list[i],
+                                      ),
+                                    );
+                                   }
+                                  },
+                                  childCount: list.length,
+                                
+                                ),
+                              ),
+                            
+                            ],
                           ),
+                       ),
+                     ),
+
+                    // Expanded(
+                    //         child: list.isEmpty? const Center(child: Text("No Data Found"),):
+                    //         ListView.builder(
+                               
+                              
+                    //           controller: scrollController,
+                    //           itemCount: list.length,
+                    //           itemBuilder: (context, i) {
+                    //             if( context.read<SearchConnectionsBloc>().resultsList.indexWhere((element) =>element.uid == list[i].uid)!=-1){
+                                 
+                    //             }
+                                
+                              
+                    //           },
+                    //         ),
+                    //       ),
                     // ElevatedButton(
                     //   onPressed: () async {
                     //     final currentUser = FirebaseAuth.instance.currentUser;

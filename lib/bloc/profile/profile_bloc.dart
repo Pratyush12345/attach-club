@@ -80,7 +80,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final review = Review(
         feedback: event.feedback,
         review: event.selectedStars,
-        name: event.userData.name,
+        name: event.name,
         mobileNo: event.userData.phoneNo,
       );
       await _repository.addReview(review, event.profileUid);

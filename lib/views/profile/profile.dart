@@ -6,6 +6,8 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/divider.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/models/review.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
 import 'package:attach_club/views/profile/profileShimmerLoader.dart';
@@ -46,13 +48,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     buttonTitle = widget.buttonTitle!;
-    context.read<ProfileBloc>().init();
+    //context.read<ProfileBloc>().init();
     final bloc = context.read<ProfileBloc>();
     developer.log(widget.uid.toString());
     if (widget.uid != bloc.uid ||
         bloc.lastUpdated == null ||
         bloc.lastUpdated!.difference(DateTime.now()).inMinutes > 2) {
       if (widget.uid != null) {
+        context.read<ProfileBloc>().init();
         bloc.add(GetUserData(uid: widget.uid));
       } else {
         bloc.userData = context.read<UserDataNotifier>().userData;
@@ -92,6 +95,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
           },
           builder: (context, state) {
             final userData = context.read<ProfileBloc>().userData;
+            
             if (userData.username.isEmpty || state is ProfileLoading) {
               // return const Center(
               //   child: CircularProgressIndicator(
@@ -224,7 +228,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               : MainAxisAlignment.center,
                           children: [
                             if (userData.phoneNo.isNotEmpty &&
-                                userData.isBasicDetailEnabled)
+                                userData.isBasicDetailEnabled && userData.uid != GlobalVariable.userData.uid )
                               CustomButton(
                                 onPressed: () {},
                                 title: "Save Contact",
@@ -410,12 +414,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                   itemCount: min(5, bloc.productList.length),
                                   itemBuilder: (context, i) {
                                     if (bloc.productList[i].isEnabled) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 25.0,
-                                        ),
-                                        child: ProductCardWithEnquiry(
-                                          product: bloc.productList[i],
+                                      return GestureDetector(
+                                        onTap: () {
+                                           Navigator.of(context)
+                                            .pushNamed("/profile/products");
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 25.0,
+                                          ),
+                                          child: ProductCardWithEnquiry(
+                                            product: bloc.productList[i],
+                                          ),
                                         ),
                                       );
                                     } else {
@@ -438,6 +448,21 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
         ),
       ),
     );
+  }
+  
+  String getCount(int n){
+   if(n>=1000 & 9999) {
+     return "1K+";
+   }
+   else if(n>=10000 & 99999) {
+     return "10K+";
+   } 
+   else if(n>=100000 & 999999) {
+     return "1L+";
+   } 
+   else {
+     return n.toString();
+   }
   }
 
   _getReview(width) {
@@ -512,13 +537,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                         context.read<ProfileBloc>().add(
                               ReviewSubmitted(
                                 selectedStars,
-                                userData.name,
+                                GlobalVariable.userData.name,
                                 // nameController.text,
                                 feedbackController.text,
-                                userData,
+                                GlobalVariable.userData,
                                 widget.uid!,
                               ),
                             );
+                         context.read<ProfileBloc>().reviewsList.add(
+                          Review(feedback: feedbackController.text, review: selectedStars, name: GlobalVariable.userData.name, mobileNo: GlobalVariable.userData.phoneNo));  
+                          selectedStars = 0;
+                          feedbackController.text = "";
+                          setState(() {});  
                       },
                       title: "Send",
                       disabled: (selectedStars == 0 ||
@@ -535,9 +565,9 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.uid != null) const SizedBox(height: 25),
-              const Text(
-                "User Reviews",
-                style: TextStyle(
+               Text(
+                "User Reviews (${getCount(context.read<ProfileBloc>().reviewsList.length)})",
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: primaryTextColor,
