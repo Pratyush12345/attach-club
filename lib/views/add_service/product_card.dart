@@ -1,6 +1,7 @@
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/edit_product_modal.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -35,11 +36,57 @@ class ProductCard extends StatelessWidget {
               child: SizedBox(
                 width: 0.4279 * width,
                 height: 0.4279 * width,
-                child: (product.image == null)
+                child: (product.imageUrl.isEmpty)
                     ? Container()
-                    : Image.file(
-                        product.image!,
+                    : CachedNetworkImage(
+                        imageUrl: product.imageUrl,
                         fit: BoxFit.fill,
+                        errorWidget: (context, url, error) => const Center(
+                          child: Text(
+                            "Image not found",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => const Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ),
+                        // Image.network(
+                        //   product.imageUrl,
+                        //   fit: BoxFit.fill,
+                        //   errorBuilder: (context, exception, stackTrace) {
+                        //     return const Center(
+                        //       child: Text(
+                        //         "Image not found",
+                        //         style: TextStyle(
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   loadingBuilder: (context, child, loadingProgress) {
+                        //     if (loadingProgress == null) {
+                        //       return child;
+                        //     } else {
+                        //       return const Center(
+                        //         child: SizedBox(
+                        //           width: 24,
+                        //           height: 24,
+                        //           child: CircularProgressIndicator(
+                        //             color: Colors.purple,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     }
+                        //   },
+                        // )
                       ),
               ),
             ),

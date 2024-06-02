@@ -193,8 +193,8 @@ class CoreRepository {
 
     final profileImageBloc = context.read<ProfileImageBloc>();
     profileImageBloc.lastUpdated = null;
-    profileImageBloc.profileImage = null;
-    profileImageBloc.bannerImage = null;
+    profileImageBloc.profileImage = "";
+    profileImageBloc.bannerImage = "";
 
     FirebaseAuth.instance.signOut();
   }
@@ -211,15 +211,15 @@ class CoreRepository {
       //TODO: check if image already exists
       //TODO: handle null imageRef condition
       final imageRef =
-          storageRef.child("users/$uid/products/${product.title}/image.jpg");
+          storageRef.child("users/$uid/products/${product.id}/image.jpg");
       final appDocDir = await getApplicationDocumentsDirectory();
       final directory =
-          Directory("${appDocDir.path}/images/products/${product.title}/");
+          Directory("${appDocDir.path}/images/products/${product.id}/");
       if (!directory.existsSync()) {
         directory.createSync(recursive: true);
       }
       final filePath =
-          "${appDocDir.path}/images/products/${product.title}/image.jpg";
+          "${appDocDir.path}/images/products/${product.id}/image.jpg";
       final file = File(filePath);
       await imageRef.writeToFile(file);
       product.image = file;

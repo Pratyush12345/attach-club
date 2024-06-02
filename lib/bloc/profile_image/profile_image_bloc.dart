@@ -13,8 +13,8 @@ part 'profile_image_state.dart';
 class ProfileImageBloc extends Bloc<ProfileImageEvent, ProfileImageState> {
   final ProfileImageRepository _repository;
   DateTime? lastUpdated;
-  File? profileImage;
-  File? bannerImage;
+  String profileImage = "";
+  String bannerImage = "";
 
   ProfileImageBloc(
     this._repository,
@@ -22,18 +22,16 @@ class ProfileImageBloc extends Bloc<ProfileImageEvent, ProfileImageState> {
     on<ProfileImageUploaded>((event, emit) async {
       emit(LoadingState());
       final file = File(event.profileImage.path);
-      profileImage = file;
-      await _repository.uploadProfilePhoto(file);
+      profileImage = await _repository.uploadProfilePhoto(file);
       lastUpdated = DateTime.now();
-      emit(ProfileImageUpdated(file));
+      emit(ProfileImageUpdated(profileImage));
     });
     on<BannerImageUploaded>((event, emit) async {
       emit(LoadingState());
       final file = File(event.bannerImage.path);
-      bannerImage = file;
-      await _repository.uploadBanner(file);
+      bannerImage = await _repository.uploadBanner(file);
       lastUpdated = DateTime.now();
-      emit(BannerImageUpdated(file));
+      emit(BannerImageUpdated(profileImage));
     });
     on<FetchImages>((event, emit) async {
       try {
@@ -43,7 +41,7 @@ class ProfileImageBloc extends Bloc<ProfileImageEvent, ProfileImageState> {
         lastUpdated = DateTime.now();
         emit(ProfileImageUpdated(profileImage));
         emit(BannerImageUpdated(bannerImage));
-        if (profileImage == null && bannerImage == null) {
+        if (profileImage.isEmpty && bannerImage.isEmpty) {
           emit(ProfileImageInitial());
         }
       } on Exception catch (e) {

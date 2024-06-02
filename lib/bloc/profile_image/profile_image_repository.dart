@@ -9,7 +9,7 @@ class ProfileImageRepository {
 
   ProfileImageRepository(this._repository);
 
-  Future<void> _uploadPhoto(String name, File file) async {
+  Future<String> _uploadPhoto(String name, File file) async {
     final storageRef = FirebaseStorage.instance.ref();
     final currentUser = _repository.getCurrentUser();
 
@@ -22,14 +22,15 @@ class ProfileImageRepository {
         .collection("users")
         .doc(currentUser.uid)
         .update({"${name}URL": url});
+    return url;
   }
 
-  Future<void> uploadProfilePhoto(File file) async {
-    await _uploadPhoto("profileImage", file);
+  Future<String> uploadProfilePhoto(File file) async {
+    return await _uploadPhoto("profileImage", file);
   }
 
-  Future<void> uploadBanner(File file) async {
-    await _uploadPhoto("bannerImage", file);
+  Future<String> uploadBanner(File file) async {
+    return await _uploadPhoto("bannerImage", file);
   }
 
   Future<bool> checkIfImageExists(String name) async {
@@ -65,11 +66,15 @@ class ProfileImageRepository {
     }
   }
 
-  Future<File?> getProfileImage() async {
-    return await _downloadImage("profileImage");
+  Future<String> getProfileImage() async {
+    // return await _downloadImage("profileImage");
+    final userData = await _repository.getUserData();
+    return userData.profileImageURL;
   }
 
-  Future<File?> getBannerImage() async {
-    return await _downloadImage("bannerImage");
+  Future<String> getBannerImage() async {
+    // return await _downloadImage("bannerImage");
+    final userData = await _repository.getUserData();
+    return userData.bannerImageURL;
   }
 }

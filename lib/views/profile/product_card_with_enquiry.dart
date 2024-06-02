@@ -28,15 +28,41 @@ class ProductCardWithEnquiry extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: (product.image == null)
-                  ? SizedBox(
-                      height: 0.1974248927 * height,
-                    )
-                  : Image.file(
-                      product.image!,
+              child: (product.imageUrl.isEmpty)
+                  ? SizedBox(height: 0.1974248927 * height)
+                  : Image.network(
+                      product.imageUrl,
                       height: 0.1974248927 * height,
                       width: double.infinity,
                       fit: BoxFit.fill,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return SizedBox(
+                            height: 0.1974248927 * height,
+                            child: const Center(
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.purple,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Text(
+                            "Image not found",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
                     ),
             ),
             Padding(

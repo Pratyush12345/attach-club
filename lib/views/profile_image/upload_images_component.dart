@@ -15,8 +15,6 @@ class UploadImagesComponent extends StatefulWidget {
 }
 
 class _UploadImagesComponentState extends State<UploadImagesComponent> {
-  // File? coverImage;
-  // File? profilePic;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +26,6 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message)));
         }
-        // if (state is ProfileImageUpdated) {
-        //   profilePic = state.file;
-        // }
-        // if (state is BannerImageUpdated) {
-        //   coverImage = state.file;
-        // }
-        // if (state is FetchedImages) {
-        //   profilePic = state.profileImage;
-        //   coverImage = state.bannerImage;
-        // }
       },
       builder: (context, state) {
         if (state is LoadingState) {
@@ -86,48 +74,93 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
   }
 
   Widget _getCover(double height) {
-    if (context.read<ProfileImageBloc>().bannerImage != null) {
+    final border = DottedBorder(
+      dashPattern: const [8, 10],
+      color: Colors.white.withOpacity(0.5),
+      borderType: BorderType.RRect,
+      strokeCap: StrokeCap.round,
+      radius: const Radius.circular(8),
+      child: Container(
+        width: double.infinity,
+        height: 0.28751 * height,
+        color: const Color(0xFF2A2D40),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomAddIcon(),
+            SizedBox(
+              height: 8,
+            ),
+            Label(title: "Upload Cover"),
+            SizedBox(
+              height: 8,
+            ),
+            Label(title: "500x500 px")
+          ],
+        ),
+      ),
+    );
+    if (context.read<ProfileImageBloc>().bannerImage.isNotEmpty) {
       return SizedBox(
         width: double.infinity,
         height: 0.28751 * height,
-        child: Image.file(
-          context.read<ProfileImageBloc>().bannerImage!,
+        child: Image.network(
+          context.read<ProfileImageBloc>().bannerImage,
           key: UniqueKey(),
           fit: BoxFit.fill,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            } else {
+              return const Center(
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.purple,
+                  ),
+                ),
+              );
+            }
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return border;
+          },
         ),
       );
     } else {
-      return DottedBorder(
-        dashPattern: const [8, 10],
-        color: Colors.white.withOpacity(0.5),
-        borderType: BorderType.RRect,
-        strokeCap: StrokeCap.round,
-        radius: const Radius.circular(8),
-        child: Container(
-          width: double.infinity,
-          height: 0.28751 * height,
-          color: const Color(0xFF2A2D40),
-          child: const Column(
+      return border;
+    }
+  }
+
+  Widget _getProfile(double width) {
+    final border = DottedBorder(
+      color: Colors.white.withOpacity(0.5),
+      borderType: BorderType.Oval,
+      dashPattern: const [8, 10],
+      strokeCap: StrokeCap.round,
+      child: Container(
+        width: 0.3302325581 * width,
+        height: 0.3302325581 * width,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFF2A2D40),
+        ),
+        child: const Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomAddIcon(),
               SizedBox(
                 height: 8,
               ),
-              Label(title: "Upload Cover"),
-              SizedBox(
-                height: 8,
-              ),
-              Label(title: "500x500 px")
+              Label(title: "Upload Profile Pic")
             ],
           ),
         ),
-      );
-    }
-  }
-
-  Widget _getProfile(double width) {
-    if (context.read<ProfileImageBloc>().profileImage != null) {
+      ),
+    );
+    if (context.read<ProfileImageBloc>().profileImage.isNotEmpty) {
       return Container(
         width: 0.3302325581 * width,
         height: 0.3302325581 * width,
@@ -135,39 +168,32 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           shape: BoxShape.circle,
         ),
         child: ClipOval(
-          child: Image.file(
-            context.read<ProfileImageBloc>().profileImage!,
+          child: Image.network(
+            context.read<ProfileImageBloc>().profileImage,
             fit: BoxFit.fill,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              } else {
+                return const Center(
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.purple,
+                    ),
+                  ),
+                );
+              }
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return border;
+            },
           ),
         ),
       );
     } else {
-      return DottedBorder(
-        color: Colors.white.withOpacity(0.5),
-        borderType: BorderType.Oval,
-        dashPattern: const [8, 10],
-        strokeCap: StrokeCap.round,
-        child: Container(
-          width: 0.3302325581 * width,
-          height: 0.3302325581 * width,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFF2A2D40),
-          ),
-          child: const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomAddIcon(),
-                SizedBox(
-                  height: 8,
-                ),
-                Label(title: "Upload Profile Pic")
-              ],
-            ),
-          ),
-        ),
-      );
+      return border;
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/add_service/add_service_repository.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:equatable/equatable.dart';
@@ -30,7 +32,7 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
     on<EditProduct>((event, emit) async {
       try {
         emit(ShowLoading());
-        await _repository.deleteProduct(event.oldProduct);
+        // await _repository.deleteProduct(event.oldProduct);
         final newProduct = await _repository.editProduct(event.newProduct);
         list.remove(event.oldProduct);
         list.add(newProduct);
@@ -62,14 +64,14 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
         lastUpdated = DateTime.now();
         emit(ListUpdated());
         emit(AddServiceInitial());
-        await _repository.downloadImageOfProducts(
-          list: list,
-          onListUpdated: (newList) {
-            list = newList;
-            emit(ListUpdated());
-            emit(AddServiceInitial());
-          },
-        );
+        // await _repository.downloadImageOfProducts(
+        //   list: list,
+        //   onListUpdated: (newList) {
+        //     list = newList;
+        //     emit(ListUpdated());
+        //     emit(AddServiceInitial());
+        //   },
+        // );
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
         emit(AddServiceInitial());

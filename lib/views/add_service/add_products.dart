@@ -50,7 +50,7 @@ class _AddProductsState extends State<AddProducts> {
       if (widget.oldProduct != null) {
         isProductDisabled = !widget.oldProduct!.isEnabled;
       }
-      file = XFile(widget.oldProduct!.image!.path);
+      // file = XFile(widget.oldProduct!.image!.path);
       disabled = _isDisabled();
     }
   }
@@ -67,13 +67,15 @@ class _AddProductsState extends State<AddProducts> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: (!widget.isOnboarding)? AppBar(
-        title: Text(
-          "${(widget.oldProduct == null) ? "Add" : "Edit"} "
-          "Product/Service",
-        ),
-        centerTitle: false,
-      ):null,
+      appBar: (!widget.isOnboarding)
+          ? AppBar(
+              title: Text(
+                "${(widget.oldProduct == null) ? "Add" : "Edit"} "
+                "Product/Service",
+              ),
+              centerTitle: false,
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -84,36 +86,29 @@ class _AddProductsState extends State<AddProducts> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.isOnboarding)
-                      ...[
-                        OnBoardingHero(
-                          totalBars: 4,
-                          selectedBars: 4,
-                          showBackButton: true,
-                          onBack: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        SizedBox(
-                          height: 0.0257 * height,
-                        ),
-                        Heading(
-                          title:
-                          "${(widget.oldProduct == null) ? "Add" : "Edit"} "
-                              "Product/Service",
-                        ),
-
-                      ],
-                    SizedBox(
-                      height: 0.03433 * height,
-                    ),
-
+                    if (widget.isOnboarding) ...[
+                      OnBoardingHero(
+                        totalBars: 4,
+                        selectedBars: 4,
+                        showBackButton: true,
+                        onBack: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      SizedBox(
+                        height: 0.0257 * height,
+                      ),
+                      Heading(
+                        title:
+                            "${(widget.oldProduct == null) ? "Add" : "Edit"} "
+                            "Product/Service",
+                      ),
+                    ],
+                    SizedBox(height: 0.03433 * height),
                     const Label(
                       title: "Enter your product or service details here",
                     ),
-                    SizedBox(
-                      height: 0.0257 * height,
-                    ),
+                    SizedBox(height: 0.0257 * height),
                     CustomTextField(
                       type: TextFieldType.RegularTextField,
                       controller: titleController,
@@ -124,11 +119,10 @@ class _AddProductsState extends State<AddProducts> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: 0.0128 * height,
-                    ),
+                    SizedBox(height: 0.0128 * height),
                     AddImages(
                       file: file,
+                      url: widget.oldProduct?.imageUrl ?? "",
                       callback: (selectedFile) {
                         setState(() {
                           file = selectedFile;
@@ -136,9 +130,7 @@ class _AddProductsState extends State<AddProducts> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: 0.0128 * height,
-                    ),
+                    SizedBox(height: 0.0128 * height),
                     CustomTextField(
                       type: TextFieldType.RegularTextField,
                       controller: descriptionController,
@@ -149,9 +141,7 @@ class _AddProductsState extends State<AddProducts> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: 0.0128 * height,
-                    ),
+                    SizedBox(height: 0.0128 * height),
                     CustomTextField(
                       type: TextFieldType.RegularTextField,
                       controller: priceController,
@@ -163,9 +153,7 @@ class _AddProductsState extends State<AddProducts> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: 0.0128 * height,
-                    ),
+                    SizedBox(height: 0.0128 * height),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -225,7 +213,7 @@ class _AddProductsState extends State<AddProducts> {
                 ),
                 CustomButton(
                   onPressed: () {
-                    _onPress(context);
+                    _onPress();
                   },
                   title: (widget.oldProduct != null) ? "Save" : "Add",
                   prefixIcon: (widget.oldProduct == null)
@@ -248,19 +236,20 @@ class _AddProductsState extends State<AddProducts> {
     return (titleController.text.isEmpty ||
         descriptionController.text.isEmpty ||
         priceController.text.isEmpty ||
-        file == null);
+        (file == null && (widget.oldProduct == null)));
   }
 
-  void _onPress(BuildContext context) {
+  void _onPress() {
     final product = Product(
       title: titleController.text,
       description: descriptionController.text,
       price: priceController.text,
       isShowEnquiryBtn: enquiry,
-      image: File(file!.path),
+      image: (file != null) ? File(file!.path) : null,
       dateAdded: Timestamp.now(),
       imageUrl: "",
       isEnabled: !isProductDisabled,
+      id: widget.oldProduct?.id ?? DateTime.now().microsecondsSinceEpoch.toString()
     );
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(
@@ -271,7 +260,7 @@ class _AddProductsState extends State<AddProducts> {
           );
     } else {
       context.read<AddServiceBloc>().add(
-            ProductAdded(product),
+            ProductAdded(product)
           );
     }
     Navigator.pop(context);

@@ -9,11 +9,13 @@ import 'package:image_picker/image_picker.dart';
 class AddImages extends StatelessWidget {
   final void Function(XFile?) callback;
   final XFile? file;
+  final String url;
 
   const AddImages({
     super.key,
     required this.callback,
     required this.file,
+    required this.url,
   });
 
   @override
@@ -36,28 +38,61 @@ class AddImages extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             )
-          : DottedBorder(
-              dashPattern: const [8, 10],
-              color: Colors.white.withOpacity(0.5),
-              borderType: BorderType.RRect,
-              strokeCap: StrokeCap.round,
-              radius: const Radius.circular(8),
-              child: Container(
-                width: double.infinity,
-                height: 0.30472103 * height,
-                color: const Color(0xFF2A2D40),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomAddIcon(),
-                    SizedBox(
-                      height: 8,
+          : (url.isNotEmpty)
+              ? SizedBox(
+                  width: double.infinity,
+                  height: 0.30472103 * height,
+                  child: Image.network(
+                    url,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Text(
+                          "Image not found",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return const Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.purple,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : DottedBorder(
+                  dashPattern: const [8, 10],
+                  color: Colors.white.withOpacity(0.5),
+                  borderType: BorderType.RRect,
+                  strokeCap: StrokeCap.round,
+                  radius: const Radius.circular(8),
+                  child: Container(
+                    width: double.infinity,
+                    height: 0.30472103 * height,
+                    color: const Color(0xFF2A2D40),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomAddIcon(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Label(title: "Add Images"),
+                      ],
                     ),
-                    Label(title: "Add Images"),
-                  ],
+                  ),
                 ),
-              ),
-            ),
     );
   }
 }

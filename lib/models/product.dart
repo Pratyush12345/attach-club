@@ -11,6 +11,7 @@ class Product {
   final Timestamp dateAdded;
   String imageUrl;
   final bool isEnabled;
+  final String id;
 
   Product({
     required this.title,
@@ -21,6 +22,7 @@ class Product {
     required this.dateAdded,
     required this.imageUrl,
     required this.isEnabled,
+    required this.id,
   });
 
   Map<String, dynamic> toMap() {
@@ -49,6 +51,7 @@ class Product {
       dateAdded: map["dateAdded"],
       imageUrl: map["image"],
       isEnabled: map["isEnabled"],
+      id: docId
     );
   }
 }

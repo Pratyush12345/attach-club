@@ -18,23 +18,25 @@ class AddServiceRepository {
           .collection("users")
           .doc(currentUser.uid)
           .collection("products")
-          .doc(product.title)
+          .doc(product.id)
           .get();
       if (doc.exists) {
-        throw Exception("This product title already exists");
+        throw Exception("Please try again");
       }
     }
 
-    final imageRef = storageRef
-        .child("users/${currentUser.uid}/products/${product.title}/image.jpg");
-    await imageRef.putFile(product.image!);
-    final url = await imageRef.getDownloadURL();
-    product.imageUrl = url;
+    if(product.image!=null){
+      final imageRef = storageRef
+          .child("users/${currentUser.uid}/products/${product.id}/image.jpg");
+      await imageRef.putData(product.image!.readAsBytesSync());
+      final url = await imageRef.getDownloadURL();
+      product.imageUrl = url;
+    }
     final check = await db
         .collection("users")
         .doc(currentUser.uid)
         .collection("products")
-        .doc(product.title)
+        .doc(product.id)
         .set(product.toMap());
     return product;
   }
@@ -54,11 +56,11 @@ class AddServiceRepository {
         .collection("users")
         .doc(currentUser.uid)
         .collection("products")
-        .doc(product.title)
+        .doc(product.id)
         .delete();
     final storageRef = FirebaseStorage.instance.ref();
     await storageRef
-        .child("users/${currentUser.uid}/products/${product.title}/image.jpg")
+        .child("users/${currentUser.uid}/products/${product.id}/image.jpg")
         .delete();
   }
 

@@ -10,7 +10,7 @@ class ProfileImageInitial extends ProfileImageState {
 }
 
 class ProfileImageUpdated extends ProfileImageState {
-  final File? file;
+  final String file;
 
   const ProfileImageUpdated(this.file);
 
@@ -19,7 +19,7 @@ class ProfileImageUpdated extends ProfileImageState {
 }
 
 class BannerImageUpdated extends ProfileImageState {
-  final File? file;
+  final String? file;
 
   const BannerImageUpdated(this.file);
 

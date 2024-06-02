@@ -85,25 +85,27 @@ class InfoCard extends StatelessWidget {
     if (profileImageURL.isEmpty) {
       return person;
     }
-   return CachedNetworkImage(
-    imageUrl:  profileImageURL,
-    imageBuilder: (context, imageProvider) {
-                    return Container(
-                        decoration: BoxDecoration(
-                        image: DecorationImage(
-                         image: imageProvider,
-                         fit: BoxFit.fill,
-                        ),
-                       ));
-                     },
-    fit: BoxFit.fill,
-    placeholder: (context, child, ) {
-      print("profile placholder-------------------");
-        return loading;
-    },
-    errorWidget: (context, error, stackTrace) {
-      return person;
-    }
-   );
+    return CachedNetworkImage(
+        imageUrl: profileImageURL,
+        imageBuilder: (context, imageProvider) {
+          return Container(
+              decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ));
+        },
+        fit: BoxFit.fill,
+        placeholder: (
+          context,
+          child,
+        ) {
+          print("profile placholder-------------------");
+          return loading;
+        },
+        errorWidget: (context, error, stackTrace) {
+          return person;
+        });
   }
 }
