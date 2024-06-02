@@ -256,9 +256,21 @@ class CoreRepository {
 
   Future<void> sendWhatsappMessage(String phoneNumber) async {
     String text =
-        "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+        "${GlobalVariable.metaData.message!.replaceAll(" newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
 
-    print(text);
+    var androidUrl = "whatsapp://send?phone=$phoneNumber&text=$text";
+    var iosUrl = "https://wa.me/$phoneNumber?text=$text}";
+    if (Platform.isIOS) {
+      await launchUrl(Uri.parse(iosUrl));
+    } else {
+      await launchUrl(Uri.parse(androidUrl));
+    }
+  }
+
+  Future<void> sendQueryWhatsappMessage(String phoneNumber) async {
+    String text =
+        "${GlobalVariable.metaData.message!.replaceAll(" newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+
     var androidUrl = "whatsapp://send?phone=$phoneNumber&text=$text";
     var iosUrl = "https://wa.me/$phoneNumber?text=$text}";
     if (Platform.isIOS) {

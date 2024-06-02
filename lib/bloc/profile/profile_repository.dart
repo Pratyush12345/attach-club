@@ -44,6 +44,10 @@ class ProfileRepository {
     );
   }
 
+  Future<void> querywhatsappIconClicked(String phoneNo) async {
+    await _repository.sendQueryWhatsappMessage(phoneNo);
+  }
+
   Future<void> addReview(Review review, String profileUid) async {
     final user = _repository.getCurrentUser();
     final db = FirebaseFirestore.instance;

@@ -64,6 +64,8 @@ dependencies:
   firebase_messaging: ^14.9.3
   flutter_local_notifications: ^17.1.2
   shimmer:
+  permission_handler: ^11.3.1
+
 #  awesome_notifications_core: ^0.9.3
 #  awesome_notifications: any
 #  awesome_notifications_fcm: any

@@ -45,8 +45,15 @@ class _SplashScreenState extends State<SplashScreen> {
               _navigate("/verifyPhone");
             }
           },
-          child: Center(
-            child: Image.asset("assets/images/splash.png")
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.asset("assets/images/splash.png")
+              ),
+              const SizedBox(height: 10.0,),
+              const Text("Attach Club", style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),)
+            ],
           ),
       ),
     );

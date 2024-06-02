@@ -78,7 +78,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        scrollController.addListener(_scrollListener);
-       Future.delayed(Duration(milliseconds: 2000),(){
+       Future.delayed(const Duration(milliseconds: 4000),(){
         
        Provider.of<ChangeSettingScreenProvider>(context, listen: false).changeSettingScreenIndex("Settings");
        } );
@@ -423,7 +423,9 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                     ),
                   ),
                   SizedBox(height: 0.01716738197 * height),
-                  GreetingDashboard( imagelink:  context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "link" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].link),
+                  GreetingDashboard( imagelink:  context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "link" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].link, 
+                  fileName :context.read<gbloc.GreetingsBloc>().filteredList.isEmpty? "greeting" : context.read<gbloc.GreetingsBloc>().filteredList[0].templates[0].name
+                  ),
                   const SizedBox(height: paddingDueToNav)
                 ],
               ),

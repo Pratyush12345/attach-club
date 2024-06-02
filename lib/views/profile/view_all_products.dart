@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewAllProducts extends StatelessWidget {
-  const ViewAllProducts({super.key});
+  final String phoneNo;
+  const ViewAllProducts({super.key, required this.phoneNo});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class ViewAllProducts extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ProductCardWithEnquiry(
+                phoneNo: phoneNo ,
                 product: bloc.productList[i],
                 expanded: true,
               ),

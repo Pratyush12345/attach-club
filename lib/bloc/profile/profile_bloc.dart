@@ -90,6 +90,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       await _repository.sendConnectionRequest(event.userUid);
       emit(const OtherUserDataUpdated());
     });
+    on<QueryWhatsappIconClicked>((event, emit) async {
+      try {
+        await _repository.querywhatsappIconClicked(event.phoneNo);
+      } on Exception catch (e) {
+        emit(ShowSnackBar(e.toString()));
+        //emit(ConnectionsNeutral());
+      }
+    });
   }
 
   int _calculateRating(List<Review> list) {

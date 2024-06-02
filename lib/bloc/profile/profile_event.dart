@@ -40,3 +40,13 @@ class ConnectButtonPressed extends ProfileEvent {
   @override
   List<Object?> get props => [userUid];
 }
+
+class QueryWhatsappIconClicked extends ProfileEvent {
+  // final ConnectionRequest request;
+  final String phoneNo;
+
+  const QueryWhatsappIconClicked(this.phoneNo);
+
+  @override
+  List<Object?> get props => [phoneNo];
+}
