@@ -55,6 +55,7 @@ class GreetingDashboard extends StatelessWidget {
             horizontal: horizontalPadding,
           ),
           child: GreetingCard(
+            fromScreen: "Dashboard",
             imageurl: imagelink,
             screenshotController: screenshotController,
           ),

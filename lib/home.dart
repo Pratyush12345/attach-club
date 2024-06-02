@@ -149,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen>
       child: Consumer<ChangeScreenProvider>(
 
         builder: (context, model, child) {
-                 print(model.selectedIndex);
                  _selectedIndex = model.selectedIndex;
                  controller.reset();
                  controller.forward();

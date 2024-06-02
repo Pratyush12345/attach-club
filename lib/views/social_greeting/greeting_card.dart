@@ -17,8 +17,9 @@ import 'package:shimmer/shimmer.dart';
 class GreetingCard extends StatelessWidget {
   
   ScreenshotController? screenshotController;
+  final String fromScreen;
   String? imageurl;
-  GreetingCard({super.key, @required this.screenshotController, @required this.imageurl,});
+  GreetingCard({super.key, @required this.screenshotController, @required this.imageurl, required this.fromScreen,});
  
 
 
@@ -30,10 +31,12 @@ class GreetingCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: (){
+        if(fromScreen == "Dashboard"){
         if (userData.accountType == "premium") {
           Navigator.of(context).pushNamed("/greetings");
         } else {
           Navigator.of(context).pushNamed("/buyPlan");
+        }
         }
       },
       child:  ClipRRect(

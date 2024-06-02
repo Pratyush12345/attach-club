@@ -15,45 +15,60 @@ class AlertsList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: min(2, list.length),
       padding: EdgeInsets.zero,
-      itemExtent: 100,
+      //itemExtent: 120,
       itemBuilder: (context, index) {
         return Card(
           color: const Color(0xFF26293B),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20.0, right: 0.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      list[index].title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.7 ,
+                        child: Text(
+                          list[index].title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      list[index].body,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
+                      const SizedBox(height: 6.0,),
+                      Text(
+                        list[index].body,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 //calculate time ago from Timestamp and DateTime.now
-                Text(
-                  _calculateTimeDiff(
-                    list[index].creationDate.toDate(),
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width*0.3 ,
+                    child: Text(
+                      maxLines: 1,
+                      style: const TextStyle(fontSize: 12.0),
+                      _calculateTimeDiff(
+                        list[index].creationDate.toDate(),
+                      ),
+                    ),
                   ),
                 ),
               ],

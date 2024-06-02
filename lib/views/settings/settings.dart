@@ -68,7 +68,6 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                 ),
                 child: Consumer<ChangeSettingScreenProvider>(
                   builder: (context, model, child) {
-                    print("builddddddd");
                     return InfoCard();
                   }
                 ),

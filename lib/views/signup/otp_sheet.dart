@@ -39,6 +39,11 @@ class _OtpSheetState extends State<OtpSheet> {
   final controller = TextEditingController();
   
   @override
+  void initState() {
+    context.read<SignupBloc>().isContinuePressed = false;
+    super.initState();
+  }
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();
@@ -131,6 +136,10 @@ class _OtpSheetState extends State<OtpSheet> {
                 CustomButton(
                   onPressed: () {
                     context.read<SignupBloc>().isContinuePressed = true;
+                    Future.delayed(const Duration(milliseconds: 10000),(){
+                       context.read<SignupBloc>().isContinuePressed = false;
+                       setState(() {});
+                    });
                     setState(() {});
                     context.read<SignupBloc>().add(VerifyOtp(
                           otp: controller.text,

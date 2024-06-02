@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';

@@ -31,60 +31,58 @@ class LinkCard extends StatelessWidget {
         else if(grp == "CONNECTED USER"){
           showDashboardBottomSheet(context); 
         }
+        else{
+           Navigator.pushNamed(context, "/settings/detailedAnalytics");
+        }
         
 
       },
-      child: GestureDetector(
-              onTap: (){
-                    Navigator.pushNamed(context, "/settings/detailedAnalytics");
-              },
-        child: Card(
-          margin: EdgeInsets.zero,
-          color:   grp == "CONNECTED USER" ? const Color(0xFFFFD16A): const Color(0xFF26293B),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: SizedBox(
-            height: 0.07725321888 * height,
-            width: 0.4 * width,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  prefix,
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  Flexible(
-                    child: RichText(
-                      text: TextSpan(
-                        text: title,
-                        style:  TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: grp == "CONNECTED USER" ? Colors.black: primaryTextColor,
-                        ),
+      child: Card(
+        margin: EdgeInsets.zero,
+        color:   grp == "CONNECTED USER" ? const Color(0xFFFFD16A): const Color(0xFF26293B),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: SizedBox(
+          height: 0.07725321888 * height,
+          width: 0.4 * width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                prefix,
+                const SizedBox(
+                  width: 6,
+                ),
+                Flexible(
+                  child: RichText(
+                    text: TextSpan(
+                      text: title,
+                      style:  TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: grp == "CONNECTED USER" ? Colors.black: primaryTextColor,
                       ),
                     ),
                   ),
-                  
-                     SizedBox(
+                ),
+                
+                   SizedBox(
+                    width: 15,
+                    height: 15,
+                    child: SvgPicture.asset(
+                      "assets/svg/arrow_up_right.svg",
                       width: 15,
                       height: 15,
-                      child: SvgPicture.asset(
-                        "assets/svg/arrow_up_right.svg",
-                        width: 15,
-                        height: 15,
-                        colorFilter: ColorFilter.mode(
-                           grp == "CONNECTED USER" ? Colors.black : Colors.white,
-                          BlendMode.srcIn,
-                        ),
+                      colorFilter: ColorFilter.mode(
+                         grp == "CONNECTED USER" ? Colors.black : Colors.white,
+                        BlendMode.srcIn,
                       ),
                     ),
-                  
-                ],
-              ),
+                  ),
+                
+              ],
             ),
           ),
         ),

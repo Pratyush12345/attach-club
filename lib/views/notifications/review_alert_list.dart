@@ -16,7 +16,7 @@ class ReviewAlertList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: min(2, list.length),
       padding: EdgeInsets.zero,
-      itemExtent: 100,
+      // itemExtent: 100,
       itemBuilder: (context, index) {
         return Card(
           color: const Color(0xFF26293B),
@@ -24,32 +24,39 @@ class ReviewAlertList extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "You got a review from ${list[index].name}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.7,
+                        child: Text(
+                          "You got a review from ${list[index].name}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      list[index].feedback,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
+                      const SizedBox(height: 6.0,),
+                      Text(
+                        list[index].feedback,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

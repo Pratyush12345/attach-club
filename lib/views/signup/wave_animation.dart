@@ -103,9 +103,20 @@ class CircleWaveRouteState extends State<CircleWaveRoute>
           child: Container(
             width: 79,
             height: 79,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white
+             decoration: const BoxDecoration(
+                              color: Color(0xFF181B2F),
+                              shape: BoxShape.circle,
+                              // image: DecorationImage(
+                                
+                              //   image: AssetImage("assets/images/splash.png"),
+                              //   fit: BoxFit.cover,
+                              // )
+              
+            ),
+            child: Image.asset("assets/images/splash.png",
+            width: 70, 
+            height: 70,
+            fit: BoxFit.contain,
             ),
           ),
           

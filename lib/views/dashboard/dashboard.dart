@@ -156,7 +156,15 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: GlobalVariable.metaData.appBannerLink! == ""? const  CircularProgressIndicator(): CachedNetworkImage(
+                        child: GlobalVariable.metaData.appBannerLink! == ""?  Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              ): CachedNetworkImage(
                           imageBuilder: (context, imageProvider) {
                             return Container(
                             decoration: BoxDecoration(

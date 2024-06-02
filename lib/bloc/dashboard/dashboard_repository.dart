@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/metaData.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,10 +66,12 @@ class DashboardRepository {
       final List<UserData> list = [];
       final Map<String, dynamic> map = jsonDecode(response.body);
       for (var i in map.entries) {
+        if(i.key!=userData.uid){
         list.add(UserData.fromJson(
           map: (i.value as Map<String, dynamic>),
           uid: i.key,
         ));
+        }
       }
       return list;
     }

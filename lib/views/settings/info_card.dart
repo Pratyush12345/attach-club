@@ -1,5 +1,6 @@
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,20 +80,30 @@ class InfoCard extends StatelessWidget {
       color: Colors.black,
     );
     const loading = CircularProgressIndicator(
-      color: Colors.purple,
+      color: Colors.grey,
     );
     if (profileImageURL.isEmpty) {
       return person;
     }
-    return Image.network(profileImageURL, fit: BoxFit.fill,
-        loadingBuilder: (context, child, loadingProgress) {
-      if (loadingProgress == null) {
-        return child;
-      } else {
+   return CachedNetworkImage(
+    imageUrl:  profileImageURL,
+    imageBuilder: (context, imageProvider) {
+                    return Container(
+                        decoration: BoxDecoration(
+                        image: DecorationImage(
+                         image: imageProvider,
+                         fit: BoxFit.fill,
+                        ),
+                       ));
+                     },
+    fit: BoxFit.fill,
+    placeholder: (context, child, ) {
+      print("profile placholder-------------------");
         return loading;
-      }
-    }, errorBuilder: (context, error, stackTrace) {
+    },
+    errorWidget: (context, error, stackTrace) {
       return person;
-    });
+    }
+   );
   }
 }

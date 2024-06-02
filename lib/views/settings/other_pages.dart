@@ -169,7 +169,7 @@ class _OtherPagesState extends State<OtherPages> {
           },
         ),
         const LineBreak(),
-        if (context.read<UserDataNotifier>().userData.accountType != "premium")
+        //if (context.read<UserDataNotifier>().userData.accountType != "premium")
           ListTile(
             title: const Text(
               "Upgrade Your Plan",
@@ -218,7 +218,7 @@ class _OtherPagesState extends State<OtherPages> {
           height: 16,
         ),
         GradientButton(
-          title: "Delete Account",
+          title: "Deactivate Account",
           subTitle: "Remove all the data and delete account",
           prefixIcon: const Icon(
             Icons.logout,

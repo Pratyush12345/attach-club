@@ -10,9 +10,8 @@ import '../../core/repository/user_data_notifier.dart';
 
 AppBar getDashboardAppBar(BuildContext context, double height) {
   final top = MediaQuery.of(context).viewInsets.top;
-  final userData = context.read<UserDataNotifier>().userData; 
   int hh = DateTime.now().hour;
-        
+       
   return AppBar(
     toolbarHeight: top + 0.080083691 * height,
     flexibleSpace: Align(
@@ -20,88 +19,93 @@ AppBar getDashboardAppBar(BuildContext context, double height) {
       child: SizedBox(
         height: 0.080083691 * height,
         child: Center(
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 24.0),
-                child: GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushNamed('/profile');
-                  },
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: ClipOval(
-                      child: _getProfileImage(userData.profileImageURL),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 6,
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushNamed('/profile');
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        userData.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: primaryTextColor,
+          child: Consumer<ChangeSettingScreenProvider>(
+            builder: (context, model, child) {
+              final userData = context.read<UserDataNotifier>().userData; 
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pushNamed('/profile');
+                      },
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: ClipOval(
+                          child: _getProfileImage(userData.profileImageURL),
                         ),
                       ),
-                      Text(
-                        hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: primaryTextColor,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.of(context).pushNamed('/notifications');
-                },
-                child: SizedBox(
-                  width: 48,
-                  child: SvgPicture.asset(
-                    "assets/svg/bell.svg",
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 11.0),
-                child: SizedBox(
-                  width: 48,
-                  child: IconButton(
-                    icon: const Icon(Icons.qr_code),
-                    iconSize: 24,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/qr');
-                    },
+                  const SizedBox(
+                    width: 6,
                   ),
-                ),
-              ),
-            ],
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pushNamed('/profile');
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            userData.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: primaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            hh>=0 && hh<12 ? "Good morning!" : hh>=12 && hh<17 ? "Good afternoon!" : "Good evening!" ,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: primaryTextColor,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pushNamed('/notifications');
+                    },
+                    child: SizedBox(
+                      width: 48,
+                      child: SvgPicture.asset(
+                        "assets/svg/bell.svg",
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 11.0),
+                    child: SizedBox(
+                      width: 48,
+                      child: IconButton(
+                        icon: const Icon(Icons.qr_code),
+                        iconSize: 24,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/qr');
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ),

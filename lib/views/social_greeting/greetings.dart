@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:attach_club/bloc/greetings/greetings_bloc.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/views/social_greeting/greeting_keep_alive.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,7 @@ class _GreetingsState extends State<Greetings> {
   final searchController = TextEditingController();
   int selectedTopic = 0;
   int selectedImage = 0;
+  String selectedCategory = "";
   ScreenshotController screenshotController = ScreenshotController();
   
   shareWidget(){
@@ -40,8 +43,9 @@ class _GreetingsState extends State<Greetings> {
 
                 //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
                 await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+                String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
 
-                Share.shareXFiles([XFile(imagePath)], text: "Hello message!!");
+                Share.shareXFiles([XFile(imagePath)], text: text);
 
               }).catchError((onError) {
                 print(onError);
@@ -111,9 +115,12 @@ class _GreetingsState extends State<Greetings> {
                           itemCount: bloc.filteredList.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
+                              key: ValueKey(index.toString()),
                               onTap: () {
                                 setState(() {
                                   selectedTopic = index;
+                                  selectedImage = 0;
+                                  selectedCategory = bloc.filteredList[index].categoryName;
                                 });
                               },
                               child: Container(
@@ -264,19 +271,21 @@ class _GreetingsState extends State<Greetings> {
                         //   ),
                         // ),
 
-                      GreetingCard(imageurl: bloc.filteredList[selectedTopic].templates[selectedImage].link , screenshotController:  screenshotController , ),
+                      GreetingCard(imageurl: bloc.filteredList[selectedTopic].templates[selectedImage].link , screenshotController:  screenshotController , fromScreen: "Social Greeting", ),
                       
                       SizedBox(height: 0.02145922747 * height),
                       SizedBox(
                         height: 0.1126609442 * height,
                         width: width,
                         child: ListView.builder(
+                          key: ValueKey(selectedCategory),
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount:
-                              bloc.filteredList[selectedTopic].templates.length,
+                          itemCount: bloc.filteredList[selectedTopic].templates.length,
                           itemBuilder: (context, index) {
+                            print("${bloc.filteredList[selectedTopic].hashCode+index}");
                             return GestureDetector(
+                              key:  ValueKey("${bloc.filteredList[selectedTopic].hashCode+index}"),
                               onTap: () {
                                 setState(() {
                                   selectedImage = index;
@@ -298,39 +307,44 @@ class _GreetingsState extends State<Greetings> {
                                           )
                                         : null,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: CachedNetworkImage(
-                                        imageBuilder: (context, imageProvider) {
-                                          return Container(
-                                              decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fill,
-                                              ),
-                                            ));
-                                          },
-                                        placeholder: (context, url) {
-                                          return Shimmer.fromColors(
-                                            direction: ShimmerDirection.ltr,
-                                              baseColor:  Colors.grey[800]!,
-                                              highlightColor: Colors.grey[600]!,
-                                        
-                                            child: Container(
-                                              color: Colors.white,
-                                            ),
-                                          );
-                                        },
-                                        imageUrl: bloc
+                                  child: GreetingSmallGrid(imageurl: bloc
                                             .filteredList[selectedTopic]
                                             .templates[index]
-                                            .link,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
+                                            .link ,),
+                                  // child: Padding(
+                                  //   padding: const EdgeInsets.all(2.0),
+                                  //   child: ClipRRect(
+                                  //     borderRadius: BorderRadius.circular(8),
+                                  //     child: CachedNetworkImage(
+                                  //        imageUrl: bloc
+                                  //           .filteredList[selectedTopic]
+                                  //           .templates[index]
+                                  //           .link,
+                                  //       imageBuilder: (context, imageProvider) {
+                                  //         return Container(
+                                  //             decoration: BoxDecoration(
+                                  //             image: DecorationImage(
+                                  //             image: imageProvider,
+                                  //             fit: BoxFit.fill,
+                                  //             ),
+                                  //           ));
+                                  //         },
+                                  //       placeholder: (context, url) {
+                                  //         return Shimmer.fromColors(
+                                  //           direction: ShimmerDirection.ltr,
+                                  //             baseColor:  Colors.grey[800]!,
+                                  //             highlightColor: Colors.grey[600]!,
+                                        
+                                  //           child: Container(
+                                  //             color: Colors.white,
+                                  //           ),
+                                  //         );
+                                  //       },
+                                       
+                                  //       fit: BoxFit.fill,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ),
                               ),
                             );
