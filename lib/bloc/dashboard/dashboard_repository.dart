@@ -3,6 +3,7 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/metaData.dart';
+import 'package:attach_club/models/search_user_data.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -39,7 +40,7 @@ class DashboardRepository {
   Future<void> sendWhatsappMessage(String phoneNo) async {
     _coreRepository.sendWhatsappMessage(phoneNo);
   }
- 
+
   Future<AppMetaData> getMetaData() async {
     final db = FirebaseDatabase.instance;
     final data = await db.ref("MetaData").get();
@@ -48,8 +49,8 @@ class DashboardRepository {
     }
     throw Exception("Meta data not found");
   }
-  
-  Future<List<UserData>> getSuggestedProfile(UserData userData) async {
+
+  Future<List<SearchUserData>> getSuggestedProfile(UserData userData) async {
     // return [];
     final domain = await _coreRepository.getDomain();
 
@@ -63,13 +64,16 @@ class DashboardRepository {
       ),
     );
     if (response.statusCode == 200) {
-      final List<UserData> list = [];
+      final List<SearchUserData> list = [];
       final Map<String, dynamic> map = jsonDecode(response.body);
       for (var i in map.entries) {
         if(i.key!=userData.uid){
-        list.add(UserData.fromJson(
-          map: (i.value as Map<String, dynamic>),
-          uid: i.key,
+        list.add(SearchUserData(
+          userData: UserData.fromJson(
+            map: (i.value as Map<String, dynamic>),
+            uid: i.key,
+          ),
+          isConnected: false, //TODO: pending api response
         ));
         }
       }

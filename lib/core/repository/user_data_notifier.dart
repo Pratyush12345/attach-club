@@ -8,6 +8,9 @@ class UserDataNotifier extends ChangeNotifier{
     firstLoginDate: Timestamp.now(),
     lastLoginDate: Timestamp.now(),
     lastPaymentDate: Timestamp.now(),
+    isPlanExpiredRecently: false,
+    planExitDate: Timestamp.now(),
+    planPurchaseDate: Timestamp.now(),
   );
   UserData get userData => _userData;
   void updateUserData(UserData newUserData){

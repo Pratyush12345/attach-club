@@ -18,12 +18,21 @@ class ManageProfile extends StatefulWidget {
 class _ManageProfileState extends State<ManageProfile> {
   final tabs = <TabData>[
     TabData(
-        title: "Display", tab: const ProfileImage(isInsideManageProfile: true)),
-    TabData(title: "Profile", tab: const EditProfile()),
+      title: "Display",
+      tab: const ProfileImage(isInsideManageProfile: true),
+    ),
     TabData(
-        title: "Your Links", tab: const AddLink(isInsideManageProfile: true)),
+      title: "Profile",
+      tab: const EditProfile(),
+    ),
     TabData(
-        title: "Product", tab: const AddService(isInsideManageProfile: true)),
+      title: "Your Links",
+      tab: const AddLink(isInsideManageProfile: true),
+    ),
+    TabData(
+      title: "Product",
+      tab: const AddService(isInsideManageProfile: true),
+    ),
     // TabData(title: "Reviews", tab: const Reviews()),
     // TabData(title: "Account", tab: const Account()),
   ];
@@ -97,10 +106,9 @@ class _ManageProfileState extends State<ManageProfile> {
               fontWeight: FontWeight.bold,
             ),
             unselectedLabelStyle: const TextStyle(
-              color: primaryTextColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w400
-            ),
+                color: primaryTextColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w400),
             // tabAlignment: TabAlignment.start,
             tabAlignment: TabAlignment.center,
           ),

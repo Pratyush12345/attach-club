@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:attach_club/bloc/splash_screen/splash_screen_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -22,7 +22,9 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   ) : super(SignupInitial()) {
     on<GoogleLoginTriggered>((event, emit) async {
       try {
+        log("pre check");
         final check = await _repository.signInWithGoogle();
+        log("post check ${emit.isDone}");
         emit(GoogleLoginSuccess());
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));
@@ -60,22 +62,23 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       }
     });
     on<CheckOnboardingStatus>((event, emit) async {
-      _checkOnboardingStatus(emit);
+      await _checkOnboardingStatus(emit);
     });
     on<CheckPhoneNumberValidity>((event, emit) async {
       final userData = await _coreRepository.getUserData();
       if(userData.phoneNo.isEmpty){
         emit(NavigateToPhoneVerification());
       }else{
-        _checkOnboardingStatus(emit);
+        await _checkOnboardingStatus(emit);
       }
     });
   }
 
-  void _checkOnboardingStatus(Emitter<SignupState> emit) async {
+  Future<void> _checkOnboardingStatus(Emitter<SignupState> emit) async {
     try {
       final result = await _coreRepository.checkOnboardingStatus();
-      print("result---------->>>>>>$result");
+      log("result---------->>>>>>$result");
+      log("onboarding status ${emit.isDone}");
       if (result) {
         emit(NavigateToDashboard());
       } else {

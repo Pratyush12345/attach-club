@@ -366,14 +366,14 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                         for (var i = 0;
                             i < min(5, bloc.suggestedProfile.length);
                             i++)
-                          if (bloc.suggestedProfile[i].uid != null)
+                          if (bloc.suggestedProfile[i].userData.uid != null)
                             ProfileCard(
-                              accountType: bloc.suggestedProfile[i].accountType ,
-                              name: bloc.suggestedProfile[i].name,
-                              description: bloc.suggestedProfile[i].description,
-                              asset: bloc.suggestedProfile[i].profileImageURL,
+                              accountType: bloc.suggestedProfile[i].userData.accountType ,
+                              name: bloc.suggestedProfile[i].userData.name,
+                              description: bloc.suggestedProfile[i].userData.description,
+                              asset: bloc.suggestedProfile[i].userData.profileImageURL,
                               selected: 3,
-                              uid: bloc.suggestedProfile[i].uid!,
+                              uid: bloc.suggestedProfile[i].userData.uid!,
                             ),
                       ],
                     ),

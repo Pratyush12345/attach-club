@@ -19,6 +19,7 @@ class UserData {
   bool isEverPurchasedPremium;
   bool isLinkEnabled;
   bool isOnline;
+  bool isPlanExpiredRecently;
   bool isProductEnabled;
   bool isReviewEnabled;
   bool isShowProfileImageOnGreeting;
@@ -28,12 +29,14 @@ class UserData {
   String name;
   String phoneNo;
   String pin;
+  Timestamp planExitDate;
+  Timestamp planPurchaseDate;
   String profession;
   int profileClickCount;
-  int profileViewCount;
-  int rating;
   String profileImageURL;
+  int profileViewCount;
   String purchasedPlanCode;
+  int rating;
   String state;
   String username;
   String? uid;
@@ -67,6 +70,9 @@ class UserData {
     this.isEverPurchasedPremium = false,
     this.isLinkEnabled = true,
     this.isOnline = true,
+    required this.isPlanExpiredRecently,
+    required this.planExitDate,
+    required this.planPurchaseDate,
     this.isProductEnabled = true,
     this.isReviewEnabled = true,
     this.isShowProfileImageOnGreeting = true,
@@ -105,7 +111,7 @@ class UserData {
       "isProductEnabled": isProductEnabled,
       "isReviewEnabled": isReviewEnabled,
       "lastLoginDate": lastLoginDate,
-      "isShowProfileImageOnGreeting" : isShowProfileImageOnGreeting,
+      "isShowProfileImageOnGreeting": isShowProfileImageOnGreeting,
       "lastPaymentDate": lastPaymentDate,
       "logoImageURL": logoImageURL,
       "name": name,
@@ -114,13 +120,13 @@ class UserData {
       "profession": profession,
       "profileClickCount": profileClickCount,
       "profileViewCount": profileViewCount,
-      "rating" : rating,
+      "rating": rating,
       "profileImageURL": profileImageURL,
       "purchasedPlanCode": purchasedPlanCode,
       "state": state,
       "username": username,
-      "andrTokenid" : andrTokenid,
-      "iosTokenid" : iosTokenid,
+      "andrTokenid": andrTokenid,
+      "iosTokenid": iosTokenid,
     };
   }
 
@@ -145,7 +151,7 @@ class UserData {
       isOnline: map["isOnline"],
       isProductEnabled: map["isProductEnabled"],
       isReviewEnabled: map["isReviewEnabled"],
-      isShowProfileImageOnGreeting : map["isShowProfileImageOnGreeting"],
+      isShowProfileImageOnGreeting: map["isShowProfileImageOnGreeting"],
       lastLoginDate: map["lastLoginDate"],
       lastPaymentDate: map["lastPaymentDate"],
       logoImageURL: map["logoImageURL"],
@@ -163,6 +169,9 @@ class UserData {
       andrTokenid: map["andrTokenId"] ?? "",
       iosTokenid: map["iosTokenId"] ?? "",
       uid: uid,
+      isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
+      planExitDate: map["planExitDate"] ?? Timestamp.now(),
+      planPurchaseDate: map["planPurchaseDate"] ?? Timestamp.now(),
     );
   }
 
@@ -205,10 +214,14 @@ class UserData {
       andrTokenid: map["andrTokenId"] ?? "",
       iosTokenid: map["iosTokenId"] ?? "",
       uid: uid,
+      isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
+      planExitDate: map["planExitDate"] ?? Timestamp.now(),
+      planPurchaseDate: map["planPurchaseDate"] ?? Timestamp.now(),
     );
   }
 
   factory UserData.fromJson({required Map<String, dynamic> map, String? uid}) {
+    log(uid.toString());
     return UserData(
       accountType: map["accountType"],
       age: map["age"],
@@ -252,8 +265,17 @@ class UserData {
       state: map["state"],
       username: map["username"],
       uid: uid,
-      andrTokenid: map["andrTokenId"]?? "",
-      iosTokenid: map["iosTokenId"]??"",
+      andrTokenid: map["andrTokenId"] ?? "",
+      iosTokenid: map["iosTokenId"] ?? "",
+      isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
+      planExitDate: Timestamp(
+        map["planExitDate"]["_seconds"],
+        map["planExitDate"]["_nanoseconds"],
+      ),
+      planPurchaseDate: Timestamp(
+        map["planPurchaseDate"]["_seconds"],
+        map["planPurchaseDate"]["_nanoseconds"],
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:attach_club/bloc/search_connections/Search_provider.dart';
 import 'package:attach_club/bloc/search_connections/search_connections_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/home.dart';
+import 'package:attach_club/models/search_user_data.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/search_connections/search_connections_text_field.dart';
 import 'package:attach_club/views/search_connections/search_profile_card.dart';
@@ -56,15 +57,15 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
      }
   }
 
-  List<UserData> removeLists(List<UserData> list1, List<UserData> list2) {
-    
-   Set<String> set2 = list2.map((item) =>item.uid! ).toSet();
-   List<UserData> listcopy = List<UserData>.from(list1);
+  List<SearchUserData> removeLists(List<SearchUserData> list1, List<SearchUserData> list2) {
+
+   Set<String> set2 = list2.map((item) =>item.userData.uid! ).toSet();
+   List<SearchUserData> listcopy = List<SearchUserData>.from(list1);
    // Remove items from the first list where the ID is in the second list
-  listcopy.removeWhere((item) => set2.contains(item.uid));
+  listcopy.removeWhere((item) => set2.contains(item.userData.uid));
   return listcopy;
 }
-  
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -86,7 +87,7 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
               },
               builder: (context, state) {
                 final list = removeLists(context.read<dbloc.DashboardBloc>().suggestedProfile, context.read<SearchConnectionsBloc>().resultsList);
-                
+
                 if(state is SearchConnectionsLoading || state is ConnectionRequestLoading){
                   return const Center(
                     child: CircularProgressIndicator(
@@ -113,7 +114,7 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                         child: Text("Recent Searches")),
                      ),
                      const SizedBox(height: 10.0,),
-                     
+
                      Expanded(
                        child: Padding(
                          padding: const EdgeInsets.symmetric(
@@ -125,11 +126,11 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                                 SliverFixedExtentList(
                                 itemExtent: context.read<SearchConnectionsBloc>().resultsList.isEmpty? 100 : 188,
                                 delegate: SliverChildListDelegate(
-                                [ 
+                                [
                                   if(context.read<SearchConnectionsBloc>().resultsList.isEmpty)
                                   const Center(
                                     child: Text("No recent search found")),
-                                  
+
                                   if(context.read<SearchConnectionsBloc>().resultsList.isNotEmpty)
                                   for (var i = 0 ; i < context.read<SearchConnectionsBloc>().resultsList.length;i++)
                                   Padding(
@@ -140,8 +141,8 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                                           : 0,
                                     ),
                                   child: SearchProfileCard(
-                                    key: ValueKey(context.read<SearchConnectionsBloc>().resultsList[i].uid),
-                                    userData: context.read<SearchConnectionsBloc>().resultsList[i],
+                                    key: ValueKey(context.read<SearchConnectionsBloc>().resultsList[i].userData.uid),
+                                    userData: context.read<SearchConnectionsBloc>().resultsList[i].userData,
                                   ),
                                   )
                                 ]
@@ -165,13 +166,13 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                                           ),
                                           child: SearchProfileCard(
                                             key: ValueKey(i),
-                                            userData: list[i],
+                                            userData: list[i].userData,
                                           ),
                                                                              ),
                                        ],
                                      );
                                    }
-                                   else{ 
+                                   else{
                                     return Padding(
                                       padding: EdgeInsets.only(
                                         top: (i == 0) ? 0.02682403433 * height : 0,
@@ -181,16 +182,16 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                                       ),
                                       child: SearchProfileCard(
                                         key: ValueKey(i),
-                                        userData: list[i],
+                                        userData: list[i].userData,
                                       ),
                                     );
                                    }
                                   },
                                   childCount: list.length,
-                                
+
                                 ),
                               ),
-                            
+
                             ],
                           ),
                        ),
@@ -199,16 +200,16 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                     // Expanded(
                     //         child: list.isEmpty? const Center(child: Text("No Data Found"),):
                     //         ListView.builder(
-                               
-                              
+
+
                     //           controller: scrollController,
                     //           itemCount: list.length,
                     //           itemBuilder: (context, i) {
                     //             if( context.read<SearchConnectionsBloc>().resultsList.indexWhere((element) =>element.uid == list[i].uid)!=-1){
-                                 
+
                     //             }
-                                
-                              
+
+
                     //           },
                     //         ),
                     //       ),

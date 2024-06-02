@@ -9,6 +9,9 @@ class GlobalVariable {
     lastLoginDate: Timestamp.now(),
     lastPaymentDate: Timestamp.now(),
     username: "",
+    isPlanExpiredRecently: false,
+    planExitDate: Timestamp.now(),
+    planPurchaseDate: Timestamp.now(),
   );
   static bool isDashboardBuildOnce = false;
   static bool isConnectionsBuildOnce = false;

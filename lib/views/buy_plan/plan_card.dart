@@ -86,7 +86,7 @@ class PlanCard extends StatelessWidget {
                 children: [
                   RichText(
                     text: TextSpan(
-                      text: "Rs. ${((1 + (discount / 100)) * price)} / Month",
+                      text: "Rs. ${((1 + (discount / 100)) * price).toInt()} / Month",
                       style: TextStyle(
                         color:
                             (gradient) ? const Color(0xFF937B00) : Colors.white,

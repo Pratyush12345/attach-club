@@ -1,5 +1,6 @@
 import 'package:attach_club/bloc/dashboard/dashboard_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/models/search_user_data.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,7 @@ part 'dashboard_state.dart';
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   int connectionsCount = 0;
   int reviewCount = 0;
-  List<UserData> suggestedProfile = [];
+  List<SearchUserData> suggestedProfile = [];
 
   final DashboardRepository _repository;
 

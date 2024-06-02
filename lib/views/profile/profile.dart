@@ -273,9 +273,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                    else if(buttonTitle == "Received"){
             
                                    }
-            
-            
-                                  
                                 },
                                 title:  buttonTitle,
                                 buttonWidth: 0.4279069767,

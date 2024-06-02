@@ -23,6 +23,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     firstLoginDate: Timestamp.now(),
     lastLoginDate: Timestamp.now(),
     lastPaymentDate: Timestamp.now(),
+    isPlanExpiredRecently: false,
+    planExitDate: Timestamp.now(),
+    planPurchaseDate: Timestamp.now(),
   );
   List<Review> reviewsList = [];
   final ProfileRepository _repository;
@@ -33,6 +36,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     firstLoginDate: Timestamp.now(),
     lastLoginDate: Timestamp.now(),
     lastPaymentDate: Timestamp.now(),
+     isPlanExpiredRecently: false,
+     planExitDate: Timestamp.now(),
+     planPurchaseDate: Timestamp.now(),
   );
   
   }

@@ -106,6 +106,7 @@ class CompleteProfileBloc
       }
 
       final user = UserData(
+        accountType: "premium",
         username: event.username,
         name: event.name,
         profession: event.profession,
@@ -120,6 +121,10 @@ class CompleteProfileBloc
         firstLoginDate: Timestamp.now(),
         lastLoginDate: Timestamp.now(),
         lastPaymentDate: Timestamp.now(),
+        isPlanExpiredRecently: false,
+        planExitDate: Timestamp.now(),
+        planPurchaseDate: Timestamp.now(),
+        purchasedPlanCode: "60DP",
       );
       await _repository.uploadUserData(user);
       await _repository.uploadUserToRealtime(user);

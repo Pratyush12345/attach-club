@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/models/search_user_data.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:http/http.dart';
 
@@ -11,7 +12,7 @@ class SearchConnectionsRepository {
 
   SearchConnectionsRepository(this._repository, this.client);
 
-  Future<List<UserData>> getSearchResult(String query) async {
+  Future<List<SearchUserData>> getSearchResult(String query) async {
     final user = _repository.getCurrentUser();
     //final domain = await _repository.getDomain();
     final domain = GlobalVariable.metaData.apiURL;
@@ -20,10 +21,13 @@ class SearchConnectionsRepository {
     final response = await client.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      final List<UserData> list = [];
+      final List<SearchUserData> list = [];
       for (var i in data.entries) {
-        if(i.key == user.uid) continue;
-        list.add(UserData.fromJson(map: i.value, uid: i.key));
+        if (i.key == user.uid) continue;
+        list.add(SearchUserData(
+          userData: UserData.fromJson(map: i.value, uid: i.key),
+          isConnected: false, //TODO: pending api response
+        ));
       }
       return list;
     }

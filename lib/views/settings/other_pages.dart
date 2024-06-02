@@ -58,7 +58,8 @@ class _OtherPagesState extends State<OtherPages> {
       ),
       onPressed: () {
         context.read<CoreRepository>().logout(context);
-        Navigator.of(context).popAndPushNamed("/signup");
+        Navigator.of(context).popUntil((route) => false);
+        Navigator.of(context).pushNamed("/signup");
       },
     );
 

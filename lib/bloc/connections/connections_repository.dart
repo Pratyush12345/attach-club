@@ -32,14 +32,14 @@ class ConnectionsRepository {
     //   throw Exception("Failed to fetch connections");
     // }
     // final userData = jsonDecode(response.body);
-    
+
     final db = FirebaseFirestore.instance;
     final data = await db
         .collection("users")
         .doc(currentUser.uid)
         .collection("requests")
         .get();
-    
+
     List<String> ids = [];
     Map<String, Map<String, dynamic>> idmap = {};
     for (var i in data.docs) {
@@ -54,7 +54,7 @@ class ConnectionsRepository {
         .collection('users')
         .where(FieldPath.documentId, whereIn: ids)
         .get();
-     
+
      for (var i in querySnapshot.docs){
       if(i.exists){
        list.add(ConnectionRequest.fromMap(
@@ -64,9 +64,9 @@ class ConnectionsRepository {
         ));
       }
      }
-   
 
-    
+
+
     return list;
   }
 

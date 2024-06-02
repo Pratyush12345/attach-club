@@ -29,7 +29,6 @@ class AppMetaData {
   }
   
   factory AppMetaData.fromMap(Map json) {
-    print(json);
     return AppMetaData(
     apiURL : json['apiURL'],
     appBannerLink : json['appBannerLink'],

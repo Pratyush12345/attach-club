@@ -13,7 +13,7 @@ class AlertsList extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: min(2, list.length),
+      itemCount: min(10, list.length),
       padding: EdgeInsets.zero,
       //itemExtent: 120,
       itemBuilder: (context, index) {

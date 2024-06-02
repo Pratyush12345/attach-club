@@ -40,7 +40,7 @@ class CoreRepository {
     final data = await db.collection("users").doc(currentUser.uid).get();
     if (data.exists &&
         data.data() != null &&
-        data.data()!["isActive"] == true) {
+        (data.data()!["username"] as String).isNotEmpty) {
       return true;
     }
     return false;
@@ -170,6 +170,9 @@ class CoreRepository {
       firstLoginDate: Timestamp.now(),
       lastLoginDate: Timestamp.now(),
       lastPaymentDate: Timestamp.now(),
+      isPlanExpiredRecently: false,
+      planExitDate: Timestamp.now(),
+      planPurchaseDate: Timestamp.now(),
     );
     profileBloc.uid = null;
     profileBloc.lastUpdated = null;
@@ -257,8 +260,6 @@ class CoreRepository {
   Future<void> sendWhatsappMessage(String phoneNumber) async {
     String text =
         "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
-
-    print(text);
     var androidUrl = "whatsapp://send?phone=$phoneNumber&text=$text";
     var iosUrl = "https://wa.me/$phoneNumber?text=$text}";
     if (Platform.isIOS) {
