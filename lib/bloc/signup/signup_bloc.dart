@@ -75,6 +75,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   void _checkOnboardingStatus(Emitter<SignupState> emit) async {
     try {
       final result = await _coreRepository.checkOnboardingStatus();
+      print("result---------->>>>>>$result");
       if (result) {
         emit(NavigateToDashboard());
       } else {

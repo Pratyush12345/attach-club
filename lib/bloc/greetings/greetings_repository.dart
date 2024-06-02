@@ -15,7 +15,12 @@ class GreetingsRepository {
       final greeting = await db.collection('socialGreetings').doc(greetingTopic.id).collection('templates').get();
       list.add(GreetingTopic.fromMap(greetingTopic.data(), greeting));
     }
+    list.sort((a, b) {
+      Timestamp timestampA = a.creationTime;
+      Timestamp timestampB = b.creationTime;
+      return timestampB.compareTo(timestampA);
+    });
     return list;
   }
-
+  
 }

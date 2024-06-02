@@ -27,7 +27,7 @@ class _GreetingsState extends State<Greetings> {
   int selectedImage = 0;
   String selectedCategory = "";
   ScreenshotController screenshotController = ScreenshotController();
-  
+  final ScrollController _scrollController = ScrollController();
   shareWidget(){
        screenshotController!.capture(delay: Duration(milliseconds: 10))
               .then((capturedImage) async {
@@ -98,6 +98,29 @@ class _GreetingsState extends State<Greetings> {
                     children: [
                       SizedBox(height: 0.01502145923 * height),
                       CustomTextField(
+                        onSubmitted: (String val){
+                          
+                         int index = bloc.filteredList.indexWhere((element) => element.categoryName.toLowerCase().contains(val.toLowerCase()));
+                         if(index !=-1){
+                           selectedTopic = index;
+                           selectedImage = 0;
+                           selectedCategory = bloc.filteredList[index].categoryName;
+                            _scrollController.animateTo(
+                            index * 56.0, // Assuming each item has a height of 56.0
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeInOut,
+                          );
+                           setState(() {}); 
+                         }
+                         else{
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('category not found'),
+                            ),
+                          );
+
+                         }
+                        },
                         type: TextFieldType.RegularTextField,
                         controller: searchController,
                         hintText: "Search greetings...",
@@ -110,6 +133,7 @@ class _GreetingsState extends State<Greetings> {
                       SizedBox(
                         height: 38,
                         child: ListView.builder(
+                          controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemCount: bloc.filteredList.length,
@@ -155,121 +179,7 @@ class _GreetingsState extends State<Greetings> {
                       ),
                       SizedBox(height: 0.03326180258 * height),
                       
-                        // child: CachedNetworkImage(
-                        //   placeholder: (context, url) =>
-                        //       const CircularProgressIndicator(
-                        //         color: Colors.purple,
-                        //       ),
-                        //   imageUrl: bloc.filteredList[selectedTopic]
-                        //       .templates[selectedImage].link,
-                        //   imageBuilder: (context, imageProvider) => Container(
-                        //     width: width * 0.8837209302,
-                        //     height: width * 0.8837209302,
-                        //     decoration: BoxDecoration(
-                        //       image: DecorationImage(
-                        //         image: imageProvider,
-                        //         fit: BoxFit.cover,
-                        //       ),
-                        //     ),
-                        //     child: Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //       children: [
-                        //         Padding(
-                        //           padding: const EdgeInsets.all(8.0),
-                        //           child: Container(
-                        //             width: 80.0,
-                        //             decoration: BoxDecoration(
-                        //               borderRadius: BorderRadius.circular(12.0),
-                        //               color: Colors.white,
-                        //             ),
-                        //             child: const Align(
-                        //               alignment: Alignment.topLeft,
-                        //               child: Icon(
-                        //                 Icons.qr_code_2,
-                        //                 size: 80.0,
-                        //                 color: Colors.black,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         Align(
-                        //           alignment: Alignment.bottomCenter,
-                        //           child: Column(
-                        //             children: [
-                        //               const Padding(
-                        //                 padding: EdgeInsets.all(8.0),
-                        //                 child: Align(
-                        //                     alignment: Alignment.topLeft,
-                        //                     child: Row(
-                        //                       children: [
-                        //                         Icon(
-                        //                           Icons.light_mode_outlined,
-                        //                           color: Colors.white,
-                        //                         ),
-                        //                         SizedBox(
-                        //                           width: 4.0,
-                        //                         ),
-                        //                         Text(
-                        //                             'Powered by Attach Club\ndownload app today',
-                        //                             style: TextStyle(
-                        //                                 color: Colors.white,
-                        //                                 fontWeight:
-                        //                                     FontWeight.normal,
-                        //                                 fontSize: 12.0)),
-                        //                       ],
-                        //                     )),
-                        //               ),
-                        //               const SizedBox(height: 2.0),
-                        //               Container(
-                        //                 height: 30.0,
-                        //                 decoration: const BoxDecoration(
-                        //                   color: Colors.white,
-                        //                 ),
-                        //                 child: const Row(
-                        //                   mainAxisAlignment:
-                        //                       MainAxisAlignment.spaceEvenly,
-                        //                   children: [
-                        //                     Row(
-                        //                       children: [
-                        //                         Icon(
-                        //                           Icons.call,
-                        //                           color: Colors.blueAccent,
-                        //                         ),
-                        //                         Text(
-                        //                           '7985624428',
-                        //                           style: TextStyle(
-                        //                             color: Colors.black,
-                        //                             fontWeight: FontWeight.bold,
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                     Row(
-                        //                       children: [
-                        //                         Icon(
-                        //                           Icons.wechat_sharp,
-                        //                           color: Colors.green,
-                        //                         ),
-                        //                         Text(
-                        //                           'wa.me/+917985624428',
-                        //                           style: TextStyle(
-                        //                             color: Colors.black,
-                        //                             fontWeight: FontWeight.bold,
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
+                       
 
                       GreetingCard(imageurl: bloc.filteredList[selectedTopic].templates[selectedImage].link , screenshotController:  screenshotController , fromScreen: "Social Greeting", ),
                       
