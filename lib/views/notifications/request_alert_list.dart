@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:attach_club/models/connection_request.dart';
 import 'package:attach_club/models/notification_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RequestAlertList extends StatelessWidget {
@@ -22,53 +23,65 @@ class RequestAlertList extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20.0, right: 0.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Image.asset(
+                  "assets/images/request.png",
+                  width: 48,
+                  height: 48,
+                ),
+                const SizedBox(width: 10),
                 Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width*0.7,
-                        child: Text(
-                          "${list[index].status}: ${list[index].name}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.7,
+                              child: Text(
+                                "${list[index].status}: ${list[index].name}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(height: 6.0,),
+                            Text(
+                              "${list[index].status} to ${list[index].name}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 6.0,),
-                      Text(
-                        "${list[index].status} to ${list[index].name}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
+                      //calculate time ago from Timestamp and DateTime.now
+                     Expanded(
+                        flex: 2,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width*0.3 ,
+                          child: Text(
+                            maxLines: 1,
+                            style: const TextStyle(fontSize: 12.0),
+                            _calculateTimeDiff(
+                              list[index].updateTime.toDate(),
+                            ),
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                  ),
-                ),
-                //calculate time ago from Timestamp and DateTime.now
-               Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width*0.3 ,
-                    child: Text(
-                      maxLines: 1,
-                      style: const TextStyle(fontSize: 12.0),
-                      _calculateTimeDiff(
-                        list[index].updateTime.toDate(),
-                      ),
-                    ),
                   ),
                 ),
               ],
