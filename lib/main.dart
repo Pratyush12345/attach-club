@@ -339,7 +339,7 @@ class _MyAppState extends State<MyApp> {
                 "/settings/profilePrivacy": (context) => const ProfilePrivacy(),
                 "/home": (context) => const HomeScreen(),
                 "/profile": (context) => const Profile(buttonTitle: "My Profile",),
-                "/profile/products": (context) => const ViewAllProducts(),
+                // "/profile/products": (context) => const ViewAllProducts(),
                 "/qr": (context) => const QrCodeScreen(),
                 "/settings/detailedAnalytics": (context) =>
                     const DetailedAnalytics(),

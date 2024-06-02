@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:developer' as developer;
+import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart' as cbloc;
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
@@ -11,12 +12,15 @@ import 'package:attach_club/models/review.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
 import 'package:attach_club/views/profile/profileShimmerLoader.dart';
+import 'package:attach_club/views/profile/view_all_products.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/components/rating.dart';
 import '../../core/components/text_field.dart';
 
@@ -230,7 +234,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             if (userData.phoneNo.isNotEmpty &&
                                 userData.isBasicDetailEnabled && userData.uid != GlobalVariable.userData.uid )
                               CustomButton(
-                                onPressed: () {},
+                                onPressed: ()async {
+                                  final url = Uri.parse("tel:${userData.phoneNo}");
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url);
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                },
                                 title: "Save Contact",
                                 assetName: "assets/svg/arrow_up_right.svg",
                                 buttonWidth: 0.4379069767,
@@ -248,8 +259,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       .add(cbloc.RequestRemoved(context.read<cbloc.ConnectionsBloc>().connectedList[index]));
                                       
                                       context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
-                                      
-                                      buttonTitle = "Connect";
+                                       buttonTitle = "Connect";
                                       setState(() {
                                         
                                       });
@@ -273,6 +283,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                    else if(buttonTitle == "Received"){
             
                                    }
+                                  Provider.of<ChangeConnectionScreenProvider>(context, listen: false).changeScreenIndex("");
+                                  Provider.of<ChangeSearchScreenProvider>(context, listen: false).changeSearchScreenIndex("");
+
+            
+                                  
                                 },
                                 title:  buttonTitle,
                                 buttonWidth: 0.4279069767,
@@ -295,43 +310,60 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     for (var i in context
                                         .read<ProfileBloc>()
                                         .socialLinksList)
-                                      Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: SizedBox(
-                                          width: 74,
-                                          height: 74,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 11.0,
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  (i.socialMedia.imageUrl
-                                                          .isNotEmpty)
-                                                      ? i.socialMedia.imageUrl
-                                                      : "assets/svg/whatsapp.svg",
-                                                  width: 26,
-                                                  height: 26,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: 6.0,
+                                      GestureDetector(
+                                        onTap: ()async{
+                                          if(i.link.contains(".com") || i.link.contains("wa") || i.link.contains("https://") ){
+                                          final url = Uri.parse(i.link);
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(url);
+                                            } else {
+                                              throw 'Could not launch $url';
+                                            }
+                                          }
+                                          else{
+                                            ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(content: Text("Not a valid link")));
+                                              }
+
+                                        },
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: SizedBox(
+                                            width: 74,
+                                            height: 74,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 11.0,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    (i.socialMedia.imageUrl
+                                                            .isNotEmpty)
+                                                        ? i.socialMedia.imageUrl
+                                                        : "assets/svg/whatsapp.svg",
+                                                    width: 26,
+                                                    height: 26,
                                                   ),
-                                                  child: Text(
-                                                    i.title,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 6.0,
+                                                    ),
+                                                    child: Text(
+                                                      i.title,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -388,8 +420,9 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.of(context)
-                                            .pushNamed("/profile/products");
+                                        // Navigator.of(context)
+                                        //     .pushNamed("/profile/products");
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ViewAllProducts(phoneNo: userData.phoneNo)));
                                       },
                                       child: const Text(
                                         "View All",
@@ -422,6 +455,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                           ),
                                           child: ProductCardWithEnquiry(
                                             product: bloc.productList[i],
+                                            phoneNo: userData.phoneNo,
+
                                           ),
                                         ),
                                       );

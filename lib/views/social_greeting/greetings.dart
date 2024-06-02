@@ -7,6 +7,7 @@ import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/social_greeting/greeting_keep_alive.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
 import 'package:screenshot/screenshot.dart';
@@ -26,15 +27,34 @@ class _GreetingsState extends State<Greetings> {
   int selectedTopic = 0;
   int selectedImage = 0;
   String selectedCategory = "";
+  String fileName = "greeting";
   ScreenshotController screenshotController = ScreenshotController();
   final ScrollController _scrollController = ScrollController();
-  shareWidget(){
-       screenshotController!.capture(delay: Duration(milliseconds: 10))
+  
+  PermissionStatus _permissionStatus = PermissionStatus.denied;
+
+  
+   Future<void> requestPermission(Permission permission) async {
+          final status = await permission.request();
+          setState(() {
+            print(status);
+            _permissionStatus = status;
+          });
+        }
+  
+  getpermissionStatus() async{
+  _permissionStatus = await Permission.storage.status;
+  }
+
+  shareWidget(String filename)async{
+       
+       if(_permissionStatus == PermissionStatus.granted){
+       screenshotController.capture(delay: Duration(milliseconds: 10))
               .then((capturedImage) async {
                 //Directory? tempDir = await getExternalStorageDirectory();
                 //String tempPath = tempDir!.path;
 
-                String filename = "image${DateTime.now().minute}.jpg";
+                String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
                 String imagePath = '/storage/emulated/0/Download/$filename';
 
                 //ShowCapturedWidget(context, capturedImage!);
@@ -43,17 +63,28 @@ class _GreetingsState extends State<Greetings> {
 
                 //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
                 await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-                String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+                String text = "${GlobalVariable.metaData.message!.replaceAll(" newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
 
                 Share.shareXFiles([XFile(imagePath)], text: text);
 
               }).catchError((onError) {
                 print(onError);
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(onError.toString()),
+                ),
+              );
               });
+       }
+       else{
+         requestPermission(Permission.storage);
+       }
   }
+
   @override
   void initState() {
     super.initState();
+    getpermissionStatus();
     //context.read<GreetingsBloc>().add(const GetGreetings());
   }
 
@@ -199,6 +230,10 @@ class _GreetingsState extends State<Greetings> {
                               onTap: () {
                                 setState(() {
                                   selectedImage = index;
+                                  fileName = bloc
+                                            .filteredList[selectedTopic]
+                                            .templates[index]
+                                            .name;
                                 });
                               },
                               child: Padding(
@@ -267,7 +302,7 @@ class _GreetingsState extends State<Greetings> {
                     padding: const EdgeInsets.only(bottom: 11.0),
                     child: CustomButton(
                       onPressed: () {
-                        shareWidget();
+                        shareWidget(fileName);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
