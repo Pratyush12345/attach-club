@@ -1,7 +1,6 @@
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class EditProfileRepository {
 
@@ -34,6 +33,14 @@ class EditProfileRepository {
     final db = FirebaseFirestore.instance;
     await db.collection("users").doc(currentUser.uid).update({
       "description": description,
+    });
+  }
+
+  Future<void> updateNamedParam(String key, String value) async {
+    final currentUser = await _repository.getCurrentUser();
+    final db = FirebaseFirestore.instance;
+    await db.collection("users").doc(currentUser.uid).update({
+      key: value,
     });
   }
 }

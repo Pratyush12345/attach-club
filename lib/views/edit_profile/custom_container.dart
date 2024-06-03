@@ -9,12 +9,16 @@ class CustomContainer extends StatefulWidget {
   final String title;
   final String hintText;
   final bool disabled;
+  final String param;
+  final void Function(String) updateTitle;
 
   const CustomContainer({
     super.key,
     required this.title,
     required this.hintText,
     this.disabled = false,
+    required this.param,
+    required this.updateTitle,
   });
 
   @override
@@ -65,7 +69,11 @@ class _CustomContainerState extends State<CustomContainer> {
       child: EditSheet(
         initialText: widget.title,
         onSave: (text) {
-          context.read<EditProfileBloc>().add(UpdateTriggered());
+          context.read<EditProfileBloc>().add(UpdateTriggered(
+            key: widget.param,
+            value: text
+          ));
+          widget.updateTitle(text);
         },
         hintText: widget.hintText,
       ),

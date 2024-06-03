@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/rating.dart';
@@ -86,7 +84,7 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
                   ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: min(5, bloc.reviews.length),
+                      itemCount: bloc.reviews.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 15.0),
@@ -111,8 +109,9 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
                                             ),
                                           ),
                                           Rating(
-                                              selected:
-                                                  bloc.reviews[index].review),
+                                            selected:
+                                                bloc.reviews[index].review,
+                                          ),
                                         ],
                                       ),
                                       Container(

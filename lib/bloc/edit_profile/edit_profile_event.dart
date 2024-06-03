@@ -61,7 +61,6 @@ class GetUserData extends EditProfileEvent {
 class NameUpdated extends EditProfileEvent {
   final String name;
 
-
   const NameUpdated({
     required this.name,
   });
@@ -72,7 +71,6 @@ class NameUpdated extends EditProfileEvent {
 
 class ProfessionUpdated extends EditProfileEvent {
   final String profession;
-
 
   const ProfessionUpdated({
     required this.profession,
@@ -85,7 +83,6 @@ class ProfessionUpdated extends EditProfileEvent {
 class DescriptionUpdated extends EditProfileEvent {
   final String description;
 
-
   const DescriptionUpdated({
     required this.description,
   });
@@ -95,8 +92,14 @@ class DescriptionUpdated extends EditProfileEvent {
 }
 
 class UpdateTriggered extends EditProfileEvent {
+  final String key;
+  final String value;
+
+  const UpdateTriggered({
+    required this.key,
+    required this.value,
+  });
 
   @override
   List<Object?> get props => [];
-
 }

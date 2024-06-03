@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:attach_club/bloc/edit_profile/edit_profile_repository.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:equatable/equatable.dart';
@@ -58,8 +56,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   _onUserDataUpdated(
     UpdateTriggered event,
     Emitter<EditProfileState> emit,
-  ) {
-    log(username);
+  ) async {
+    await _repository.updateNamedParam(event.key, event.value);
   }
 
   _onNameUpdated(

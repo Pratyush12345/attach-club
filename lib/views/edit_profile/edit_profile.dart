@@ -1,11 +1,9 @@
 import 'package:attach_club/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:attach_club/constants.dart';
-import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/views/edit_profile/custom_container.dart';
-import 'package:attach_club/views/edit_profile/edit_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -135,12 +133,8 @@ class _EditProfileState extends State<EditProfile> {
                       disabled: true,
                     ),
                     SizedBox(height: 0.0243 * height),
-                    const Label(
-                      title: "Your profile will be available at:",
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
+                    const Label(title: "Your profile will be available at:"),
+                    const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
                         text: "www.theattachclub.com/",
@@ -150,14 +144,18 @@ class _EditProfileState extends State<EditProfile> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 0.0343 * height,
-                    ),
+                    SizedBox(height: 0.0343 * height),
                     const Label(title: "Basic Details"),
                     SizedBox(height: 0.01716738197 * height),
                     CustomContainer(
                       title: nameController.text,
                       hintText: "Name",
+                      param: "name",
+                      updateTitle: (text){
+                        setState(() {
+                          nameController.text = text;
+                        });
+                      },
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -166,17 +164,35 @@ class _EditProfileState extends State<EditProfile> {
                       child: CustomContainer(
                         title: professionController.text,
                         hintText: "Profession",
+                        param: "profession",
+                        updateTitle: (text){
+                          setState(() {
+                            professionController.text = text;
+                          });
+                        },
                       ),
                     ),
                     CustomContainer(
                       title: phoneNumberController.text,
                       hintText: "Phone Number",
                       disabled: true,
+                      param: "phoneNo",
+                      updateTitle: (text){
+                        setState(() {
+                          phoneNumberController.text = text;
+                        });
+                      },
                     ),
                     SizedBox(height: 0.01287553648 * height),
                     CustomContainer(
                       title: descriptionController.text,
                       hintText: "Description",
+                      param: "description",
+                      updateTitle: (text){
+                        setState(() {
+                          descriptionController.text = text;
+                        });
+                      },
                     ),
                     SizedBox(height: 0.0343 * height),
                     const Label(title: "Address"),
@@ -184,23 +200,47 @@ class _EditProfileState extends State<EditProfile> {
                     CustomContainer(
                       title: stateController.text,
                       hintText: "State",
+                      param: "state",
+                      updateTitle: (text){
+                        setState(() {
+                          stateController.text = text;
+                        });
+                      },
                     ),
                     SizedBox(height: 0.01287553648 * height),
                     CustomContainer(
                       title: cityController.text,
                       hintText: "City",
+                      param: "city",
+                      updateTitle: (text){
+                        setState(() {
+                          cityController.text = text;
+                        });
+                      },
                     ),
                     SizedBox(height: 0.01287553648 * height),
                     CustomContainer(
                       title: pinCodeController.text,
                       hintText: "Pin Code",
+                      param: "pin",
+                      updateTitle: (text){
+                        setState(() {
+                          pinCodeController.text = text;
+                        });
+                      },
                     ),
-                    SizedBox(
-                      height: 0.01287553648 * height
-                    ),
+                    SizedBox(height: 0.01287553648 * height),
                     CustomContainer(
                       title: countryController.text,
                       hintText: "Country",
+                      param: "country",
+                      updateTitle: (text){
+                        setState(() {
+                          setState(() {
+                            countryController.text = text;
+                          });
+                        });
+                      },
                     ),
                   ],
                 ),
