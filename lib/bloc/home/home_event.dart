@@ -8,3 +8,8 @@ class GetUserData extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CheckActiveStatus extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}

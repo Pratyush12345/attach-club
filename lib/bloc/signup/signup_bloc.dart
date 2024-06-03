@@ -22,9 +22,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   ) : super(SignupInitial()) {
     on<GoogleLoginTriggered>((event, emit) async {
       try {
-        log("pre check");
         final check = await _repository.signInWithGoogle();
-        log("post check ${emit.isDone}");
         emit(GoogleLoginSuccess());
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));

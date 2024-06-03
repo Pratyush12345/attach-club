@@ -40,6 +40,7 @@ import 'package:attach_club/core/repository/firebase_api.dart';
 import 'package:attach_club/firebase_options.dart';
 import 'package:attach_club/views/add_link/add_link.dart';
 import 'package:attach_club/views/add_service/add_service_screen.dart';
+import 'package:attach_club/views/blocked/blocked.dart';
 import 'package:attach_club/views/buy_plan/buy_plan.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
 import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
@@ -347,6 +348,7 @@ class _MyAppState extends State<MyApp> {
                 "/buyPlan": (context) => const BuyPlan(),
                 "/notifications": (context) => const Notifications(),
                 "/verifyPhone": (context) => const VerifyPhone(),
+                "/blocked": (context)=> const BlockedScreen(),
               },
             ),
           ),

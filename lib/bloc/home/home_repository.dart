@@ -9,4 +9,8 @@ class HomeRepository {
   Future<UserData> getUserData()async{
     return await _repository.getUserData();
   }
+
+  Future<bool> checkActiveStatus() async {
+    return await _repository.checkActiveStatus();
+  }
 }

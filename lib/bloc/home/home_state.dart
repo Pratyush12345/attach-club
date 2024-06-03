@@ -18,3 +18,8 @@ class UserDataUpdated extends HomeState {
   List<Object?> get props => [userData];
 
 }
+
+class UserBlockedStatus extends HomeState {
+  @override
+  List<Object> get props => [];
+}

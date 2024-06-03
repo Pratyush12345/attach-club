@@ -18,7 +18,6 @@ class SignupRepository {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    log("pre login");
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 

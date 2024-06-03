@@ -221,7 +221,6 @@ class UserData {
   }
 
   factory UserData.fromJson({required Map<String, dynamic> map, String? uid}) {
-    log(uid.toString());
     return UserData(
       accountType: map["accountType"],
       age: map["age"],
