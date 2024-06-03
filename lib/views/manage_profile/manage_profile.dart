@@ -44,7 +44,6 @@ class _ManageProfileState extends State<ManageProfile> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          leadingWidth: 52,
           leading: GestureDetector(
             onTap: () {
               Navigator.of(context).pop();

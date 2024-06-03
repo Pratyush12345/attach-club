@@ -1,8 +1,11 @@
 import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
+import 'package:attach_club/models/globalVariable.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../core/components/custom_add_icon.dart';
 import '../../core/components/label.dart';
@@ -31,7 +34,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         if (state is LoadingState) {
           return const Center(
             child: CircularProgressIndicator(
-              color: Colors.purple,
+              color: Colors.grey,
             ),
           );
         }
@@ -47,6 +50,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                     context.read<ProfileImageBloc>().add(
                           BannerImageUploaded(pickedImage),
                         );
+                        GlobalVariable.isAnyChangeInProfile = true;
                   }
                 },
                 child: _getCover(height),
@@ -61,6 +65,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                       context.read<ProfileImageBloc>().add(
                             ProfileImageUploaded(pickedImage),
                           );
+                          GlobalVariable.isAnyChangeInProfile = true;
                     }
                   },
                   child: _getProfile(width),
@@ -104,29 +109,57 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
       return SizedBox(
         width: double.infinity,
         height: 0.28751 * height,
-        child: Image.network(
-          context.read<ProfileImageBloc>().bannerImage,
-          key: UniqueKey(),
-          fit: BoxFit.fill,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            } else {
-              return const Center(
-                child: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CircularProgressIndicator(
-                    color: Colors.purple,
-                  ),
-                ),
-              );
-            }
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return border;
-          },
-        ),
+        child : CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill,
+                              ),
+                            ));
+                          },
+                          imageUrl: context.read<ProfileImageBloc>().bannerImage,
+                          errorWidget: (context, error, stackTrace) {
+                            return border;
+                          },
+                          fit: BoxFit.fill,
+                            placeholder : (context, url) {
+                              return Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              );
+
+                          } ,
+                         ),
+        // Image.network(
+        //   context.read<ProfileImageBloc>().bannerImage,
+        //   key: UniqueKey(),
+        //   fit: BoxFit.fill,
+        //   loadingBuilder: (context, child, loadingProgress) {
+        //     if (loadingProgress == null) {
+        //       return child;
+        //     } else {
+        //       return const Center(
+        //         child: SizedBox(
+        //           height: 24,
+        //           width: 24,
+        //           child: CircularProgressIndicator(
+        //             color: Colors.purple,
+        //           ),
+        //         ),
+        //       );
+        //     }
+        //   },
+        //   errorBuilder: (context, error, stackTrace) {
+        //     return border;
+        //   },
+        // ),
       );
     } else {
       return border;
@@ -168,28 +201,57 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           shape: BoxShape.circle,
         ),
         child: ClipOval(
-          child: Image.network(
-            context.read<ProfileImageBloc>().profileImage,
-            fit: BoxFit.fill,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              } else {
-                return const Center(
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.purple,
-                    ),
-                  ),
-                );
-              }
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return border;
-            },
-          ),
+          child: CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill,
+                              ),
+                            ));
+                          },
+                          imageUrl: context.read<ProfileImageBloc>().profileImage,
+                          errorWidget: (context, error, stackTrace) {
+                            return border;
+                          },
+                          fit: BoxFit.fill,
+                            placeholder : (context, url) {
+                              return Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              );
+
+                          } ,
+                         ),
+          
+          // Image.network(
+          //   context.read<ProfileImageBloc>().profileImage,
+          //   fit: BoxFit.fill,
+          //   loadingBuilder: (context, child, loadingProgress) {
+          //     if (loadingProgress == null) {
+          //       return child;
+          //     } else {
+          //       return const Center(
+          //         child: SizedBox(
+          //           height: 24,
+          //           width: 24,
+          //           child: CircularProgressIndicator(
+          //             color: Colors.grey,
+          //           ),
+          //         ),
+          //       );
+          //     }
+          //   },
+          //   errorBuilder: (context, error, stackTrace) {
+          //     return border;
+          //   },
+          // ),
         ),
       );
     } else {

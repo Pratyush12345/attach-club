@@ -38,6 +38,7 @@ class _GreetingDashboardState extends State<GreetingDashboard> {
         }
 
   getpermissionStatus() async{
+    print("${await Permission.storage.status}");
   _permissionStatus = await Permission.storage.status;
   }
 
@@ -46,12 +47,12 @@ class _GreetingDashboardState extends State<GreetingDashboard> {
        if(_permissionStatus == PermissionStatus.granted){
        screenshotController.capture(delay: Duration(milliseconds: 10))
               .then((capturedImage) async {
-                //Directory? tempDir = await getExternalStorageDirectory();
-                //String tempPath = tempDir!.path;
+                Directory? tempDir = await getDownloadsDirectory();
+                String tempPath = tempDir!.path;
 
                 String filename = "image${widget.fileName!.replaceAll(".jpg", "")}.jpg";
-                String imagePath = '/storage/emulated/0/Download/$filename';
-
+                //String imagePath = '/storage/emulated/0/Download/$filename';
+                String imagePath = '$tempPath/$filename'; 
                 //ShowCapturedWidget(context, capturedImage!);
                 print("path----------$imagePath");
                 File imageFile = File(imagePath);

@@ -64,7 +64,7 @@ class AddImages extends StatelessWidget {
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
-                            color: Colors.purple,
+                            color: Colors.grey,
                           ),
                         ),
                       );

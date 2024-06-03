@@ -1,5 +1,6 @@
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/add_products.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class EditProductModal extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
               context.read<AddServiceBloc>().add(DeleteProduct(product));
+              GlobalVariable.isAnyChangeInProfile = true;
             },
             title: "Delete",
             buttonWidth: 0.425581,

@@ -4,8 +4,10 @@ import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/product.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProductCardWithEnquiry extends StatelessWidget {
@@ -33,45 +35,100 @@ class ProductCardWithEnquiry extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: (product.imageUrl.isEmpty)
-                  ? SizedBox(height: 0.1974248927 * height)
-                  : Image.network(
-                      product.imageUrl,
+            Container(
                       height: 0.1974248927 * height,
                       width: double.infinity,
-                      fit: BoxFit.fill,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return SizedBox(
-                            height: 0.1974248927 * height,
-                            child: const Center(
-                              child: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.purple,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: product.imageUrl == ""?  Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              ) : CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill,
+                              ),
+                            ));
+                          },
+                          errorWidget: (context, error, stackTrace) {
+                            return const Center(
+                              child: Text(
+                                "Image not found",
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text(
-                            "Image not found",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      },
+                            );
+                          },
+                          imageUrl: product.imageUrl,
+                          
+                          fit: BoxFit.fill,
+                            placeholder : (context, url) {
+                              return Shimmer.fromColors(
+                                direction: ShimmerDirection.ltr,
+                                  baseColor:  Colors.grey[800]!,
+                                  highlightColor: Colors.grey[600]!,
+
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              );
+
+                          } ,
+                         ),
+                      ),
                     ),
-            ),
+
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(8),
+            //   child: (product.imageUrl.isEmpty)
+            //       ? SizedBox(height: 0.1974248927 * height)
+            //       : Image.network(
+            //           product.imageUrl,
+            //           height: 0.1974248927 * height,
+            //           width: double.infinity,
+            //           fit: BoxFit.fill,
+            //           loadingBuilder: (context, child, loadingProgress) {
+            //             if (loadingProgress == null) {
+            //               return child;
+            //             } else {
+            //               return SizedBox(
+            //                 height: 0.1974248927 * height,
+            //                 child: const Center(
+            //                   child: SizedBox(
+            //                     width: 24,
+            //                     height: 24,
+            //                     child: CircularProgressIndicator(
+            //                       color: Colors.grey,
+            //                     ),
+            //                   ),
+            //                 ),
+            //               );
+            //             }
+            //           },
+            //           errorBuilder: (context, error, stackTrace) {
+            //             return const Center(
+            //               child: Text(
+            //                 "Image not found",
+            //                 style: TextStyle(
+            //                   color: Colors.white,
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //         ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 15.5,
@@ -137,7 +194,7 @@ class ProductCardWithEnquiry extends StatelessWidget {
                             32,
                           ),
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                          String text =
                           "I have an query for \nProduct- ${product.title}\nProduct Description- ${product.description}\nMy Contact No- ${GlobalVariable.userData.phoneNo}\nMy Attach club profile : ${GlobalVariable.metaData.webURL!+ GlobalVariable.userData.username}";
 

@@ -68,6 +68,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
         bloc.add(const GetUserData());
       }
     }
+    if(GlobalVariable.isAnyChangeInProfile){
+      GlobalVariable.isAnyChangeInProfile = false;
+      context.read<ProfileBloc>().init();
+        bloc.add(GetUserData(uid: widget.uid));
+    }
   }
 
   @override
@@ -310,19 +315,24 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     for (var i in context
                                         .read<ProfileBloc>()
                                         .socialLinksList)
+                                      if(i.isEnabled)  
                                       GestureDetector(
                                         onTap: ()async{
                                           if(i.link.contains(".com") || i.link.contains("wa") || i.link.contains("https://") ){
                                           final url = Uri.parse(i.link);
                                             if (await canLaunchUrl(url)) {
                                               await launchUrl(url);
+                                              
                                             } else {
+                                              ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(content: Text("Not a valid link")));
                                               throw 'Could not launch $url';
+                                               
                                             }
                                           }
                                           else{
                                             ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(content: Text("Not a valid link")));
+                                                    .showSnackBar(const SnackBar(content: Text("Not a valid link")));
                                               }
 
                                         },
@@ -388,9 +398,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               const SizedBox(height: 8),
                               RichText(
                                 text: TextSpan(
-                                  text: context
-                                      .read<UserDataNotifier>()
-                                      .userData
+                                  text:userData
                                       .description,
                                   style: TextStyle(
                                     fontSize: 16,

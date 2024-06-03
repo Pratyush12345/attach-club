@@ -3,6 +3,7 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -168,6 +169,7 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
               disabled: isDisabled,
             ),
           );
+
     } else {
       context.read<AddLinkBloc>().add(
             SocialLinkAdded(
@@ -179,5 +181,6 @@ class _AddPlatformInfoState extends State<AddPlatformInfo> {
             ),
           );
     }
+    GlobalVariable.isAnyChangeInProfile = true;
   }
 }

@@ -7,6 +7,7 @@ import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/social_greeting/greeting_keep_alive.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
@@ -43,6 +44,7 @@ class _GreetingsState extends State<Greetings> {
         }
   
   getpermissionStatus() async{
+    print("${await Permission.storage.status}");
   _permissionStatus = await Permission.storage.status;
   }
 
@@ -51,11 +53,15 @@ class _GreetingsState extends State<Greetings> {
        if(_permissionStatus == PermissionStatus.granted){
        screenshotController.capture(delay: Duration(milliseconds: 10))
               .then((capturedImage) async {
-                //Directory? tempDir = await getExternalStorageDirectory();
-                //String tempPath = tempDir!.path;
+                
+                //String imagePath = '/storage/emulated/0/Download/$filename';
+
+                Directory? tempDir = await getExternalStorageDirectory();
+                String tempPath = tempDir!.path;
 
                 String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
-                String imagePath = '/storage/emulated/0/Download/$filename';
+                //String imagePath = '/storage/emulated/0/Download/$filename';
+                String imagePath = '$tempPath/$filename'; 
 
                 //ShowCapturedWidget(context, capturedImage!);
                 print("path----------$imagePath");

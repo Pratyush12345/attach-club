@@ -66,7 +66,7 @@ class _AddServiceState extends State<AddService> {
             if (state is ShowLoading) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.purple,
+                  color: Colors.grey,
                 ),
               );
             }

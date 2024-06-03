@@ -1,5 +1,7 @@
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/edit_profile/edit_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +29,7 @@ class _CustomContainerState extends State<CustomContainer> {
     return GestureDetector(
       onTap: (!widget.disabled)?_openModal:null,
       child: Container(
-          height: 64,
+          height: widget.hintText == "Description" ? 110 :64,
           decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.08),
               borderRadius: BorderRadius.circular(10)),
@@ -35,12 +37,18 @@ class _CustomContainerState extends State<CustomContainer> {
             padding: const EdgeInsets.only(left: 12.0),
             child: Row(
               children: [
-                Text(
-                  widget.title,
-                  style: _getTextStyle(
-                    Colors.white,
-                    20,
-                    FontWeight.w400,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width *0.85,
+                  
+                  child: Text(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    widget.title,
+                    style: _getTextStyle(
+                      Colors.white,
+                      20,
+                      FontWeight.w400,
+                    ),
                   ),
                 ),
               ],
@@ -65,7 +73,9 @@ class _CustomContainerState extends State<CustomContainer> {
       child: EditSheet(
         initialText: widget.title,
         onSave: (text) {
+          print("text-------$text");
           context.read<EditProfileBloc>().add(UpdateTriggered());
+          GlobalVariable.isAnyChangeInProfile = true;
         },
         hintText: widget.hintText,
       ),

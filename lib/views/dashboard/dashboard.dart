@@ -164,7 +164,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                                 child: Container(
                                   color: Colors.white,
                                 ),
-                              ): CachedNetworkImage(
+                              ) : CachedNetworkImage(
                           imageBuilder: (context, imageProvider) {
                             return Container(
                             decoration: BoxDecoration(
@@ -195,30 +195,6 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
 
                           } ,
                          ),
-
-                        // Image.network(GlobalVariable.metaData.appBannerLink!, fit: BoxFit.fill,
-                        //       loadingBuilder: (context, child, loadingProgress) {
-                        //     if (loadingProgress == null) {
-                        //       return child;
-                        //     } else {
-                        //       return const SizedBox(
-                        //         height: 20.0,
-                        //         width: 20.0,
-                        //         child: Center(
-                        //           child: CircularProgressIndicator(
-                        //             color: Colors.purple,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     }
-                        //   }, errorBuilder: (context, error, stackTrace) {
-                        //     return Image.asset(
-                        //   "assets/images/dashboard.png",
-                        //   fit: BoxFit.cover,
-                        //   );
-                        //   }
-                        //   )
-
                       ),
                     ),
                   ),

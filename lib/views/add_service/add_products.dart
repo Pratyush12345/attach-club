@@ -6,6 +6,7 @@ import 'package:attach_club/core/components/heading.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -213,7 +214,7 @@ class _AddProductsState extends State<AddProducts> {
                 ),
                 CustomButton(
                   onPressed: () {
-                    _onPress();
+                    _onPress((widget.oldProduct != null) ? "Save" : "Add");
                   },
                   title: (widget.oldProduct != null) ? "Save" : "Add",
                   prefixIcon: (widget.oldProduct == null)
@@ -239,7 +240,7 @@ class _AddProductsState extends State<AddProducts> {
         (file == null && (widget.oldProduct == null)));
   }
 
-  void _onPress() {
+  void _onPress(String type) {
     final product = Product(
       title: titleController.text,
       description: descriptionController.text,
@@ -247,7 +248,7 @@ class _AddProductsState extends State<AddProducts> {
       isShowEnquiryBtn: enquiry,
       image: (file != null) ? File(file!.path) : null,
       dateAdded: Timestamp.now(),
-      imageUrl: "",
+      imageUrl: type == "Save"? widget.oldProduct!.imageUrl : "",
       isEnabled: !isProductDisabled,
       id: widget.oldProduct?.id ?? DateTime.now().microsecondsSinceEpoch.toString()
     );
@@ -262,7 +263,9 @@ class _AddProductsState extends State<AddProducts> {
       context.read<AddServiceBloc>().add(
             ProductAdded(product)
           );
+          
     }
+    GlobalVariable.isAnyChangeInProfile = true;
     Navigator.pop(context);
   }
 }
