@@ -102,6 +102,8 @@ class _HomeScreenState extends State<HomeScreen>
     ).animate(controller);
     controller.forward();
     context.read<HomeBloc>().add(GetUserData());
+    context.read<HomeBloc>().add(CheckActiveStatus());
+
 
      animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -144,6 +146,10 @@ class _HomeScreenState extends State<HomeScreen>
       listener: (context, state) {
         if (state is UserDataUpdated) {
           context.read<UserDataNotifier>().updateUserData(state.userData);
+        }
+        if (state is UserBlockedStatus) {
+          Navigator.of(context).popUntil((route) => false);
+          Navigator.of(context).pushNamed("/blocked");
         }
       },
       child: Consumer<ChangeScreenProvider>(

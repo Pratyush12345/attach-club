@@ -40,7 +40,19 @@ class CoreRepository {
     final data = await db.collection("users").doc(currentUser.uid).get();
     if (data.exists &&
         data.data() != null &&
-        (data.data()!["username"] as String).isNotEmpty) {
+        (data.data()!["name"] as String).isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> checkActiveStatus() async {
+    final db = FirebaseFirestore.instance;
+    final currentUser = getCurrentUser();
+    final data = await db.collection("users").doc(currentUser.uid).get();
+    if (data.exists &&
+        data.data() != null &&
+        (data.data()!["isActive"] as bool)==true) {
       return true;
     }
     return false;
