@@ -63,11 +63,20 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       await _checkOnboardingStatus(emit);
     });
     on<CheckPhoneNumberValidity>((event, emit) async {
-      final userData = await _coreRepository.getUserData();
-      if(userData.phoneNo.isEmpty){
-        emit(NavigateToPhoneVerification());
-      }else{
-        await _checkOnboardingStatus(emit);
+      try{
+        // log(?.toString()??"null");
+        final currentUser = FirebaseAuth.instance.currentUser;
+        // final userData = await _coreRepository.getUserData();
+        if(currentUser==null) {
+          throw Exception("phone verification failed. user not logged in");
+        }
+        else if(currentUser.phoneNumber==null || currentUser.phoneNumber!.isEmpty){
+          emit(NavigateToPhoneVerification());
+        }else{
+          await _checkOnboardingStatus(emit);
+        }
+      } catch (e){
+        emit(ShowSnackBar(e.toString()));
       }
     });
   }

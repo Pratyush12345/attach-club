@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:attach_club/bloc/splash_screen/splash_screen_repository.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/globalVariable.dart';
@@ -45,7 +46,12 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
         }
         return emit(NavigateToSignup());
       } on Exception catch (e) {
-        emit(ShowSnackBar(e.toString()));
+        log(e.toString());
+        if(e.toString()=="Exception: User data not found"){
+          emit(NavigateToSignup());
+        }else{
+          emit(ShowSnackBar(e.toString()));
+        }
       }
     });
   }

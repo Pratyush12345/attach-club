@@ -115,14 +115,14 @@ class CompleteProfileBloc
         city: event.city,
         pin: event.pincode,
         country: event.country,
-        phoneNo: (event.phoneNo[1] == "+")
+        phoneNo: (event.phoneNo[0] == "+")
             ? event.phoneNo.substring(3)
             : event.phoneNo,
         firstLoginDate: Timestamp.now(),
         lastLoginDate: Timestamp.now(),
         lastPaymentDate: Timestamp.now(),
         isPlanExpiredRecently: false,
-        planExitDate: Timestamp.now(),
+        planExitDate: Timestamp.fromDate(DateTime.now().add(const Duration(days: 60))),
         planPurchaseDate: Timestamp.now(),
         purchasedPlanCode: "60DP",
       );
