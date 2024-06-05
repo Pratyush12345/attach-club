@@ -23,4 +23,15 @@ class DetailedAnalyticsRepository {
   Future<List<Review>> getReviews() async {
     return await _repository.getReviewsList(null);
   }
+
+  Future<void> deleteReview(String id) async {
+    final db = FirebaseFirestore.instance;
+    final user = _repository.getCurrentUser();
+    await db
+        .collection("users")
+        .doc(user.uid)
+        .collection("review")
+        .doc(id)
+        .delete();
+  }
 }

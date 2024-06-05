@@ -10,3 +10,11 @@ class GetData extends DetailedAnalyticsEvent {
   @override
   List<Object> get props => [];
 }
+
+class DeleteReview extends DetailedAnalyticsEvent {
+  final int index;
+  const DeleteReview(this.index);
+
+  @override
+  List<Object> get props => [index];
+}

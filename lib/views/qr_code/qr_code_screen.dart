@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/profile/profile.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({super.key});
@@ -49,11 +51,25 @@ class _QrCodeScreenState extends State<QrCodeScreen>
     if (mounted && !isNavigated) {
       isNavigated = true;
       // _barcode = barcodes.barcodes.firstOrNull;
-      await Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) {
-        return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue ?? "", buttonTitle: "Connect" ,);
-      }));
+      // await Navigator.of(context)
+      //     .pushReplacement(MaterialPageRoute(builder: (context) {
+      //   return Profile(uid: barcodes.barcodes.firstOrNull?.displayValue ?? "", buttonTitle: "Connect" ,);
+      // }));
     }
+    //barcodes.barcodes.firstOrNull?.displayValue
+    try{
+      final Uri url = Uri.parse(barcodes.barcodes.firstOrNull!.displayValue!);
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
+    } catch (e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not launch the scanned url'),
+        ),
+      );
+    }
+
   }
 
   @override
@@ -110,6 +126,7 @@ class _QrCodeScreenState extends State<QrCodeScreen>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    log("${GlobalVariable.metaData.webURL}${GlobalVariable.userData.username}");
 
     return DefaultTabController(
       length: 2,
