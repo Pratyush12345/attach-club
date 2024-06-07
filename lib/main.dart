@@ -45,6 +45,9 @@ import 'package:attach_club/views/buy_plan/buy_plan.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
 import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
 import 'package:attach_club/views/edit_profile/edit_profile.dart';
+import 'package:attach_club/views/intro/intro1.dart';
+import 'package:attach_club/views/intro/intro2.dart';
+import 'package:attach_club/views/intro/intro3.dart';
 import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:attach_club/views/social_greeting/greetings.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
@@ -349,6 +352,9 @@ class _MyAppState extends State<MyApp> {
                 "/notifications": (context) => const Notifications(),
                 "/verifyPhone": (context) => const VerifyPhone(),
                 "/blocked": (context)=> const BlockedScreen(),
+                "/intro1": (context)=> const Intro1(),
+                "/intro2": (context)=> const Intro2(),
+                "/intro3": (context)=> const Intro3(),
               },
             ),
           ),

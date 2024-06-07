@@ -5,6 +5,11 @@ abstract class SplashScreenEvent extends Equatable {
 }
 
 class CheckLoginStatus extends SplashScreenEvent{
+  final bool isInsideIntro;
+
+  CheckLoginStatus({this.isInsideIntro = false});
+
+
   @override
   List<Object?> get props => [];
 }

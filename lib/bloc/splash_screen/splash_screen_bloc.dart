@@ -44,11 +44,17 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
           }
           return emit(NavigateToOnboarding());
         }
-        return emit(NavigateToSignup());
+        if(event.isInsideIntro){
+          return emit(NavigateToSignup());
+        }
+        return emit(NavigateToIntro());
       } on Exception catch (e) {
         log(e.toString());
         if(e.toString()=="Exception: User data not found"){
-          emit(NavigateToSignup());
+          if(event.isInsideIntro){
+            return emit(NavigateToSignup());
+          }
+          return emit(NavigateToIntro());
         }else{
           emit(ShowSnackBar(e.toString()));
         }
