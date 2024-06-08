@@ -337,7 +337,8 @@ class CoreRepository {
         verificationFailed: verificationFailed,
         codeSent: codeSent,
         codeAutoRetrievalTimeout: autoRetrieve,
-        forceResendingToken: resendToken);
+        forceResendingToken: resendToken,
+    );
   }
 
   Future<UserCredential> verifyOtp(
