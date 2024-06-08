@@ -77,17 +77,11 @@ class _CustomContainerState extends State<CustomContainer> {
       child: EditSheet(
         initialText: widget.title,
         onSave: (text) {
-<<<<<<< HEAD
-          print("text-------$text");
-          context.read<EditProfileBloc>().add(UpdateTriggered());
-          GlobalVariable.isAnyChangeInProfile = true;
-=======
           context.read<EditProfileBloc>().add(UpdateTriggered(
             key: widget.param,
             value: text
           ));
           widget.updateTitle(text);
->>>>>>> e63b041be862c79e2f4418d19f3c3ce12e9b8208
         },
         hintText: widget.hintText,
       ),

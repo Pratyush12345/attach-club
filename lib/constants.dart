@@ -4,7 +4,6 @@ import 'package:flutter_cashfree_pg_sdk/api/cftheme/cftheme.dart';
 import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
 
 const horizontalPadding = 24.0;
-
 const onboardingButtonBottomPadding = 12.0;
 
 final socialMediaList = <SocialMedia>[

@@ -56,7 +56,6 @@ class Dashboard extends StatefulWidget {
   ];
 
   const Dashboard({super.key});
-
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -278,26 +277,23 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                   ),
                   SizedBox(height: 0.01931330472 * height),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: horizontalPadding,
+                    padding: const EdgeInsets.only(
+                     left: horizontalPadding, right: horizontalPadding
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Wrap(
-                        spacing: 16,
-                        children: [
-                          for (var i in Dashboard.connectData)
-                            LinkCard(
-                              grp: "CONNECTED USER",
-                              prefix: SvgPicture.asset(
-                                i["asset"]!,
-                                width: 30,
-                                height: 30,
-                              ),
-                              title: i["title"] ?? "title",
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (var i in Dashboard.connectData)
+                          LinkCard(
+                            grp: "CONNECTED USER",
+                            prefix: SvgPicture.asset(
+                              i["asset"]!,
+                              width: 30,
+                              height: 30,
                             ),
-                        ],
-                      ),
+                            title: i["title"] ?? "title",
+                          ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 0.02575107296 * height),
