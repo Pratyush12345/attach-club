@@ -27,6 +27,23 @@ class DetailedAnalyticsBloc extends Bloc<DetailedAnalyticsEvent, DetailedAnalyti
         rating = (ans / reviews.length).round();
       }
       emit(DetailedAnalyticsLoaded());
+      emit(DetailedAnalyticsInitial());
+    });
+    on<DeleteReview>((event, emit) async {
+      await _repository.deleteReview(reviews[event.index].id);
+      reviews.remove(reviews[event.index]);
+      if(reviews.isEmpty){
+        rating = 0;
+      }
+      else {
+        double ans = 0;
+        for (int i = 0; i < reviews.length; i++) {
+          ans += reviews[i].review;
+        }
+        rating = (ans / reviews.length).round();
+      }
+      emit(DetailedAnalyticsLoaded());
+      emit(DetailedAnalyticsInitial());
     });
   }
 }

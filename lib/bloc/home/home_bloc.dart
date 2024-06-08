@@ -5,6 +5,8 @@ import 'package:attach_club/models/user_data.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/globalVariable.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 
@@ -12,6 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository _repository;
   HomeBloc(this._repository) : super(HomeInitial()) {
     on<GetUserData>((event, emit) async {
+      GlobalVariable.metaData.webURL = await _repository.getWebUrl();
       final userData = await _repository.getUserData();
       emit(UserDataUpdated(userData));
     });

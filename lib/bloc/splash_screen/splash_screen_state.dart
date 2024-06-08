@@ -14,6 +14,11 @@ class NavigateToSignup extends SplashScreenState {
   List<Object?> get props => [];
 }
 
+class NavigateToIntro extends SplashScreenState {
+  @override
+  List<Object?> get props => [];
+}
+
 class NavigateToOnboarding extends SplashScreenState {
   @override
   List<Object?> get props => [];

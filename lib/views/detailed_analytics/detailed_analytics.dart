@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/detailed_analytics/detailed_analytics_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/rating.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/views/detailed_analytics/analytics_card.dart';
 import 'package:attach_club/views/detailed_analytics/long_analytic_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,6 +38,7 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
           }
           final userData = context.read<UserDataNotifier>().userData;
           final bloc = context.read<DetailedAnalyticsBloc>();
+          log(bloc.reviews.length.toString());
           return Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: horizontalPadding,
@@ -92,6 +96,7 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisAlignment:
@@ -114,16 +119,27 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red.withOpacity(0.2),
-                                        ),
-                                        width: 40,
-                                        height: 40,
-                                        child: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
+                                      GestureDetector(
+                                        onTap: () {
+                                          context
+                                              .read<DetailedAnalyticsBloc>()
+                                              .add(
+                                                DeleteReview(
+                                                  index
+                                                ),
+                                              );
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.red.withOpacity(0.2),
+                                          ),
+                                          width: 40,
+                                          height: 40,
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
                                         ),
                                       )
                                     ],

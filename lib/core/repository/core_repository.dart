@@ -315,7 +315,7 @@ class CoreRepository {
         .get();
     for (var i in data.docs) {
       if (i.exists) {
-        list.add(Review.fromJson(i.data()));
+        list.add(Review.fromJson(i.data(), i.id));
       }
     }
     return list;

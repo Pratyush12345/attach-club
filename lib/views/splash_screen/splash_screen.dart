@@ -44,6 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
             if(state is NavigateToVerifyPhone){
               _navigate("/verifyPhone");
             }
+            if(state is NavigateToIntro){
+              _navigate("/intro1");
+            }
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
   String accountType;
-  String andrTokenid;
-  String iosTokenid;
   int age;
   String bannerImageURL;
   String city;
@@ -76,8 +74,6 @@ class UserData {
     this.isProductEnabled = true,
     this.isReviewEnabled = true,
     this.isShowProfileImageOnGreeting = true,
-    this.andrTokenid = "",
-    this.iosTokenid = "",
     this.uid,
   });
   
@@ -108,25 +104,26 @@ class UserData {
       "isEverPurchasedPremium": isEverPurchasedPremium,
       "isLinkEnabled": isLinkEnabled,
       "isOnline": isOnline,
+      "isPlanExpiredRecently": isPlanExpiredRecently,
       "isProductEnabled": isProductEnabled,
       "isReviewEnabled": isReviewEnabled,
-      "lastLoginDate": lastLoginDate,
       "isShowProfileImageOnGreeting": isShowProfileImageOnGreeting,
+      "lastLoginDate": lastLoginDate,
       "lastPaymentDate": lastPaymentDate,
       "logoImageURL": logoImageURL,
       "name": name,
       "phoneNo": phoneNo,
       "pin": pin,
+      "planExitDate": planExitDate,
+      "planPurchaseDate": planPurchaseDate,
       "profession": profession,
       "profileClickCount": profileClickCount,
-      "profileViewCount": profileViewCount,
-      "rating": rating,
       "profileImageURL": profileImageURL,
+      "profileViewCount": profileViewCount,
       "purchasedPlanCode": purchasedPlanCode,
+      "rating": rating,
       "state": state,
       "username": username,
-      "andrTokenid": andrTokenid,
-      "iosTokenid": iosTokenid,
     };
   }
 
@@ -166,8 +163,6 @@ class UserData {
       purchasedPlanCode: map["purchasedPlanCode"],
       state: map["state"],
       username: map["username"],
-      andrTokenid: map["andrTokenId"] ?? "",
-      iosTokenid: map["iosTokenId"] ?? "",
       uid: uid,
       isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
       planExitDate: map["planExitDate"] ?? Timestamp.now(),
@@ -211,8 +206,6 @@ class UserData {
       purchasedPlanCode: map["purchasedPlanCode"],
       state: map["state"],
       username: map["username"],
-      andrTokenid: map["andrTokenId"] ?? "",
-      iosTokenid: map["iosTokenId"] ?? "",
       uid: uid,
       isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
       planExitDate: map["planExitDate"] ?? Timestamp.now(),
@@ -264,8 +257,6 @@ class UserData {
       state: map["state"],
       username: map["username"],
       uid: uid,
-      andrTokenid: map["andrTokenId"] ?? "",
-      iosTokenid: map["iosTokenId"] ?? "",
       isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
       planExitDate: Timestamp(
         map["planExitDate"]["_seconds"],
