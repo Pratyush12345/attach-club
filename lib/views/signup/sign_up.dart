@@ -47,7 +47,8 @@ class _SignUpState extends State<SignUp> {
             PhoneVerificationTriggered(
                 phoneNumber: controller.text,
                 verificationFailed: verificationFailed,
-                verificationCompleted: verificationCompleted),
+                verificationCompleted: verificationCompleted,
+            ),
           );
     }
   }

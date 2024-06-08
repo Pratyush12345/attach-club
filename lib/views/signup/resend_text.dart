@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:attach_club/bloc/signup/signup_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ResendText extends StatefulWidget {
   final void Function(int) resendOtp;
@@ -51,7 +53,11 @@ class _ResendTextState extends State<ResendText> {
           fontWeight: FontWeight.w500,
         ),
       ),
-      onTap: () {},
+      onTap: () {
+        widget.resendOtp(count);
+        count = 60;
+        startTimer();
+      },
     );
   }
 }
