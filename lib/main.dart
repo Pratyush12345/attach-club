@@ -334,6 +334,7 @@ class _MyAppState extends State<MyApp> {
                     backgroundColor: Color(0xFF2D4CF9)),
               ),
               themeMode: ThemeMode.dark,
+              debugShowCheckedModeBanner: false,
               initialRoute: "/splash_screen",
               routes: {        
                 "/splash_screen": (context) => UpgradeAlert(
