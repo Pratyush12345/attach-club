@@ -53,11 +53,12 @@ class PlatformListModal extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 80,
-                mainAxisExtent: 80,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 19,
+                maxCrossAxisExtent: 120,
+                mainAxisExtent: 120,
+                mainAxisSpacing: 11,
+                crossAxisSpacing: 12,
               ),
+              itemCount: socialMediaList.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
@@ -68,8 +69,8 @@ class PlatformListModal extends StatelessWidget {
                         list: list);
                   },
                   child: Container(
-                    width: 80,
-                    height: 80,
+                    width: 120,
+                    height: 120,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: const Color(0xFF181B2F),
@@ -78,17 +79,18 @@ class PlatformListModal extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 30,
-                          height: 30,
+                          width: 44,
+                          height: 44,
                           child: SvgPicture.asset(
                             socialMediaList[index].imageUrl,
                           ),
                         ),
+                        const SizedBox(height: 10),
                         Text(
                           socialMediaList[index].name,
                           style: const TextStyle(
                               fontWeight: FontWeight.w400,
-                              fontSize: 12,
+                              fontSize: 14,
                               color: primaryTextColor,
                           ),
                         )
@@ -97,7 +99,6 @@ class PlatformListModal extends StatelessWidget {
                   ),
                 );
               },
-              itemCount: socialMediaList.length,
             ),
           ],
         ),

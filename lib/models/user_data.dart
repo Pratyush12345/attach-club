@@ -11,6 +11,7 @@ class UserData {
   String description;
   String email;
   Timestamp firstLoginDate;
+  int greetingsCount;
   String headLineTxt;
   bool isActive;
   bool isBasicDetailEnabled;
@@ -48,6 +49,7 @@ class UserData {
     this.description = "",
     this.email = "",
     required this.firstLoginDate,
+    this.greetingsCount = 0,
     this.headLineTxt = "",
     required this.lastLoginDate,
     required this.lastPaymentDate,
@@ -98,6 +100,7 @@ class UserData {
       "description": description,
       "email": email,
       "firstLoginDate": firstLoginDate,
+      "greetingsCount": greetingsCount,
       "headLineTxt": headLineTxt,
       "isActive": isActive,
       "isBasicDetailEnabled": isBasicDetailEnabled,
@@ -140,6 +143,7 @@ class UserData {
       description: map["description"],
       email: map["email"],
       firstLoginDate: map["firstLoginDate"],
+      greetingsCount: map["greetingsCount"]??0,
       headLineTxt: map["headLineTxt"],
       isActive: map["isActive"],
       isBasicDetailEnabled: map["isBasicDetailEnabled"],
@@ -183,6 +187,7 @@ class UserData {
       description: map["description"],
       email: map["email"],
       firstLoginDate: map["firstLoginDate"],
+      greetingsCount: map["greetingsCount"]??0,
       headLineTxt: map["headLineTxt"],
       isActive: map["isActive"],
       isBasicDetailEnabled: map["isBasicDetailEnabled"],
@@ -226,6 +231,7 @@ class UserData {
         map["firstLoginDate"]["_seconds"],
         map["firstLoginDate"]["_nanoseconds"],
       ),
+      greetingsCount: map["greetingsCount"]??0,
       headLineTxt: map["headLineTxt"],
       isActive: map["isActive"],
       isBasicDetailEnabled: map["isBasicDetailEnabled"],

@@ -4,6 +4,7 @@ import 'package:attach_club/bloc/add_service/add_service_repository.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
 
 part 'add_service_event.dart';
 
@@ -18,6 +19,10 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
   AddServiceBloc(this._repository) : super(AddServiceInitial()) {
     on<ProductAdded>((event, emit) async {
       try {
+        if(list.length>=3){
+          emit(const ShowSnackBar("Please Upgrade Plan to add more products"));
+          return emit(NavigateToBuyPlan());
+        }
         emit(ShowLoading());
         final product = await _repository.addProduct(event.product);
         list.add(product);

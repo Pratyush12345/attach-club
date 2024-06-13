@@ -77,154 +77,161 @@ class _AddProductsState extends State<AddProducts> {
             )
           : null,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.isOnboarding) ...[
-                      OnBoardingHero(
-                        totalBars: 4,
-                        selectedBars: 4,
-                        showBackButton: true,
-                        onBack: () {
-                          Navigator.of(context).pop();
+        child: BlocListener<AddServiceBloc, AddServiceState>(
+          listener: (context, state) {
+            if (state is NavigateToBuyPlan) {
+              Navigator.of(context).pushNamed("/buyPlan");
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.isOnboarding) ...[
+                        OnBoardingHero(
+                          totalBars: 4,
+                          selectedBars: 4,
+                          showBackButton: true,
+                          onBack: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        SizedBox(
+                          height: 0.0257 * height,
+                        ),
+                        Heading(
+                          title:
+                              "${(widget.oldProduct == null) ? "Add" : "Edit"} "
+                              "Product/Service",
+                        ),
+                      ],
+                      SizedBox(height: 0.03433 * height),
+                      const Label(
+                        title: "Enter your product or service details here",
+                      ),
+                      SizedBox(height: 0.0257 * height),
+                      CustomTextField(
+                        type: TextFieldType.RegularTextField,
+                        controller: titleController,
+                        hintText: "Product Title",
+                        onChanged: (s) {
+                          setState(() {
+                            disabled = _isDisabled();
+                          });
                         },
                       ),
-                      SizedBox(
-                        height: 0.0257 * height,
+                      SizedBox(height: 0.0128 * height),
+                      AddImages(
+                        file: file,
+                        url: widget.oldProduct?.imageUrl ?? "",
+                        callback: (selectedFile) {
+                          setState(() {
+                            file = selectedFile;
+                            disabled = _isDisabled();
+                          });
+                        },
                       ),
-                      Heading(
-                        title:
-                            "${(widget.oldProduct == null) ? "Add" : "Edit"} "
-                            "Product/Service",
+                      SizedBox(height: 0.0128 * height),
+                      CustomTextField(
+                        type: TextFieldType.RegularTextField,
+                        controller: descriptionController,
+                        hintText: "Product Description",
+                        onChanged: (s) {
+                          setState(() {
+                            disabled = _isDisabled();
+                          });
+                        },
+                      ),
+                      SizedBox(height: 0.0128 * height),
+                      CustomTextField(
+                        type: TextFieldType.RegularTextField,
+                        controller: priceController,
+                        hintText: "Price",
+                        keyboardType: TextInputType.number,
+                        onChanged: (s) {
+                          setState(() {
+                            disabled = _isDisabled();
+                          });
+                        },
+                      ),
+                      SizedBox(height: 0.0128 * height),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Show enquiry button",
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Switch(
+                            value: enquiry,
+                            onChanged: (value) {
+                              setState(() {
+                                enquiry = value;
+                                disabled = _isDisabled();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 0.0048 * height),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Disable",
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Switch(
+                            value: isProductDisabled,
+                            onChanged: (value) {
+                              setState(() {
+                                isProductDisabled = value;
+                                disabled = _isDisabled();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 0.0068 * height),
+                      RichText(
+                        text: TextSpan(
+                            text:
+                                "Turning this option on will hide this link from your profile for all users",
+                            style: TextStyle(color: paragraphTextColor)),
                       ),
                     ],
-                    SizedBox(height: 0.03433 * height),
-                    const Label(
-                      title: "Enter your product or service details here",
-                    ),
-                    SizedBox(height: 0.0257 * height),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      controller: titleController,
-                      hintText: "Product Title",
-                      onChanged: (s) {
-                        setState(() {
-                          disabled = _isDisabled();
-                        });
-                      },
-                    ),
-                    SizedBox(height: 0.0128 * height),
-                    AddImages(
-                      file: file,
-                      url: widget.oldProduct?.imageUrl ?? "",
-                      callback: (selectedFile) {
-                        setState(() {
-                          file = selectedFile;
-                          disabled = _isDisabled();
-                        });
-                      },
-                    ),
-                    SizedBox(height: 0.0128 * height),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      controller: descriptionController,
-                      hintText: "Product Description",
-                      onChanged: (s) {
-                        setState(() {
-                          disabled = _isDisabled();
-                        });
-                      },
-                    ),
-                    SizedBox(height: 0.0128 * height),
-                    CustomTextField(
-                      type: TextFieldType.RegularTextField,
-                      controller: priceController,
-                      hintText: "Price",
-                      keyboardType: TextInputType.number,
-                      onChanged: (s) {
-                        setState(() {
-                          disabled = _isDisabled();
-                        });
-                      },
-                    ),
-                    SizedBox(height: 0.0128 * height),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Show enquiry button",
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Switch(
-                          value: enquiry,
-                          onChanged: (value) {
-                            setState(() {
-                              enquiry = value;
-                              disabled = _isDisabled();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 0.0048 * height),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Disable",
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Switch(
-                          value: isProductDisabled,
-                          onChanged: (value) {
-                            setState(() {
-                              isProductDisabled = value;
-                              disabled = _isDisabled();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 0.0068 * height),
-                    RichText(
-                      text: TextSpan(
-                          text:
-                              "Turning this option on will hide this link from your profile for all users",
-                          style: TextStyle(color: paragraphTextColor)),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 0.0148 * height,
-                ),
-                CustomButton(
-                  onPressed: () {
-                    _onPress();
-                  },
-                  title: (widget.oldProduct != null) ? "Save" : "Add",
-                  prefixIcon: (widget.oldProduct == null)
-                      ? const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        )
-                      : null,
-                  disabled: disabled,
-                ),
-              ],
+                  ),
+                  SizedBox(
+                    height: 0.0148 * height,
+                  ),
+                  CustomButton(
+                    onPressed: () {
+                      _onPress();
+                    },
+                    title: (widget.oldProduct != null) ? "Save" : "Add",
+                    prefixIcon: (widget.oldProduct == null)
+                        ? const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          )
+                        : null,
+                    disabled: disabled,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -241,16 +248,16 @@ class _AddProductsState extends State<AddProducts> {
 
   void _onPress() {
     final product = Product(
-      title: titleController.text,
-      description: descriptionController.text,
-      price: priceController.text,
-      isShowEnquiryBtn: enquiry,
-      image: (file != null) ? File(file!.path) : null,
-      dateAdded: Timestamp.now(),
-      imageUrl: "",
-      isEnabled: !isProductDisabled,
-      id: widget.oldProduct?.id ?? DateTime.now().microsecondsSinceEpoch.toString()
-    );
+        title: titleController.text,
+        description: descriptionController.text,
+        price: priceController.text,
+        isShowEnquiryBtn: enquiry,
+        image: (file != null) ? File(file!.path) : null,
+        dateAdded: Timestamp.now(),
+        imageUrl: "",
+        isEnabled: !isProductDisabled,
+        id: widget.oldProduct?.id ??
+            DateTime.now().microsecondsSinceEpoch.toString());
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(
             EditProduct(
@@ -259,9 +266,7 @@ class _AddProductsState extends State<AddProducts> {
             ),
           );
     } else {
-      context.read<AddServiceBloc>().add(
-            ProductAdded(product)
-          );
+      context.read<AddServiceBloc>().add(ProductAdded(product));
     }
     Navigator.pop(context);
   }

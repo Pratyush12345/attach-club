@@ -47,7 +47,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         init();
         if (event.uid != null) {
-          await _repository.incrementProfileCount(event.uid!);
+          await _repository.incrementViewCount(event.uid!);
+          await _repository.incrementClickCount();
+          emit(IncrementClickCount());
         }
         userData = await _repository.getUserData(event.uid);
         socialLinksList = await _repository.getSocialLinksList(event.uid);

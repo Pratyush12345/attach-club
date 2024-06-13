@@ -42,3 +42,8 @@ class ShowSnackBar extends ProfileState {
   @override
   List<Object> get props => [message];
 }
+
+class IncrementClickCount extends ProfileState {
+  @override
+  List<Object> get props => [];
+}

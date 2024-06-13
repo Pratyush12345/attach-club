@@ -63,7 +63,19 @@ class ProfileRepository {
     return await _repository.getReviewsList(uid);
   }
 
-  Future<void> incrementProfileCount(String uid) async {
+  Future<void> incrementViewCount(String uid) async {
+    final db = FirebaseFirestore.instance;
+    final data = await db.collection("users").doc(uid).get();
+    if (data.exists) {
+      final count = UserData.fromMap(map: data.data()!).profileViewCount;
+      await db.collection("users").doc(uid).update({
+        "profileViewCount": count + 1,
+      });
+    }
+  }
+
+  Future<void> incrementClickCount() async {
+    final uid = _repository.getCurrentUser().uid;
     final db = FirebaseFirestore.instance;
     final data = await db.collection("users").doc(uid).get();
     if (data.exists) {

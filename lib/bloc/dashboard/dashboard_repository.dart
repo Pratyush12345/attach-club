@@ -81,4 +81,11 @@ class DashboardRepository {
     }
     throw Exception("Error fetching suggested profile");
   }
+
+  Future<void> incrementGreetingsCount() async {
+    final user = _coreRepository.getCurrentUser();
+    final db = FirebaseFirestore.instance;
+    final doc = db.collection("users").doc(user.uid);
+    return await doc.update({"greetingsCount": 1});
+  }
 }

@@ -22,7 +22,6 @@ class Greetings extends StatefulWidget {
 }
 
 class _GreetingsState extends State<Greetings> {
-
   final searchController = TextEditingController();
   int selectedTopic = 0;
   int selectedImage = 0;
@@ -30,55 +29,53 @@ class _GreetingsState extends State<Greetings> {
   String fileName = "greeting";
   ScreenshotController screenshotController = ScreenshotController();
   final ScrollController _scrollController = ScrollController();
-  
+
   PermissionStatus _permissionStatus = PermissionStatus.denied;
 
-  
-   Future<void> requestPermission(Permission permission) async {
-          final status = await permission.request();
-          setState(() {
-            print(status);
-            _permissionStatus = status;
-          });
-        }
-  
-  getpermissionStatus() async{
-  _permissionStatus = await Permission.storage.status;
+  Future<void> requestPermission(Permission permission) async {
+    final status = await permission.request();
+    setState(() {
+      print(status);
+      _permissionStatus = status;
+    });
   }
 
-  shareWidget(String filename)async{
-       
-       if(_permissionStatus == PermissionStatus.granted){
-       screenshotController.capture(delay: Duration(milliseconds: 10))
-              .then((capturedImage) async {
-                //Directory? tempDir = await getExternalStorageDirectory();
-                //String tempPath = tempDir!.path;
+  getpermissionStatus() async {
+    _permissionStatus = await Permission.storage.status;
+  }
 
-                String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
-                String imagePath = '/storage/emulated/0/Download/$filename';
+  shareWidget(String filename) async {
+    if (_permissionStatus == PermissionStatus.granted) {
+      screenshotController
+          .capture(delay: Duration(milliseconds: 10))
+          .then((capturedImage) async {
+        //Directory? tempDir = await getExternalStorageDirectory();
+        //String tempPath = tempDir!.path;
 
-                //ShowCapturedWidget(context, capturedImage!);
-                print("path----------$imagePath");
-                File imageFile = File(imagePath);
+        String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
+        String imagePath = '/storage/emulated/0/Download/$filename';
 
-                //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
-                await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-                String text = "${GlobalVariable.metaData.message!.replaceAll(" newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
+        //ShowCapturedWidget(context, capturedImage!);
+        print("path----------$imagePath");
+        File imageFile = File(imagePath);
 
-                Share.shareXFiles([XFile(imagePath)], text: text);
+        //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
+        await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+        String text =
+            "${GlobalVariable.metaData.message!.replaceAll(" newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
 
-              }).catchError((onError) {
-                print(onError);
-                ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(onError.toString()),
-                ),
-              );
-              });
-       }
-       else{
-         requestPermission(Permission.storage);
-       }
+        Share.shareXFiles([XFile(imagePath)], text: text);
+      }).catchError((onError) {
+        print(onError);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(onError.toString()),
+          ),
+        );
+      });
+    } else {
+      requestPermission(Permission.storage);
+    }
   }
 
   @override
@@ -129,28 +126,30 @@ class _GreetingsState extends State<Greetings> {
                     children: [
                       SizedBox(height: 0.01502145923 * height),
                       CustomTextField(
-                        onSubmitted: (String val){
-                          
-                         int index = bloc.filteredList.indexWhere((element) => element.categoryName.toLowerCase().contains(val.toLowerCase()));
-                         if(index !=-1){
-                           selectedTopic = index;
-                           selectedImage = 0;
-                           selectedCategory = bloc.filteredList[index].categoryName;
+                        onSubmitted: (String val) {
+                          int index = bloc.filteredList.indexWhere((element) =>
+                              element.categoryName
+                                  .toLowerCase()
+                                  .contains(val.toLowerCase()));
+                          if (index != -1) {
+                            selectedTopic = index;
+                            selectedImage = 0;
+                            selectedCategory =
+                                bloc.filteredList[index].categoryName;
                             _scrollController.animateTo(
-                            index * 56.0, // Assuming each item has a height of 56.0
-                            duration: const Duration(seconds: 1),
-                            curve: Curves.easeInOut,
-                          );
-                           setState(() {}); 
-                         }
-                         else{
-                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('category not found'),
-                            ),
-                          );
-
-                         }
+                              index * 56.0,
+                              // Assuming each item has a height of 56.0
+                              duration: const Duration(seconds: 1),
+                              curve: Curves.easeInOut,
+                            );
+                            setState(() {});
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('category not found'),
+                              ),
+                            );
+                          }
                         },
                         type: TextFieldType.RegularTextField,
                         controller: searchController,
@@ -175,7 +174,8 @@ class _GreetingsState extends State<Greetings> {
                                 setState(() {
                                   selectedTopic = index;
                                   selectedImage = 0;
-                                  selectedCategory = bloc.filteredList[index].categoryName;
+                                  selectedCategory =
+                                      bloc.filteredList[index].categoryName;
                                 });
                               },
                               child: Container(
@@ -209,11 +209,12 @@ class _GreetingsState extends State<Greetings> {
                         ),
                       ),
                       SizedBox(height: 0.03326180258 * height),
-                      
-                       
-
-                      GreetingCard(imageurl: bloc.filteredList[selectedTopic].templates[selectedImage].link , screenshotController:  screenshotController , fromScreen: "Social Greeting", ),
-                      
+                      GreetingCard(
+                        imageurl: bloc.filteredList[selectedTopic]
+                            .templates[selectedImage].link,
+                        screenshotController: screenshotController,
+                        fromScreen: "Social Greeting",
+                      ),
                       SizedBox(height: 0.02145922747 * height),
                       SizedBox(
                         height: 0.1126609442 * height,
@@ -222,18 +223,19 @@ class _GreetingsState extends State<Greetings> {
                           key: ValueKey(selectedCategory),
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: bloc.filteredList[selectedTopic].templates.length,
+                          itemCount:
+                              bloc.filteredList[selectedTopic].templates.length,
                           itemBuilder: (context, index) {
-                            print("${bloc.filteredList[selectedTopic].hashCode+index}");
+                            print(
+                                "${bloc.filteredList[selectedTopic].hashCode + index}");
                             return GestureDetector(
-                              key:  ValueKey("${bloc.filteredList[selectedTopic].hashCode+index}"),
+                              key: ValueKey(
+                                  "${bloc.filteredList[selectedTopic].hashCode + index}"),
                               onTap: () {
                                 setState(() {
                                   selectedImage = index;
-                                  fileName = bloc
-                                            .filteredList[selectedTopic]
-                                            .templates[index]
-                                            .name;
+                                  fileName = bloc.filteredList[selectedTopic]
+                                      .templates[index].name;
                                 });
                               },
                               child: Padding(
@@ -252,10 +254,10 @@ class _GreetingsState extends State<Greetings> {
                                           )
                                         : null,
                                   ),
-                                  child: GreetingSmallGrid(imageurl: bloc
-                                            .filteredList[selectedTopic]
-                                            .templates[index]
-                                            .link ,),
+                                  child: GreetingSmallGrid(
+                                    imageurl: bloc.filteredList[selectedTopic]
+                                        .templates[index].link,
+                                  ),
                                   // child: Padding(
                                   //   padding: const EdgeInsets.all(2.0),
                                   //   child: ClipRRect(
@@ -279,13 +281,13 @@ class _GreetingsState extends State<Greetings> {
                                   //           direction: ShimmerDirection.ltr,
                                   //             baseColor:  Colors.grey[800]!,
                                   //             highlightColor: Colors.grey[600]!,
-                                        
+
                                   //           child: Container(
                                   //             color: Colors.white,
                                   //           ),
                                   //         );
                                   //       },
-                                       
+
                                   //       fit: BoxFit.fill,
                                   //     ),
                                   //   ),

@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:attach_club/bloc/profile/profile_bloc.dart';
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/views/profile/product_card_with_enquiry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../models/user_data.dart';
 
 class ViewAllProducts extends StatelessWidget {
   final String phoneNo;
@@ -21,7 +25,7 @@ class ViewAllProducts extends StatelessWidget {
           horizontal: horizontalPadding,
         ),
         child: ListView.builder(
-          itemCount: bloc.productList.length,
+          itemCount: _getLength(bloc.userData, bloc.productList.length),
           itemBuilder: (context, i) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -35,5 +39,12 @@ class ViewAllProducts extends StatelessWidget {
         ),
       ),
     );
+  }
+  int _getLength(UserData userData, int length) {
+    if (userData.accountType=="normal") {
+      return min(3, length);
+    } else {
+      return length;
+    }
   }
 }

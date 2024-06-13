@@ -65,6 +65,7 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   shimmer:
   permission_handler: ^11.3.1
+  connectivity_plus: ^6.0.3
 
 #  awesome_notifications_core: ^0.9.3
 #  awesome_notifications: any

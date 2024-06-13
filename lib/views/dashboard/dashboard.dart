@@ -124,6 +124,12 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
             ),
           );
         }
+        if(state is GreetingsCountIncremented){
+          final temp = context.read<UserDataNotifier>();
+          final userData = temp.userData;
+          userData.greetingsCount = 1;
+          temp.updateUserData(userData);
+        }
       },
       builder: (context, state) {
         if (state is DashboardLoading && !GlobalVariable.isDashboardBuildOnce) {
