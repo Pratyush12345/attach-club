@@ -46,6 +46,9 @@ class _GreetingsState extends State<Greetings> {
   getpermissionStatus() async{
     print("${await Permission.storage.status}");
   _permissionStatus = await Permission.storage.status;
+  if(_permissionStatus == PermissionStatus.denied){
+    requestPermission(Permission.storage);
+   }
   }
 
   shareWidget(String filename)async{

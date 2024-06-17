@@ -40,6 +40,9 @@ class _GreetingDashboardState extends State<GreetingDashboard> {
   getpermissionStatus() async{
     print("${await Permission.storage.status}");
   _permissionStatus = await Permission.storage.status;
+   if(_permissionStatus == PermissionStatus.denied){
+    requestPermission(Permission.storage);
+   }
   }
 
   shareWidget()async{
@@ -76,6 +79,7 @@ class _GreetingDashboardState extends State<GreetingDashboard> {
          requestPermission(Permission.storage);
        }
   }
+
   @override
   void initState() {
     getpermissionStatus();
