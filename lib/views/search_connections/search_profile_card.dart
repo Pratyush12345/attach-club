@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:attach_club/bloc/connections/connection_provider.dart';
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/bloc/search_connections/Search_provider.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/search_connections/search_connections_bloc.dart';
 
@@ -64,8 +67,17 @@ class SearchProfileCard extends StatelessWidget {
       }
 
       return GestureDetector(
-        onTap: () {
-          if (context.read<UserDataNotifier>().userData.profileClickCount < 3) {
+        onTap: () async {
+          final currentUser = context.read<UserDataNotifier>().userData;
+          final prefs = await SharedPreferences.getInstance();
+          final int count = prefs.getInt('counter') ?? 1;
+          final DateTime date = DateTime.parse(
+              prefs.getString('counterDate') ?? DateTime.now().toString());
+          if (currentUser.accountType=="premium" ||
+              date.difference(DateTime.now()) >= const Duration(days: 1) ||
+              count < 3) {
+            log(date.difference(DateTime.now()).toString());
+            if (!context.mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(

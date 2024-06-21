@@ -50,3 +50,11 @@ class QueryWhatsappIconClicked extends ProfileEvent {
   @override
   List<Object?> get props => [phoneNo];
 }
+
+class SaveContact extends ProfileEvent {
+
+  const SaveContact();
+
+  @override
+  List<Object?> get props => [];
+}

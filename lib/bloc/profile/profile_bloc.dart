@@ -6,6 +6,8 @@ import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/properties/social_media.dart';
 
 part 'profile_event.dart';
 
@@ -29,19 +31,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   );
   List<Review> reviewsList = [];
   final ProfileRepository _repository;
-  
-  init(){
-   userData = UserData(
-    username: "",
-    firstLoginDate: Timestamp.now(),
-    lastLoginDate: Timestamp.now(),
-    lastPaymentDate: Timestamp.now(),
-     isPlanExpiredRecently: false,
-     planExitDate: Timestamp.now(),
-     planPurchaseDate: Timestamp.now(),
-  );
-  
+
+  init() {
+    userData = UserData(
+      username: "",
+      firstLoginDate: Timestamp.now(),
+      lastLoginDate: Timestamp.now(),
+      lastPaymentDate: Timestamp.now(),
+      isPlanExpiredRecently: false,
+      planExitDate: Timestamp.now(),
+      planPurchaseDate: Timestamp.now(),
+    );
   }
+
   ProfileBloc(this._repository) : super(ProfileInitial()) {
     on<GetUserData>((event, emit) async {
       try {
@@ -105,6 +107,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ShowSnackBar(e.toString()));
         //emit(ConnectionsNeutral());
       }
+    });
+    on<SaveContact>((event, emit) async {
+      final List<SocialMedia> list = [];
+      for (var i in socialLinksList) {
+        if (i.isEnabled) {
+          list.add(SocialMedia(
+            i.link,
+            customLabel: i.title,
+          ));
+        }
+      }
+      final contact = Contact(
+        displayName: userData.username,
+        phones: [Phone(userData.phoneNo)],
+        socialMedias: list,
+      );
+      await contact.insert();
     });
   }
 

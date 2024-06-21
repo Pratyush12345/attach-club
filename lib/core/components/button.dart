@@ -3,11 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomButton extends StatelessWidget {
-  static const textStyle = TextStyle(
-    color: primaryTextColor,
-    fontSize: 18,
-    fontWeight: FontWeight.w400,
-  );
 
   final bool isDark;
   final void Function() onPressed;
@@ -18,6 +13,8 @@ class CustomButton extends StatelessWidget {
   final Widget? prefixIcon;
   final double? doubleSize;
   final ButtonType buttonType;
+  final Color? color;
+  final Color? textColor;
 
   const CustomButton({
     super.key,
@@ -30,10 +27,17 @@ class CustomButton extends StatelessWidget {
     this.prefixIcon,
     this.doubleSize,
     this.buttonType = ButtonType.LargeButton,
+    this.color,
+    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      color: textColor ?? primaryTextColor,
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+    );
     final width = MediaQuery.of(context).size.width;
     return ElevatedButton(
       style: ButtonStyle(
@@ -62,7 +66,9 @@ class CustomButton extends StatelessWidget {
           (states) {
             if (states.contains(MaterialState.disabled) || isDark) {
               return Colors.transparent;
-            } else {
+            } else if(color!=null){
+              return color;
+            }else{
               return const Color(0xFF2D4CF9);
             }
           },

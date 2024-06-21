@@ -7,8 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../constants.dart';
 
 part 'splash_screen_event.dart';
 
@@ -24,13 +28,16 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
   ) : super(SplashScreenInitial()) {
     on<CheckLoginStatus>((event, emit) async {
       try {
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setInt('counter', 0);
+        // await prefs.setString('counterDate', DateTime.now().toString());
         await Future.delayed(const Duration(milliseconds: 500));
         if (_repository.isUserLoggedIn()) {
           final userData = await _coreRepository.getUserData();
           if (FirebaseAuth.instance.currentUser!.phoneNumber != null) {
             if (userData.phoneNo.isEmpty) {
               await _coreRepository.updatePhoneNo(
-                  FirebaseAuth.instance.currentUser!.phoneNumber!,
+                FirebaseAuth.instance.currentUser!.phoneNumber!,
               );
             }
           } else {
@@ -44,18 +51,18 @@ class SplashScreenBloc extends Bloc<SplashScreenEvent, SplashScreenState> {
           }
           return emit(NavigateToOnboarding());
         }
-        if(event.isInsideIntro){
+        if (event.isInsideIntro) {
           return emit(NavigateToSignup());
         }
         return emit(NavigateToIntro());
       } on Exception catch (e) {
         log(e.toString());
-        if(e.toString()=="Exception: User data not found"){
-          if(event.isInsideIntro){
+        if (e.toString() == "Exception: User data not found") {
+          if (event.isInsideIntro) {
             return emit(NavigateToSignup());
           }
           return emit(NavigateToIntro());
-        }else{
+        } else {
           emit(ShowSnackBar(e.toString()));
         }
       }

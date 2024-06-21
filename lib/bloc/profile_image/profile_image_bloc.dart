@@ -48,5 +48,19 @@ class ProfileImageBloc extends Bloc<ProfileImageEvent, ProfileImageState> {
         emit(ShowSnackBar(e.toString()));
       }
     });
+    on<ProfileImageDeleted>((event, emit) async {
+      emit(LoadingState());
+      await _repository.deleteProfileImage();
+      profileImage = "";
+      lastUpdated = DateTime.now();
+      emit(ProfileImageUpdated(profileImage));
+    });
+    on<BannerImageDeleted>((event, emit) async {
+      emit(LoadingState());
+      await _repository.deleteBannerImage();
+      bannerImage = "";
+      lastUpdated = DateTime.now();
+      emit(BannerImageUpdated(bannerImage));
+    });
   }
 }

@@ -18,6 +18,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   String pinCode = "";
   String country = "";
   String city = "";
+  List<String> professionsList = [];
+  List<String> filteredProfessionsList = [];
 
   EditProfileBloc(this._repository) : super(EditProfileInitial()) {
     // on<OnVerifyClicked>(_onVerifyClicked);
@@ -51,6 +53,34 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     on<ProfessionUpdated>(_onProfessionUpdated);
     on<DescriptionUpdated>(_onDescriptionUpdated);
     on<UpdateTriggered>(_onUserDataUpdated);
+    on<GetProfessions>(_onGetProfessions);
+    on<FilterProfessions>(_onFilterProfessions);
+  }
+
+  _onFilterProfessions(
+    FilterProfessions event,
+    Emitter<EditProfileState> emit,
+  ) {
+    filteredProfessionsList = professionsList
+        .where((element) => element.toLowerCase().contains(event.query.toLowerCase()))
+        .toList();
+    emit(const ProfessionsFiltered());
+    emit(EditProfileInitial());
+  }
+
+  _onGetProfessions(
+    GetProfessions event,
+    Emitter<EditProfileState> emit,
+  ) async {
+    try {
+      emit(ProfessionsLoading());
+      professionsList = await _repository.getProfessions();
+      filteredProfessionsList = professionsList;
+      emit(const ProfessionsFiltered());
+      emit(EditProfileInitial());
+    } on Exception catch (e) {
+      emit(ShowSnackBar("Something went wrong $e"));
+    }
   }
 
   _onUserDataUpdated(

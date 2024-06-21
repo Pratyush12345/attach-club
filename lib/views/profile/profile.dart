@@ -242,13 +242,16 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 userData.uid != GlobalVariable.userData.uid)
                               CustomButton(
                                 onPressed: () async {
-                                  final url =
-                                      Uri.parse("tel:${userData.phoneNo}");
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    throw 'Could not launch $url';
-                                  }
+                                  // final url =
+                                  //     Uri.parse("tel:${userData.phoneNo}");
+                                  // if (await canLaunchUrl(url)) {
+                                  //   await launchUrl(url);
+                                  // } else {
+                                  //   throw 'Could not launch $url';
+                                  // }
+                                  context.read<ProfileBloc>().add(
+                                        SaveContact(),
+                                      );
                                 },
                                 title: "Save Contact",
                                 assetName: "assets/svg/arrow_up_right.svg",

@@ -38,3 +38,16 @@ class DataUpdated extends EditProfileState {
   @override
   List<Object?> get props => [name, profession, description];
 }
+
+class ProfessionsLoading extends EditProfileState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ProfessionsFiltered extends EditProfileState {
+
+  const ProfessionsFiltered();
+
+  @override
+  List<Object?> get props => [];
+}

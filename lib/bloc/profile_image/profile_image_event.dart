@@ -26,3 +26,13 @@ class FetchImages extends ProfileImageEvent {
   @override
   List<Object?> get props => [];
 }
+
+class BannerImageDeleted extends ProfileImageEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class ProfileImageDeleted extends ProfileImageEvent {
+  @override
+  List<Object?> get props => [];
+}

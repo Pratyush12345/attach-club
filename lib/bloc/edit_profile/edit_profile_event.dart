@@ -103,3 +103,17 @@ class UpdateTriggered extends EditProfileEvent {
   @override
   List<Object?> get props => [];
 }
+
+class GetProfessions extends EditProfileEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class FilterProfessions extends EditProfileEvent {
+  final String query;
+
+  const FilterProfessions(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}

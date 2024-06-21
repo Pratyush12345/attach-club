@@ -1,11 +1,12 @@
-import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/views/edit_profile/edit_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../bloc/edit_profile/edit_profile_bloc.dart';
+import '../../constants.dart';
 
 class CustomContainer extends StatefulWidget {
   final String title;
@@ -76,7 +77,7 @@ class _CustomContainerState extends State<CustomContainer> {
     );
   }
 
-  _decideModel(){
+  _decideModel() {
     if (widget.isProfessionDropdown) {
       _onProfessionClick(MediaQuery.of(context).size.height);
     } else {
@@ -93,85 +94,213 @@ class _CustomContainerState extends State<CustomContainer> {
   }
 
   _onProfessionClick(double height) {
-    showModalBottomSheet(
+    final controller = TextEditingController();
+    showCustomModalBottomSheet(
       context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return SizedBox(
+      sheetHeight: 0.6,
+      child: SafeArea(
+        child: SizedBox(
           width: double.infinity,
           height: 0.4887700535 * height,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 0.03540772532 * height),
-                const Text(
-                  "Selected Platform",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                SizedBox(height: 0.02789699571 * height),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: professionList.length,
-                  itemBuilder: (context, i) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          widget.updateTitle(professionList[i]);
-                          Navigator.pop(context);
-                          context.read<EditProfileBloc>().add(
-                                UpdateTriggered(
-                                  key: widget.param,
-                                  value: professionList[i],
-                                ),
-                              );
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF181B2F),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          height: 48,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 18),
-                                      child: Text(
-                                        professionList[i],
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 0.03540772532 * height),
+              const Text(
+                "Selected Platform",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              SizedBox(height: 0.02789699571 * height),
+              CustomTextField(
+                type: TextFieldType.RegularTextField,
+                controller: controller,
+                hintText: "Search",
+                onChanged: (text) {
+                  context.read<EditProfileBloc>().add(
+                        FilterProfessions(text),
+                      );
+                },
+              ),
+              SizedBox(height: 0.02789699571 * height),
+              BlocBuilder<EditProfileBloc, EditProfileState>(
+                builder: (context, state) {
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: context
+                          .read<EditProfileBloc>()
+                          .filteredProfessionsList
+                          .length,
+                      itemBuilder: (context, i) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              widget.updateTitle(context
+                                  .read<EditProfileBloc>()
+                                  .filteredProfessionsList[i]);
+                              Navigator.pop(context);
+                              context.read<EditProfileBloc>().add(
+                                    UpdateTriggered(
+                                      key: widget.param,
+                                      value: context
+                                          .read<EditProfileBloc>()
+                                          .filteredProfessionsList[i],
+                                    ),
+                                  );
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF181B2F),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ],
+                              height: 48,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 18),
+                                          child: Text(
+                                            context
+                                                .read<EditProfileBloc>()
+                                                .filteredProfessionsList[i],
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
+    // showModalBottomSheet(
+    //   context: context,
+    //   isScrollControlled: true,
+    //   builder: (context) {
+    //     return SizedBox(
+    //       width: double.infinity,
+    //       height: 0.4887700535 * height,
+    //       child: Padding(
+    //         padding: const EdgeInsets.symmetric(
+    //           horizontal: horizontalPadding,
+    //         ),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             SizedBox(height: 0.03540772532 * height),
+    //             const Text(
+    //               "Selected Platform",
+    //               style: TextStyle(fontSize: 16, color: Colors.white),
+    //             ),
+    //             SizedBox(height: 0.02789699571 * height),
+    //             CustomTextField(
+    //               type: TextFieldType.RegularTextField,
+    //               controller: controller,
+    //               hintText: "Search",
+    //               onChanged: (text) {
+    //                 context.read<EditProfileBloc>().add(
+    //                       FilterProfessions(text),
+    //                     );
+    //               },
+    //             ),
+    //             SizedBox(height: 0.02789699571 * height),
+    //             BlocBuilder<EditProfileBloc, EditProfileState>(
+    //               builder: (context, state) {
+    //                 return ListView.builder(
+    //                   shrinkWrap: true,
+    //                   itemCount: context
+    //                       .read<EditProfileBloc>()
+    //                       .filteredProfessionsList
+    //                       .length,
+    //                   itemBuilder: (context, i) {
+    //                     return GestureDetector(
+    //                       onTap: () {
+    //                         setState(() {
+    //                           widget.updateTitle(context
+    //                               .read<EditProfileBloc>()
+    //                               .filteredProfessionsList[i]);
+    //                           Navigator.pop(context);
+    //                           context.read<EditProfileBloc>().add(
+    //                                 UpdateTriggered(
+    //                                   key: widget.param,
+    //                                   value: context
+    //                                       .read<EditProfileBloc>()
+    //                                       .filteredProfessionsList[i],
+    //                                 ),
+    //                               );
+    //                         });
+    //                       },
+    //                       child: Padding(
+    //                         padding: const EdgeInsets.only(bottom: 8.0),
+    //                         child: Container(
+    //                           width: double.infinity,
+    //                           decoration: BoxDecoration(
+    //                             color: const Color(0xFF181B2F),
+    //                             borderRadius: BorderRadius.circular(8),
+    //                           ),
+    //                           height: 48,
+    //                           child: Row(
+    //                             children: [
+    //                               Expanded(
+    //                                 child: Row(
+    //                                   mainAxisAlignment:
+    //                                       MainAxisAlignment.start,
+    //                                   crossAxisAlignment:
+    //                                       CrossAxisAlignment.center,
+    //                                   children: [
+    //                                     Padding(
+    //                                       padding:
+    //                                           const EdgeInsets.only(left: 18),
+    //                                       child: Text(
+    //                                         context
+    //                                             .read<EditProfileBloc>()
+    //                                             .filteredProfessionsList[i],
+    //                                         style: const TextStyle(
+    //                                           fontSize: 16,
+    //                                           color: Colors.white,
+    //                                         ),
+    //                                       ),
+    //                                     )
+    //                                   ],
+    //                                 ),
+    //                               ),
+    //                             ],
+    //                           ),
+    //                         ),
+    //                       ),
+    //                     );
+    //                   },
+    //                 );
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   _openModal() {
