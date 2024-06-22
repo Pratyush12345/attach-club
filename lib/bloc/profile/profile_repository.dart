@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/models/review.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRepository {
   final CoreRepository _repository;
@@ -83,6 +86,19 @@ class ProfileRepository {
       await db.collection("users").doc(uid).update({
         "profileClickCount": count + 1,
       });
+      final prefs = await SharedPreferences.getInstance();
+      final DateTime date = DateTime.parse(
+          prefs.getString('counterDate') ?? DateTime.now().toString());
+      if(date.difference(DateTime.now()) < const Duration(days: 1)){
+        log("increment");
+        final int localCount = prefs.getInt('counter')??0;
+        await prefs.setInt('counter', localCount+1);
+      }else{
+        log("reset");
+        await prefs.setInt('counter', 1);
+        await prefs.setString('counterDate', DateTime.now().toString());
+      }
+
     }
   }
 

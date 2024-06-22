@@ -25,7 +25,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         requestList.sort((a, b) => b.updateTime.compareTo(a.updateTime));
 
         publicAlerts = await _repository.getPublicAlerts();
+        publicAlerts.sort((a, b) => b.creationDate.compareTo(a.creationDate));
         privateAlerts = await _repository.getPrivateAlerts();
+        privateAlerts.sort((a, b) => b.creationDate.compareTo(a.creationDate));
         emit(NotificationsUpdated());
       } on Exception catch (e) {
         emit(ShowSnackBar(e.toString()));

@@ -115,7 +115,6 @@ class _MyAppState extends State<MyApp> {
     if (_getConnectivityResult(newResult)) {
       navigatorKey.currentState?.pop();
       isNavigated = false;
-      log("false");
     }
   }
 
@@ -127,15 +126,12 @@ class _MyAppState extends State<MyApp> {
         .onConnectivityChanged
         .listen((List<ConnectivityResult> result) async {
       if (_getConnectivityResult(result)) {
-        log("internet");
         if (isNavigated) {
           await _onRetry();
         }
       } else {
-        log("no internet");
         if (!isNavigated) {
           isNavigated = true;
-          log("true");
           navigatorKey.currentState?.push(MaterialPageRoute(
             builder: (context) {
               return NoInternet(

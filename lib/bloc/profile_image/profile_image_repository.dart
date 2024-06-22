@@ -77,4 +77,16 @@ class ProfileImageRepository {
     final userData = await _repository.getUserData();
     return userData.bannerImageURL;
   }
+
+  Future<void> deleteProfileImage() async {
+    final db = FirebaseFirestore.instance;
+    final currentUser = _repository.getCurrentUser();
+    await db.collection("users").doc(currentUser.uid).update({"profileImageURL": ""});
+  }
+
+  Future<void> deleteBannerImage() async {
+    final db = FirebaseFirestore.instance;
+    final currentUser = _repository.getCurrentUser();
+    await db.collection("users").doc(currentUser.uid).update({"bannerImageURL": ""});
+  }
 }

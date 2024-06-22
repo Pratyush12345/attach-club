@@ -22,7 +22,6 @@ class _BuyPlanState extends State<BuyPlan> {
   int selectedIndex = 0;
   var cfPaymentGatewayService = CFPaymentGatewayService();
 
-
   @override
   void initState() {
     super.initState();
@@ -38,7 +37,7 @@ class _BuyPlanState extends State<BuyPlan> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
-        Text("payment failed ${errorResponse.getMessage().toString()}"),
+            Text("payment failed ${errorResponse.getMessage().toString()}"),
       ),
     );
   }
@@ -86,6 +85,9 @@ class _BuyPlanState extends State<BuyPlan> {
               );
             }
             final list = context.read<BuyPlanBloc>().list;
+            final isPremium =
+                (context.read<UserDataNotifier>().userData.accountType ==
+                    "premium");
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
@@ -171,11 +173,23 @@ class _BuyPlanState extends State<BuyPlan> {
                   ),
                   CustomButton(
                     onPressed: () {
-                      context.read<BuyPlanBloc>().add(
-                            TriggerPG(list[selectedIndex].planCode),
-                          );
+                      if (!isPremium) {
+                        context.read<BuyPlanBloc>().add(
+                              TriggerPG(list[selectedIndex].planCode),
+                            );
+                      }else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("You are already a premium user"),
+                          ),
+                        );
+                      }
                     },
-                    title: "Subscribe",
+                    title: isPremium
+                        ? "Current Plan is ${context.read<UserDataNotifier>().userData.purchasedPlanCode}"
+                        : "Subscribe",
+                    color: const Color(0xFFFFD16A),
+                    textColor: Colors.black,
                   ),
                 ],
               ),

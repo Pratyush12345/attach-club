@@ -17,6 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -256,12 +257,15 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 userData.uid != GlobalVariable.userData.uid)
                               CustomButton(
                                 onPressed: () async {
-                                  final url =
-                                      Uri.parse("tel:${userData.phoneNo}");
-                                  if (await canLaunchUrl(url)) {
-                                    await launchUrl(url);
-                                  } else {
-                                    throw 'Could not launch $url';
+                                  // final url =
+                                  //     Uri.parse("tel:${userData.phoneNo}");
+                                  // if (await canLaunchUrl(url)) {
+                                  //   await launchUrl(url);
+                                  // } else {
+                                  //   throw 'Could not launch $url';
+                                  // }
+                                  if (await FlutterContacts.requestPermission()){
+                                      context.read<ProfileBloc>().add(const SaveContact(),);
                                   }
                                 },
                                 title: "Save Contact",

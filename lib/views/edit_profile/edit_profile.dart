@@ -50,6 +50,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     final bloc = context.read<EditProfileBloc>();
     final userData = context.read<UserDataNotifier>().userData;
+    bloc.add(GetProfessions());
     bloc.username = userData.username;
     bloc.name = userData.name;
     bloc.profession = userData.profession;

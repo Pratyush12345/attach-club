@@ -1,14 +1,16 @@
 import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
-import 'package:attach_club/models/globalVariable.dart';
+import 'package:attach_club/views/profile_image/profile_sheet_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../core/components/custom_add_icon.dart';
 import '../../core/components/label.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class UploadImagesComponent extends StatefulWidget {
   const UploadImagesComponent({super.key});
@@ -18,7 +20,6 @@ class UploadImagesComponent extends StatefulWidget {
 }
 
 class _UploadImagesComponentState extends State<UploadImagesComponent> {
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -43,15 +44,16 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () async {
-                  XFile? pickedImage = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (context.mounted && pickedImage != null) {
-                    context.read<ProfileImageBloc>().add(
-                          BannerImageUploaded(pickedImage),
-                        );
-                        GlobalVariable.isAnyChangeInProfile = true;
-                  }
+                onTap: () {
+                  showProfileSheetModal(
+                    context,
+                    _selectCoverAndUpload,
+                    () {
+                      context.read<ProfileImageBloc>().add(
+                            BannerImageDeleted(),
+                          );
+                    },
+                  );
                 },
                 child: _getCover(height),
               ),
@@ -59,14 +61,15 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
-                    XFile? pickedImage = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                    if (context.mounted && pickedImage != null) {
-                      context.read<ProfileImageBloc>().add(
-                            ProfileImageUploaded(pickedImage),
-                          );
-                          GlobalVariable.isAnyChangeInProfile = true;
-                    }
+                    showProfileSheetModal(
+                      context,
+                      _selectProfileAndUpload,
+                      () {
+                        context.read<ProfileImageBloc>().add(
+                              ProfileImageDeleted(),
+                            );
+                      },
+                    );
                   },
                   child: _getProfile(width),
                 ),
@@ -76,6 +79,34 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
         );
       },
     );
+  }
+
+  _selectProfileAndUpload() async {
+    XFile? pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (context.mounted && pickedImage != null) {
+      CroppedFile? croppedFile =
+          await ImageCropper().cropImage(sourcePath: pickedImage.path);
+      if (context.mounted && croppedFile != null) {
+        context.read<ProfileImageBloc>().add(
+              ProfileImageUploaded(XFile(croppedFile.path)),
+            );
+      }
+    }
+  }
+
+  _selectCoverAndUpload() async {
+    XFile? pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (context.mounted && pickedImage != null) {
+      CroppedFile? croppedFile =
+          await ImageCropper().cropImage(sourcePath: pickedImage.path);
+      if (context.mounted && croppedFile != null) {
+        context.read<ProfileImageBloc>().add(
+              BannerImageUploaded(XFile(croppedFile.path)),
+            );
+      }
+    }
   }
 
   Widget _getCover(double height) {
