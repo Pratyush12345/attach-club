@@ -28,7 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixWidget,
     this.disabled = false,
     this.color,
-    this.height = 64,
+    this.height = 48,
     this.fontSize = 20,
     this.keyboardType = TextInputType.text,
   });

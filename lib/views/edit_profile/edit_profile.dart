@@ -168,6 +168,7 @@ class _EditProfileState extends State<EditProfile> {
                         title: professionController.text,
                         hintText: "Profession",
                         param: "profession",
+                        isProfessionDropdown: true,
                         updateTitle: (text){
                           setState(() {
                             professionController.text = text;

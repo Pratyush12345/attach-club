@@ -55,3 +55,8 @@ class ShowLoading extends AddServiceState {
   @override
   List<Object?> get props => [];
 }
+
+class NavigateToBuyPlan extends AddServiceState {
+  @override
+  List<Object?> get props => [];
+}

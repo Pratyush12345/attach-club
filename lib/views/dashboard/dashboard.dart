@@ -20,6 +20,7 @@ import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
 import 'package:attach_club/views/social_greeting/greeting_dashboard.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +67,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
   bool get wantKeepAlive => true;
   
   ScrollController scrollController = ScrollController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   @override
   void initState() {
@@ -78,7 +80,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        scrollController.addListener(_scrollListener);
        Future.delayed(const Duration(milliseconds: 4000),(){
-        
+      initFirestore();  
        Provider.of<ChangeSettingScreenProvider>(context, listen: false).changeSettingScreenIndex("Settings");
        } );
       
@@ -86,6 +88,20 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     context
         .read<profileBloc.ProfileBloc>()
         .add(const profileBloc.GetUserData());
+      
+  }
+  
+  initFirestore(){
+    _firestore.collection('users').doc('${GlobalVariable.userData.uid}').snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          if(context.read<UserDataNotifier>().userData.accountType != snapshot.data()?['accountType']){
+          context.read<UserDataNotifier>().userData.accountType = snapshot.data()?['accountType'];
+          print(context.read<UserDataNotifier>().userData.accountType);
+          }
+        });
+      }
+    });  
   }
 
   @override
@@ -122,6 +138,12 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
               content: Text(state.message),
             ),
           );
+        }
+        if(state is GreetingsCountIncremented){
+          final temp = context.read<UserDataNotifier>();
+          final userData = temp.userData;
+          userData.greetingsCount = 1;
+          temp.updateUserData(userData);
         }
       },
       builder: (context, state) {

@@ -19,3 +19,9 @@ class SendWhatsappMessage extends DashboardEvent {
   @override
   List<Object?> get props => [phoneNo];
 }
+
+class IncrementGreetingsCount extends DashboardEvent {
+  const IncrementGreetingsCount();
+  @override
+  List<Object?> get props => [];
+}

@@ -34,5 +34,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         emit(DashboardInitial());
       }
     });
+    on<IncrementGreetingsCount>((event, emit) async {
+      try {
+        await _repository.incrementGreetingsCount();
+        emit(GreetingsCountIncremented());
+      } on Exception catch (e) {
+        emit(ShowSnackBar("Error incrementing greetings count $e"));
+        emit(DashboardInitial());
+      }
+    });
   }
 }

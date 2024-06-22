@@ -39,7 +39,7 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           );
         }
         return SizedBox(
-          height: 0.3723175966 * height,
+          height: 0.4023175966 * height,
           child: Stack(
             children: [
               GestureDetector(
@@ -197,9 +197,13 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
       return Container(
         width: 0.3302325581 * width,
         height: 0.3302325581 * width,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-        ),
+         decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2.5,
+                              ),
+                              borderRadius: BorderRadius.circular(73.5),
+                            ),
         child: ClipOval(
           child: CachedNetworkImage(
                           imageBuilder: (context, imageProvider) {

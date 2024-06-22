@@ -46,6 +46,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   final feedbackController = TextEditingController();
   int selectedStars = 0;
   String buttonTitle = "";
+
   // UserData userData = UserData(username: '');
 
   @override
@@ -54,7 +55,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     buttonTitle = widget.buttonTitle!;
     //context.read<ProfileBloc>().init();
     final bloc = context.read<ProfileBloc>();
-    developer.log(widget.uid.toString());
     if (widget.uid != bloc.uid ||
         bloc.lastUpdated == null ||
         bloc.lastUpdated!.difference(DateTime.now()).inMinutes > 2) {
@@ -98,13 +98,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.message)));
             }
+            if (state is IncrementClickCount) {
+              final temp = context.read<UserDataNotifier>().userData;
+              temp.profileClickCount++;
+              context.read<UserDataNotifier>().updateUserData(temp);
+            }
             // if (state is OtherUserDataUpdated) {
             //   userData = state.userData;
             // }
           },
           builder: (context, state) {
             final userData = context.read<ProfileBloc>().userData;
-            
+
             if (userData.username.isEmpty || state is ProfileLoading) {
               // return const Center(
               //   child: CircularProgressIndicator(
@@ -117,13 +122,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  
                   SizedBox(
                     width: double.infinity,
-                    height: 0.3841201717 * height,
+                    height: 0.4541201717 * height,
                     child: Stack(
                       children: [
-                        
                         ShaderMask(
                           shaderCallback: (Rect bounds) {
                             return const LinearGradient(
@@ -145,8 +148,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                         Align(
                           alignment: Alignment.topLeft,
                           child: IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white,),
-                            onPressed: (){
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
@@ -157,7 +163,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             width: 147,
                             height: 147,
                             decoration: BoxDecoration(
-                              border:  Border.all(
+                              border: Border.all(
                                 color: Colors.white,
                                 width: 2.5,
                               ),
@@ -192,9 +198,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
-                              color: primaryTextColor,
+                              color: Colors.grey,
                             ),
                           ),
+                        if (userData.isBasicDetailEnabled)
+                          Text(
+                            userData.city,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),  
                         if (userData.isReviewEnabled)
                           Column(
                             children: [
@@ -237,15 +252,17 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               : MainAxisAlignment.center,
                           children: [
                             if (userData.phoneNo.isNotEmpty &&
-                                userData.isBasicDetailEnabled && userData.uid != GlobalVariable.userData.uid )
+                                userData.isBasicDetailEnabled &&
+                                userData.uid != GlobalVariable.userData.uid)
                               CustomButton(
-                                onPressed: ()async {
-                                  final url = Uri.parse("tel:${userData.phoneNo}");
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(url);
-                                    } else {
-                                      throw 'Could not launch $url';
-                                    }
+                                onPressed: () async {
+                                  final url =
+                                      Uri.parse("tel:${userData.phoneNo}");
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(url);
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
                                 },
                                 title: "Save Contact",
                                 assetName: "assets/svg/arrow_up_right.svg",
@@ -256,47 +273,48 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             if (widget.uid != null)
                               CustomButton(
                                 onPressed: () {
-                                   if(buttonTitle == "Disconnect"){
-                                      int index = context.read<cbloc.ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == widget.uid);
-                                      if(index!=-1){
-                                      context
-                                      .read<cbloc.ConnectionsBloc>()
-                                      .add(cbloc.RequestRemoved(context.read<cbloc.ConnectionsBloc>().connectedList[index]));
-                                      
-                                      context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
-                                       buttonTitle = "Connect";
-                                      setState(() {
-                                        
-                                      });
-                                      }
-                                   }
-                                   else if(buttonTitle == "Connect"){
-                                    context.read<ProfileBloc>().add(
-                                        ConnectButtonPressed(
-                                          widget.uid!,
-                                        ),
-                                      );
-                                     buttonTitle = "Request Sent"; 
-                                      context.read<cbloc.ConnectionsBloc>().add(cbloc.FetchConnections());
-                                     setState(() {
-                                        
-                                      });
-                                   }
-                                   else if(buttonTitle == "Request Sent"){
-                                    
-                                   }
-                                   else if(buttonTitle == "Received"){
-            
-                                   }
-                                  Provider.of<ChangeConnectionScreenProvider>(context, listen: false).changeScreenIndex("");
-                                  Provider.of<ChangeSearchScreenProvider>(context, listen: false).changeSearchScreenIndex("");
+                                  if (buttonTitle == "Disconnect") {
+                                    int index = context
+                                        .read<cbloc.ConnectionsBloc>()
+                                        .connectedList
+                                        .indexWhere((element) =>
+                                            element.uid == widget.uid);
+                                    if (index != -1) {
+                                      context.read<cbloc.ConnectionsBloc>().add(
+                                          cbloc.RequestRemoved(context
+                                              .read<cbloc.ConnectionsBloc>()
+                                              .connectedList[index]));
 
-            
-                                  
+                                      context
+                                          .read<cbloc.ConnectionsBloc>()
+                                          .add(cbloc.FetchConnections());
+                                      buttonTitle = "Connect";
+                                      setState(() {});
+                                    }
+                                  } else if (buttonTitle == "Connect") {
+                                    context.read<ProfileBloc>().add(
+                                          ConnectButtonPressed(
+                                            widget.uid!,
+                                          ),
+                                        );
+                                    buttonTitle = "Request Sent";
+                                    context
+                                        .read<cbloc.ConnectionsBloc>()
+                                        .add(cbloc.FetchConnections());
+                                    setState(() {});
+                                  } else if (buttonTitle == "Request Sent") {
+                                  } else if (buttonTitle == "Received") {}
+                                  Provider.of<ChangeConnectionScreenProvider>(
+                                          context,
+                                          listen: false)
+                                      .changeScreenIndex("");
+                                  Provider.of<ChangeSearchScreenProvider>(
+                                          context,
+                                          listen: false)
+                                      .changeSearchScreenIndex("");
                                 },
-                                title:  buttonTitle,
+                                title: buttonTitle,
                                 buttonWidth: 0.4279069767,
-                    
                               ),
                           ],
                         ),
@@ -317,9 +335,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         .socialLinksList)
                                       if(i.isEnabled)  
                                       GestureDetector(
-                                        onTap: ()async{
-                                          if(i.link.contains(".com") || i.link.contains("wa") || i.link.contains("https://") ){
-                                          final url = Uri.parse(i.link);
+                                        onTap: () async {
+                                          if (i.link.contains(".com") ||
+                                              i.link.contains("wa") ||
+                                              i.link.contains("https://")) {
+                                            final url = Uri.parse(i.link);
                                             if (await canLaunchUrl(url)) {
                                               await launchUrl(url);
                                               
@@ -329,12 +349,12 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                               throw 'Could not launch $url';
                                                
                                             }
-                                          }
-                                          else{
+                                          } else {
                                             ScaffoldMessenger.of(context)
-                                                    .showSnackBar(const SnackBar(content: Text("Not a valid link")));
-                                              }
-
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Not a valid link")));
+                                          }
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
@@ -345,7 +365,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                             width: 74,
                                             height: 74,
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
                                                 horizontal: 11.0,
                                               ),
                                               child: Column(
@@ -357,21 +378,21 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                                             .isNotEmpty)
                                                         ? i.socialMedia.imageUrl
                                                         : "assets/svg/whatsapp.svg",
-                                                    width: 26,
-                                                    height: 26,
+                                                    width: 40,
+                                                    height: 40,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 6.0,
-                                                    ),
-                                                    child: Text(
-                                                      i.title,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
+                                                  // Padding(
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //     top: 6.0,
+                                                  //   ),
+                                                  //   child: Text(
+                                                  //     i.title,
+                                                  //     maxLines: 1,
+                                                  //     overflow:
+                                                  //         TextOverflow.ellipsis,
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               ),
                                             ),
@@ -430,7 +451,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       onTap: () {
                                         // Navigator.of(context)
                                         //     .pushNamed("/profile/products");
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ViewAllProducts(phoneNo: userData.phoneNo)));
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewAllProducts(
+                                              phoneNo: userData.phoneNo,
+                                            ),
+                                          ),
+                                        );
                                       },
                                       child: const Text(
                                         "View All",
@@ -449,13 +477,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 height: 0.3805150215 * height,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: min(5, bloc.productList.length),
+                                  itemCount: _getProductCount(
+                                      bloc.userData, bloc.productList.length),
                                   itemBuilder: (context, i) {
                                     if (bloc.productList[i].isEnabled) {
                                       return GestureDetector(
                                         onTap: () {
-                                           Navigator.of(context)
-                                            .pushNamed("/profile/products");
+                                          Navigator.of(context)
+                                              .pushNamed("/profile/products");
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.only(
@@ -464,7 +493,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                           child: ProductCardWithEnquiry(
                                             product: bloc.productList[i],
                                             phoneNo: userData.phoneNo,
-
                                           ),
                                         ),
                                       );
@@ -489,20 +517,17 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
       ),
     );
   }
-  
-  String getCount(int n){
-   if(n>=1000 & 9999) {
-     return "1K+";
-   }
-   else if(n>=10000 & 99999) {
-     return "10K+";
-   } 
-   else if(n>=100000 & 999999) {
-     return "1L+";
-   } 
-   else {
-     return n.toString();
-   }
+
+  String getCount(int n) {
+    if (n >= 1000 & 9999) {
+      return "1K+";
+    } else if (n >= 10000 & 99999) {
+      return "10K+";
+    } else if (n >= 100000 & 999999) {
+      return "1L+";
+    } else {
+      return n.toString();
+    }
   }
 
   _getReview(width) {
@@ -584,11 +609,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 widget.uid!,
                               ),
                             );
-                         context.read<ProfileBloc>().reviewsList.add(
-                          Review(feedback: feedbackController.text, review: selectedStars, name: GlobalVariable.userData.name, mobileNo: GlobalVariable.userData.phoneNo));  
-                          selectedStars = 0;
-                          feedbackController.text = "";
-                          setState(() {});  
+                        context.read<ProfileBloc>().reviewsList.add(Review(
+                            feedback: feedbackController.text,
+                            review: selectedStars,
+                            name: GlobalVariable.userData.name,
+                            mobileNo: GlobalVariable.userData.phoneNo));
+                        selectedStars = 0;
+                        feedbackController.text = "";
+                        setState(() {});
                       },
                       title: "Send",
                       disabled: (selectedStars == 0 ||
@@ -605,7 +633,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.uid != null) const SizedBox(height: 25),
-               Text(
+              Text(
                 "User Reviews (${getCount(context.read<ProfileBloc>().reviewsList.length)})",
                 style: const TextStyle(
                   fontSize: 20,
@@ -613,19 +641,19 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                   color: primaryTextColor,
                 ),
               ),
-               const SizedBox(height: 8),
-              if(bloc.reviewsList.isEmpty)
-              Center(
-                child: RichText(
-                                  text: TextSpan(
-                                    text: "No reviews found",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: paragraphTextColor,
-                                    ),
-                                  ),
-                                ),
-              ),
+              const SizedBox(height: 8),
+              if (bloc.reviewsList.isEmpty)
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      text: "No reviews found",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: paragraphTextColor,
+                      ),
+                    ),
+                  ),
+                ),
               for (var i = 0; i < min(bloc.reviewsList.length, 5); i++)
                 ListTile(
                   title: Text(
@@ -642,8 +670,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                   ),
                   trailing: Rating(selected: bloc.reviewsList[i].review),
                 ),
-
-                const SizedBox(height: 8),
+              const SizedBox(height: 8),
             ],
           )
       ],
@@ -652,40 +679,42 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     //   return ;
     // }
     // return ;
-  } 
+  }
 
   _getBannerImage(UserData userData) {
     final url = userData.bannerImageURL;
     return CachedNetworkImage(
       imageBuilder: (context, imageProvider) {
-                    return Container(
-                        decoration: BoxDecoration(
-                        image: DecorationImage(
-                         image: imageProvider,
-                         fit: BoxFit.fill,
-                        ),
-                       ));
-                     },
-      imageUrl:  url,
+        return Container(
+            decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fill,
+          ),
+        ));
+      },
+      imageUrl: url,
       fit: BoxFit.fill,
       errorWidget: (context, error, stackTrace) {
-        return Image.asset( 
+        return Image.asset(
           "assets/images/banner.jpeg",
           fit: BoxFit.cover,
         );
       },
-      placeholder: (context, child,) {
+      placeholder: (
+        context,
+        child,
+      ) {
         return Shimmer.fromColors(
           direction: ShimmerDirection.ltr,
-            baseColor:  Colors.grey[800]!,
-            highlightColor: Colors.grey[600]!,
-      
+          baseColor: Colors.grey[800]!,
+          highlightColor: Colors.grey[600]!,
           child: Container(
             color: Colors.white,
           ),
         );
       },
-    ); 
+    );
     if (url.isNotEmpty) {
       return Image.network(
         url,
@@ -706,23 +735,31 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
       return CachedNetworkImage(
         imageUrl: url,
         imageBuilder: (context, imageProvider) {
-                    return Container(
-                        decoration: BoxDecoration(
-                        image: DecorationImage(
-                         image: imageProvider,
-                         fit: BoxFit.cover,
-                        ),
-                       ));
-                     },
+          return Container(
+              decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ));
+        },
         fit: BoxFit.cover,
       );
     } else {
       //TODO: Set new default profile image
       return const Icon(
-        Icons.person, 
+        Icons.person,
         size: 140,
         // size: 0.1242060086 * height,
       );
+    }
+  }
+
+  int _getProductCount(UserData userData, int length) {
+    if (userData.accountType == "normal") {
+      return min(3, length);
+    } else {
+      return min(5, length);
     }
   }
 }

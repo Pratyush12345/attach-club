@@ -1,5 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
-
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
 import 'package:attach_club/bloc/add_link/add_link_repository.dart';
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
@@ -46,16 +47,15 @@ import 'package:attach_club/views/blocked/blocked.dart';
 import 'package:attach_club/views/buy_plan/buy_plan.dart';
 import 'package:attach_club/views/complete_profile/complete_profile.dart';
 import 'package:attach_club/views/detailed_analytics/detailed_analytics.dart';
-import 'package:attach_club/views/edit_profile/edit_profile.dart';
 import 'package:attach_club/views/intro/intro1.dart';
 import 'package:attach_club/views/intro/intro2.dart';
 import 'package:attach_club/views/intro/intro3.dart';
+import 'package:attach_club/views/no_internet/no_internet.dart';
 import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:attach_club/views/social_greeting/greetings.dart';
 import 'package:attach_club/views/manage_profile/manage_profile.dart';
 import 'package:attach_club/views/notifications/notifications.dart';
 import 'package:attach_club/views/profile/profile.dart';
-import 'package:attach_club/views/profile/view_all_products.dart';
 import 'package:attach_club/views/profile_image/profile_image.dart';
 import 'package:attach_club/views/profile_privacy/profile_privacy.dart';
 import 'package:attach_club/views/qr_code/qr_code_screen.dart';
@@ -63,8 +63,8 @@ import 'package:attach_club/views/settings/settings.dart';
 import 'package:attach_club/home.dart';
 import 'package:attach_club/views/signup/sign_up.dart';
 import 'package:attach_club/views/splash_screen/splash_screen.dart';
-import 'package:attach_club/views/verify_otp/verify_otp.dart';
 import 'package:attach_club/views/verify_phone/verify_phone.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,14 +78,13 @@ import 'core/repository/user_data_notifier.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-
 void main() async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions().currentPlatform,
   );
-  await FirebaseAPi().initNotifications();
+  await FirebaseApi().initNotifications();
   runApp(
     const MyApp(),
   );
@@ -100,16 +99,59 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Client client;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
+  bool isNavigated = false;
+
+  bool _getConnectivityResult(List<ConnectivityResult> result) {
+    return result.contains(ConnectivityResult.mobile) ||
+        result.contains(ConnectivityResult.wifi) ||
+        result.contains(ConnectivityResult.vpn) ||
+        result.contains(ConnectivityResult.ethernet) ||
+        result.contains(ConnectivityResult.other);
+  }
+
+  Future<void> _onRetry() async {
+    final newResult = await (Connectivity().checkConnectivity());
+    if (_getConnectivityResult(newResult)) {
+      navigatorKey.currentState?.pop();
+      isNavigated = false;
+      log("false");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     client = Client();
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) async {
+      if (_getConnectivityResult(result)) {
+        log("internet");
+        if (isNavigated) {
+          await _onRetry();
+        }
+      } else {
+        log("no internet");
+        if (!isNavigated) {
+          isNavigated = true;
+          log("true");
+          navigatorKey.currentState?.push(MaterialPageRoute(
+            builder: (context) {
+              return NoInternet(
+                onRetry: _onRetry,
+              );
+            },
+          ));
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
     client.close();
+    // subscription.cancel();
     super.dispose();
   }
 
@@ -125,10 +167,18 @@ class _MyAppState extends State<MyApp> {
         create: (context) => client,
         child: MultiRepositoryProvider(
           providers: [
-            ChangeNotifierProvider(create: (context)=> ChangeScreenProvider(),),
-            ChangeNotifierProvider(create: (context)=> ChangeConnectionScreenProvider(),),
-            ChangeNotifierProvider(create: (context)=> ChangeSearchScreenProvider(),),
-            ChangeNotifierProvider(create: (context)=> ChangeSettingScreenProvider(),),
+            ChangeNotifierProvider(
+              create: (context) => ChangeScreenProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ChangeConnectionScreenProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ChangeSearchScreenProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ChangeSettingScreenProvider(),
+            ),
             RepositoryProvider(
               create: (context) => CoreRepository(),
             ),
@@ -214,12 +264,10 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             RepositoryProvider(
-              create: (context) => NotificationsRepository(
-                context.read<CoreRepository>()
-              ),
+              create: (context) =>
+                  NotificationsRepository(context.read<CoreRepository>()),
             ),
           ],
-          
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
@@ -316,7 +364,7 @@ class _MyAppState extends State<MyApp> {
               navigatorKey: navigatorKey,
               // locale: DevicePreview.locale(context),
               // builder: DevicePreview.appBuilder,
-              title: 'Flutter Demo',
+              title: 'Attach Club',
               darkTheme: ThemeData(
                 brightness: Brightness.dark,
                 scaffoldBackgroundColor: const Color(0xFF181B2F),
@@ -351,7 +399,9 @@ class _MyAppState extends State<MyApp> {
                 "/settings/manageProfile": (context) => const ManageProfile(),
                 "/settings/profilePrivacy": (context) => const ProfilePrivacy(),
                 "/home": (context) => const HomeScreen(),
-                "/profile": (context) => const Profile(buttonTitle: "My Profile",),
+                "/profile": (context) => const Profile(
+                      buttonTitle: "My Profile",
+                    ),
                 // "/profile/products": (context) => const ViewAllProducts(),
                 "/qr": (context) => const QrCodeScreen(),
                 "/settings/detailedAnalytics": (context) =>
@@ -360,10 +410,11 @@ class _MyAppState extends State<MyApp> {
                 "/buyPlan": (context) => const BuyPlan(),
                 "/notifications": (context) => const Notifications(),
                 "/verifyPhone": (context) => const VerifyPhone(),
-                "/blocked": (context)=> const BlockedScreen(),
-                "/intro1": (context)=> const Intro1(),
-                "/intro2": (context)=> const Intro2(),
-                "/intro3": (context)=> const Intro3(),
+                "/blocked": (context) => const BlockedScreen(),
+                "/intro1": (context) => const Intro1(),
+                "/intro2": (context) => const Intro2(),
+                "/intro3": (context) => const Intro3(),
+                // "/noInternet": (context) => const NoInternet(),
               },
             ),
           ),

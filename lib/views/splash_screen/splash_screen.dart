@@ -1,4 +1,5 @@
 import 'package:attach_club/bloc/splash_screen/splash_screen_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

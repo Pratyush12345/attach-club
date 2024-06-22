@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ class ProfileCard extends StatelessWidget {
   });
 
   _getImage(height) {
-
     final staticImage = SizedBox(
       height: 0.1942060086 * height,
       width: double.infinity,
@@ -38,70 +38,70 @@ class ProfileCard extends StatelessWidget {
         children: [
           Center(
             child: Icon(
-              Icons.person, 
+              Icons.person,
               size: 0.1242060086 * height,
             ),
           ),
-          accountType.toLowerCase() == "premium"?  Align(
-                         alignment: Alignment.bottomLeft,
-                         child :SizedBox(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          child: Image.asset("assets/images/premium_icon.png",
-                                          )),
-                                         
-                        ) : const SizedBox(),
+          accountType.toLowerCase() == "premium"
+              ? Align(
+                  alignment: Alignment.bottomLeft,
+                  child: SizedBox(
+                      height: 40.0,
+                      width: 40.0,
+                      child: Image.asset(
+                        "assets/images/premium_icon.png",
+                      )),
+                )
+              : const SizedBox(),
         ],
       ),
     );
-    
-    if(asset.isEmpty){
+
+    if (asset.isEmpty) {
       return staticImage;
     }
-    return  SizedBox(
+    return SizedBox(
       height: 0.1942060086 * height,
       width: double.infinity,
       child: CachedNetworkImage(
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                        decoration: BoxDecoration(
-                        image: DecorationImage( 
-                         image: imageProvider,
-                         fit: BoxFit.fill,
-                        ),
-                        
-                       ),
-                       child: accountType.toLowerCase() == "premium"?  Align(
-                         alignment: Alignment.bottomLeft,
-                         child :SizedBox(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          child: Image.asset("assets/images/premium_icon.png",
-                                          )),
-                                         
-                        ) : const SizedBox(),
-                        
-                       );
-                     },
-                  placeholder: (context, url) {
-                   return Shimmer.fromColors(
-                                direction: ShimmerDirection.ltr,
-                                  baseColor:  Colors.grey[800]!,
-                                  highlightColor: Colors.grey[600]!,
-                            
-                                child: Container(
-                                  color: Colors.white,
-                                ),
-                              );
-                  },
-                  imageUrl: asset,
-                  fit: BoxFit.fill,
-                  height: 0.1942060086 * height,
-      
-                  errorWidget: (context, error, stackTrace) {
-                    return staticImage;
-                  },
-          ),
+        imageBuilder: (context, imageProvider) {
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: accountType.toLowerCase() == "premium"
+                ? Align(
+                    alignment: Alignment.bottomLeft,
+                    child: SizedBox(
+                        height: 40.0,
+                        width: 40.0,
+                        child: Image.asset(
+                          "assets/images/premium_icon.png",
+                        )),
+                  )
+                : const SizedBox(),
+          );
+        },
+        placeholder: (context, url) {
+          return Shimmer.fromColors(
+            direction: ShimmerDirection.ltr,
+            baseColor: Colors.grey[800]!,
+            highlightColor: Colors.grey[600]!,
+            child: Container(
+              color: Colors.white,
+            ),
+          );
+        },
+        imageUrl: asset,
+        fit: BoxFit.fill,
+        height: 0.1942060086 * height,
+        errorWidget: (context, error, stackTrace) {
+          return staticImage;
+        },
+      ),
     );
   }
 
@@ -111,16 +111,30 @@ class ProfileCard extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () {
-        String title = "Connect";
-        
-        int index1 = context.read<ConnectionsBloc>().connectedList.indexWhere((element) => element.uid == uid);
-        
-        if(index1 !=-1){
-         title = "Connected";
-        }
-        else{
-          title = context.read<ConnectionsBloc>().sentList.indexWhere((element) => element.uid == uid)!=-1 ? "Request Sent" : 
-          context.read<ConnectionsBloc>().receivedList.indexWhere((element) => element.uid == uid)!=-1 ? "Received" : "Connect";
+        if (context.read<UserDataNotifier>().userData.profileClickCount < 3 || context.read<UserDataNotifier>().userData.accountType == "premium") {
+           String title = "Connect";
+
+        int index1 = context
+            .read<ConnectionsBloc>()
+            .connectedList
+            .indexWhere((element) => element.uid == uid);
+
+        if (index1 != -1) {
+          title = "Connected";
+        } else {
+          title = context
+                      .read<ConnectionsBloc>()
+                      .sentList
+                      .indexWhere((element) => element.uid == uid) !=
+                  -1
+              ? "Request Sent"
+              : context
+                          .read<ConnectionsBloc>()
+                          .receivedList
+                          .indexWhere((element) => element.uid == uid) !=
+                      -1
+                  ? "Received"
+                  : "Connect";
         }
         Navigator.push(
           context,
@@ -131,6 +145,18 @@ class ProfileCard extends StatelessWidget {
             ),
           ),
         );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "You have reached the maximum limit of profile views for the day. Upgrade to premium to view more profiles.",
+                ),
+              ),
+            );
+            Navigator.of(context).pushNamed("/buyPlan");
+          }
+
+        
       },
       child: Card(
         shape: RoundedRectangleBorder(

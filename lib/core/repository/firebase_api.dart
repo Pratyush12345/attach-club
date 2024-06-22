@@ -15,7 +15,7 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 void handleLocalBackgroundMessage(NotificationResponse response) {
 }
 
-class FirebaseAPi {
+class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',

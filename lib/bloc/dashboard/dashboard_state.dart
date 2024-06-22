@@ -27,3 +27,8 @@ class DashboardLoading extends DashboardState {
   @override
   List<Object?> get props => [];
 }
+
+class GreetingsCountIncremented extends DashboardState {
+  @override
+  List<Object?> get props => [];
+}

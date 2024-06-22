@@ -60,7 +60,7 @@ class _DetailedAnalyticsState extends State<DetailedAnalytics> {
                       ),
                       AnalyticsCard(
                         title: "Profile Clicks",
-                        number: userData.profileClickCount.toString(),
+                        number: userData.profileViewCount.toString(),
                         assetPath: "assets/svg/profile_analytics_vector.svg",
                       ),
                     ],
