@@ -3,6 +3,7 @@ import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/edit_profile/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -139,8 +140,10 @@ class _EditProfileState extends State<EditProfile> {
                     const Label(title: "Your profile will be available at:"),
                     const SizedBox(height: 4),
                     RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        text: "www.theattachclub.com/",
+                        text: "${GlobalVariable.metaData.webURL}",
                         style: _getTextStyle(Colors.white, 20, FontWeight.w500),
                         children: [
                           TextSpan(text: userNameController.text),

@@ -32,50 +32,55 @@ class _GreetingDashboardState extends State<GreetingDashboard> {
 
   PermissionStatus _permissionStatus = PermissionStatus.denied;
 
-  Future<void> requestPermission(Permission permission) async {
-    final status = await permission.request();
-    setState(() {
-      print(status);
-      _permissionStatus = status;
-    });
+   Future<void> requestPermission(Permission permission) async {
+          final status = await permission.request();
+          setState(() {
+            print(status);
+            _permissionStatus = status;
+          });
+        }
+
+  getpermissionStatus() async{
+    print("${await Permission.storage.status}");
+  _permissionStatus = await Permission.storage.status;
+   if(_permissionStatus == PermissionStatus.denied){
+    requestPermission(Permission.storage);
+   }
   }
 
-  getpermissionStatus() async {
-    _permissionStatus = await Permission.storage.status;
-  }
+  shareWidget()async{
+       
+       if(_permissionStatus == PermissionStatus.granted){
+       screenshotController.capture(delay: Duration(milliseconds: 10))
+              .then((capturedImage) async {
+                Directory? tempDir = await getDownloadsDirectory();
+                String tempPath = tempDir!.path;
 
-  shareWidget() async {
-    if (_permissionStatus == PermissionStatus.granted) {
-      screenshotController
-          .capture(delay: Duration(milliseconds: 10))
-          .then((capturedImage) async {
-        //Directory? tempDir = await getExternalStorageDirectory();
-        //String tempPath = tempDir!.path;
+                String filename = "image${widget.fileName!.replaceAll(".jpg", "")}.jpg";
+                //String imagePath = '/storage/emulated/0/Download/$filename';
+                String imagePath = '$tempPath/$filename'; 
+                //ShowCapturedWidget(context, capturedImage!);
+                print("path----------$imagePath");
+                File imageFile = File(imagePath);
 
-        String filename = "image${widget.fileName!.replaceAll(".jpg", "")}.jpg";
-        String imagePath = '/storage/emulated/0/Download/$filename';
+                //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
+                await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
+                String text = "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
 
-        //ShowCapturedWidget(context, capturedImage!);
-        print("path----------$imagePath");
-        File imageFile = File(imagePath);
+                Share.shareXFiles([XFile(imagePath)], text: text);
 
-        //notification(filename, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1VuKA1bfF-J9EICmf9n4YvfTkXkhQb4Zln2kVXHZnw&s');
-        await imageFile.writeAsBytes(capturedImage!.buffer.asUint8List());
-        String text =
-            "${GlobalVariable.metaData.message!.replaceAll("newline ", "\n").replaceAll("#name", GlobalVariable.userData.name)} \n ${GlobalVariable.metaData.webURL! + GlobalVariable.userData.username}";
-
-        Share.shareXFiles([XFile(imagePath)], text: text);
-      }).catchError((onError) {
-        print(onError);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(onError.toString()),
-          ),
-        );
-      });
-    } else {
-      requestPermission(Permission.storage);
-    }
+              }).catchError((onError) {
+                print(onError);
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(onError.toString()),
+                ),
+              );
+              });
+       }
+       else{
+         requestPermission(Permission.storage);
+       }
   }
 
   @override

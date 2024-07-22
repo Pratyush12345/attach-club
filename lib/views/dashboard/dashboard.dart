@@ -20,6 +20,7 @@ import 'package:attach_club/views/settings/settings_provider.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
 import 'package:attach_club/views/social_greeting/greeting_dashboard.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +57,6 @@ class Dashboard extends StatefulWidget {
   ];
 
   const Dashboard({super.key});
-
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -67,6 +67,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
   bool get wantKeepAlive => true;
   
   ScrollController scrollController = ScrollController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   @override
   void initState() {
@@ -79,7 +80,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        scrollController.addListener(_scrollListener);
        Future.delayed(const Duration(milliseconds: 4000),(){
-        
+      initFirestore();  
        Provider.of<ChangeSettingScreenProvider>(context, listen: false).changeSettingScreenIndex("Settings");
        } );
       
@@ -87,6 +88,20 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
     context
         .read<profileBloc.ProfileBloc>()
         .add(const profileBloc.GetUserData());
+      
+  }
+  
+  initFirestore(){
+    _firestore.collection('users').doc('${GlobalVariable.userData.uid}').snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          if(context.read<UserDataNotifier>().userData.accountType != snapshot.data()?['accountType']){
+          context.read<UserDataNotifier>().userData.accountType = snapshot.data()?['accountType'];
+          print(context.read<UserDataNotifier>().userData.accountType);
+          }
+        });
+      }
+    });  
   }
 
   @override
@@ -170,7 +185,7 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                                 child: Container(
                                   color: Colors.white,
                                 ),
-                              ): CachedNetworkImage(
+                              ) : CachedNetworkImage(
                           imageBuilder: (context, imageProvider) {
                             return Container(
                             decoration: BoxDecoration(
@@ -201,30 +216,6 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
 
                           } ,
                          ),
-
-                        // Image.network(GlobalVariable.metaData.appBannerLink!, fit: BoxFit.fill,
-                        //       loadingBuilder: (context, child, loadingProgress) {
-                        //     if (loadingProgress == null) {
-                        //       return child;
-                        //     } else {
-                        //       return const SizedBox(
-                        //         height: 20.0,
-                        //         width: 20.0,
-                        //         child: Center(
-                        //           child: CircularProgressIndicator(
-                        //             color: Colors.purple,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     }
-                        //   }, errorBuilder: (context, error, stackTrace) {
-                        //     return Image.asset(
-                        //   "assets/images/dashboard.png",
-                        //   fit: BoxFit.cover,
-                        //   );
-                        //   }
-                        //   )
-
                       ),
                     ),
                   ),
@@ -308,26 +299,23 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
                   ),
                   SizedBox(height: 0.01931330472 * height),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: horizontalPadding,
+                    padding: const EdgeInsets.only(
+                     left: horizontalPadding, right: horizontalPadding
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Wrap(
-                        spacing: 16,
-                        children: [
-                          for (var i in Dashboard.connectData)
-                            LinkCard(
-                              grp: "CONNECTED USER",
-                              prefix: SvgPicture.asset(
-                                i["asset"]!,
-                                width: 30,
-                                height: 30,
-                              ),
-                              title: i["title"] ?? "title",
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (var i in Dashboard.connectData)
+                          LinkCard(
+                            grp: "CONNECTED USER",
+                            prefix: SvgPicture.asset(
+                              i["asset"]!,
+                              width: 30,
+                              height: 30,
                             ),
-                        ],
-                      ),
+                            title: i["title"] ?? "title",
+                          ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 0.02575107296 * height),

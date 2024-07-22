@@ -7,6 +7,7 @@ import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/social_greeting/greeting_keep_alive.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:attach_club/views/social_greeting/greeting_card.dart';
@@ -32,28 +33,40 @@ class _GreetingsState extends State<Greetings> {
 
   PermissionStatus _permissionStatus = PermissionStatus.denied;
 
-  Future<void> requestPermission(Permission permission) async {
-    final status = await permission.request();
-    setState(() {
-      print(status);
-      _permissionStatus = status;
-    });
+  
+   Future<void> requestPermission(Permission permission) async {
+          final status = await permission.request();
+          setState(() {
+            print(status);
+            _permissionStatus = status;
+          });
+        }
+  
+  getpermissionStatus() async{
+    print("${await Permission.storage.status}");
+  _permissionStatus = await Permission.storage.status;
+  if(_permissionStatus == PermissionStatus.denied){
+    requestPermission(Permission.storage);
+   }
   }
 
-  getpermissionStatus() async {
-    _permissionStatus = await Permission.storage.status;
-  }
+  shareWidget(String filename)async{
+       
+       if(_permissionStatus == PermissionStatus.granted){
+       screenshotController.capture(delay: Duration(milliseconds: 10))
+              .then((capturedImage) async {
+                
+                //String imagePath = '/storage/emulated/0/Download/$filename';
 
-  shareWidget(String filename) async {
-    if (_permissionStatus == PermissionStatus.granted) {
-      screenshotController
-          .capture(delay: Duration(milliseconds: 10))
-          .then((capturedImage) async {
-        //Directory? tempDir = await getExternalStorageDirectory();
-        //String tempPath = tempDir!.path;
+                Directory? tempDir = await getExternalStorageDirectory();
+                String tempPath = tempDir!.path;
 
-        String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
-        String imagePath = '/storage/emulated/0/Download/$filename';
+                String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
+                //String imagePath = '/storage/emulated/0/Download/$filename';
+                String imagePath = '$tempPath/$filename'; 
+
+        // String filename = "image${fileName.replaceAll(".jpg", "")}.jpg";
+        // String imagePath = '/storage/emulated/0/Download/$filename';
 
         //ShowCapturedWidget(context, capturedImage!);
         print("path----------$imagePath");

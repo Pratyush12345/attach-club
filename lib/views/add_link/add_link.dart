@@ -62,7 +62,7 @@ class _AddLinkState extends State<AddLink> {
             if (state is AddLinkLoading) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.purple,
+                  color: Colors.grey,
                 ),
               );
             }

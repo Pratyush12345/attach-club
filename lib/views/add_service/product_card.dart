@@ -3,6 +3,7 @@ import 'package:attach_club/models/product.dart';
 import 'package:attach_club/views/add_service/edit_product_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -49,14 +50,18 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        placeholder: (context, url) => const Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.purple,
-                            ),
-                          ),
+                        placeholder: (context, url) => SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Shimmer.fromColors(
+                              direction: ShimmerDirection.ltr,
+                                baseColor:  Colors.grey[800]!,
+                                highlightColor: Colors.grey[600]!,
+                        
+                              child: Container(
+                                color: Colors.white,
+                              ),
+                            )
                         ),
                         // Image.network(
                         //   product.imageUrl,

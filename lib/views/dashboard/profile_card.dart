@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:attach_club/bloc/connections/connections_bloc.dart';
 import 'package:attach_club/constants.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,8 @@ class ProfileCard extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () {
-        String title = "Connect";
+        if (context.read<UserDataNotifier>().userData.profileClickCount < 3 || context.read<UserDataNotifier>().userData.accountType == "premium") {
+           String title = "Connect";
 
         int index1 = context
             .read<ConnectionsBloc>()
@@ -143,6 +145,18 @@ class ProfileCard extends StatelessWidget {
             ),
           ),
         );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "You have reached the maximum limit of profile views for the day. Upgrade to premium to view more profiles.",
+                ),
+              ),
+            );
+            Navigator.of(context).pushNamed("/buyPlan");
+          }
+
+        
       },
       child: Card(
         shape: RoundedRectangleBorder(

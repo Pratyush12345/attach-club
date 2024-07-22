@@ -32,6 +32,8 @@ class AddServiceRepository {
       final url = await imageRef.getDownloadURL();
       product.imageUrl = url;
     }
+    
+
     final check = await db
         .collection("users")
         .doc(currentUser.uid)

@@ -34,9 +34,8 @@ class LinkCard extends StatelessWidget {
         else{
            Navigator.pushNamed(context, "/settings/detailedAnalytics");
         }
-        
-
       },
+
       child: Card(
         margin: EdgeInsets.zero,
         color:   grp == "CONNECTED USER" ? const Color(0xFFFFD16A): const Color(0xFF26293B),
@@ -45,7 +44,7 @@ class LinkCard extends StatelessWidget {
         ),
         child: SizedBox(
           height: 0.07725321888 * height,
-          width: 0.4 * width,
+          width: grp == "CONNECTED USER" ? 0.41 * width : 0.4 * width,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(

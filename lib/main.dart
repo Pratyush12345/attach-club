@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
 import 'package:attach_club/bloc/add_link/add_link_repository.dart';
 import 'package:attach_club/bloc/add_service/add_service_bloc.dart';
@@ -72,7 +72,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-
+import 'package:upgrader/upgrader.dart';
 import 'bloc/splash_screen/splash_screen_bloc.dart';
 import 'core/repository/user_data_notifier.dart';
 
@@ -150,6 +150,8 @@ class _MyAppState extends State<MyApp> {
     // subscription.cancel();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -376,9 +378,14 @@ class _MyAppState extends State<MyApp> {
                     backgroundColor: Color(0xFF2D4CF9)),
               ),
               themeMode: ThemeMode.dark,
+              debugShowCheckedModeBanner: false,
               initialRoute: "/splash_screen",
-              routes: {
-                "/splash_screen": (context) => const SplashScreen(),
+              routes: {        
+                "/splash_screen": (context) => UpgradeAlert(
+                  dialogStyle: Platform.isIOS? UpgradeDialogStyle.cupertino: UpgradeDialogStyle.material,
+                  showIgnore: true,
+                  showLater: true,
+                  child: const SplashScreen()),
                 "/signup": (context) => const SignUp(),
                 "/onboard1": (context) => const CompleteProfile(),
                 "/onboard2": (context) => const ProfileImage(),

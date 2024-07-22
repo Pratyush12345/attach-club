@@ -56,7 +56,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Image.asset("assets/images/splash.png")
               ),
               const SizedBox(height: 10.0,),
-              const Text("Attach Club", style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),)
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Attach", style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.w800),),
+                  Text("Club", style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.w400),),
+                ],
+              ),
+              const Text("PROOF OF YOUR SMARTNESS", style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400),)
             ],
           ),
       ),

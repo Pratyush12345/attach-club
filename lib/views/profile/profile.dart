@@ -17,6 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -67,6 +68,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
         bloc.lastUpdated = DateTime.now();
         bloc.add(const GetUserData());
       }
+    }
+    if(GlobalVariable.isAnyChangeInProfile){
+      GlobalVariable.isAnyChangeInProfile = false;
+      context.read<ProfileBloc>().init();
+        bloc.add(GetUserData(uid: widget.uid));
     }
   }
 
@@ -119,7 +125,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 0.3841201717 * height,
+                    height: 0.4541201717 * height,
                     child: Stack(
                       children: [
                         ShaderMask(
@@ -193,9 +199,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
-                              color: primaryTextColor,
+                              color: Colors.grey,
                             ),
                           ),
+                        if (userData.isBasicDetailEnabled)
+                          Text(
+                            userData.city,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),  
                         if (userData.isReviewEnabled)
                           Column(
                             children: [
@@ -249,9 +264,9 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                   // } else {
                                   //   throw 'Could not launch $url';
                                   // }
-                                  context.read<ProfileBloc>().add(
-                                        SaveContact(),
-                                      );
+                                  if (await FlutterContacts.requestPermission()){
+                                      context.read<ProfileBloc>().add(const SaveContact(),);
+                                  }
                                 },
                                 title: "Save Contact",
                                 assetName: "assets/svg/arrow_up_right.svg",
@@ -322,6 +337,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     for (var i in context
                                         .read<ProfileBloc>()
                                         .socialLinksList)
+                                      if(i.isEnabled)  
                                       GestureDetector(
                                         onTap: () async {
                                           if (i.link.contains(".com") ||
@@ -330,8 +346,12 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                             final url = Uri.parse(i.link);
                                             if (await canLaunchUrl(url)) {
                                               await launchUrl(url);
+                                              
                                             } else {
+                                              ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(content: Text("Not a valid link")));
                                               throw 'Could not launch $url';
+                                               
                                             }
                                           } else {
                                             ScaffoldMessenger.of(context)
@@ -362,21 +382,21 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                                             .isNotEmpty)
                                                         ? i.socialMedia.imageUrl
                                                         : "assets/svg/whatsapp.svg",
-                                                    width: 26,
-                                                    height: 26,
+                                                    width: 40,
+                                                    height: 40,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 6.0,
-                                                    ),
-                                                    child: Text(
-                                                      i.title,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
+                                                  // Padding(
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //     top: 6.0,
+                                                  //   ),
+                                                  //   child: Text(
+                                                  //     i.title,
+                                                  //     maxLines: 1,
+                                                  //     overflow:
+                                                  //         TextOverflow.ellipsis,
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               ),
                                             ),
@@ -403,9 +423,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               const SizedBox(height: 8),
                               RichText(
                                 text: TextSpan(
-                                  text: context
-                                      .read<UserDataNotifier>()
-                                      .userData
+                                  text:userData
                                       .description,
                                   style: TextStyle(
                                     fontSize: 16,

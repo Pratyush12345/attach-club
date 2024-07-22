@@ -1,6 +1,7 @@
 import 'package:attach_club/bloc/add_link/add_link_bloc.dart';
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/views/add_link/add_platform_info.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class EditPlatformInfo extends StatelessWidget {
                     DeleteSocialLink(socialLink),
                   );
               Navigator.pop(context);
+              GlobalVariable.isAnyChangeInProfile = true;
             },
             title: "Delete",
             buttonWidth: 0.425581,

@@ -1,6 +1,7 @@
 import 'package:attach_club/core/components/custom_modal_sheet.dart';
 import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/views/edit_profile/edit_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,29 +37,28 @@ class _CustomContainerState extends State<CustomContainer> {
     return GestureDetector(
       onTap: (!widget.disabled) ? _decideModel : null,
       child: Container(
-        height: 48,
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    (widget.title.isNotEmpty) ? widget.title : widget.hintText,
+          height: widget.hintText == "Description" ? 110 :64,
+          decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width *0.85,
+                  
+                  child: Text(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    widget.title,
                     style: _getTextStyle(
-                      (widget.title.isNotEmpty)
-                          ? Colors.white
-                          : paragraphTextColor,
+                      Colors.white,
                       20,
                       FontWeight.w400,
                     ),
                   ),
-                ],
+                
               ),
               (widget.isProfessionDropdown)
                   ? Padding(

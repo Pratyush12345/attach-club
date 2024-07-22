@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/components/button.dart';
+import '../../models/globalVariable.dart';
 import 'add_images.dart';
 
 class AddProducts extends StatefulWidget {
@@ -216,31 +217,134 @@ class _AddProductsState extends State<AddProducts> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 0.0148 * height,
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      _onPress();
-                    },
-                    title: (widget.oldProduct != null) ? "Save" : "Add",
-                    prefixIcon: (widget.oldProduct == null)
-                        ? const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          )
-                        : null,
-                    disabled: disabled,
-                  ),
-                ],
-              ),
+                    
+                    SizedBox(height: 0.03433 * height),
+                    
+                    const Label(
+                      title: "Enter your product or service details here",
+                    ),
+                    SizedBox(height: 0.0257 * height),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      controller: titleController,
+                      hintText: "Product Title",
+                      onChanged: (s) {
+                        setState(() {
+                          disabled = _isDisabled();
+                        });
+                      },
+                    ),
+                    SizedBox(height: 0.0128 * height),
+                    AddImages(
+                      file: file,
+                      url: widget.oldProduct?.imageUrl ?? "",
+                      callback: (selectedFile) {
+                        setState(() {
+                          file = selectedFile;
+                          disabled = _isDisabled();
+                        });
+                      },
+                    ),
+                    SizedBox(height: 0.0128 * height),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      controller: descriptionController,
+                      hintText: "Product Description",
+                      onChanged: (s) {
+                        setState(() {
+                          disabled = _isDisabled();
+                        });
+                      },
+                    ),
+                    SizedBox(height: 0.0128 * height),
+                    CustomTextField(
+                      type: TextFieldType.RegularTextField,
+                      controller: priceController,
+                      hintText: "Price",
+                      keyboardType: TextInputType.number,
+                      onChanged: (s) {
+                        setState(() {
+                          disabled = _isDisabled();
+                        });
+                      },
+                    ),
+                    SizedBox(height: 0.0128 * height),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Show enquiry button",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Switch(
+                          value: enquiry,
+                          onChanged: (value) {
+                            setState(() {
+                              enquiry = value;
+                              disabled = _isDisabled();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0.0048 * height),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Disable",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Switch(
+                          value: isProductDisabled,
+                          onChanged: (value) {
+                            setState(() {
+                              isProductDisabled = value;
+                              disabled = _isDisabled();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0.0068 * height),
+                    RichText(
+                      text: TextSpan(
+                          text:
+                              "Turning this option on will hide this link from your profile for all users",
+                          style: TextStyle(color: paragraphTextColor)),
+                    ),
+                 ],
+                ),
+                SizedBox(
+                  height: 0.0148 * height,
+                ),
+                CustomButton(
+                  onPressed: () {
+                    _onPress((widget.oldProduct != null) ? "Save" : "Add");
+                  },
+                  title: (widget.oldProduct != null) ? "Save" : "Add",
+                  prefixIcon: (widget.oldProduct == null)
+                      ? const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        )
+                      : null,
+                  disabled: disabled,
+                ),
+              ],
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 
   bool _isDisabled() {
@@ -250,7 +354,7 @@ class _AddProductsState extends State<AddProducts> {
         (file == null && (widget.oldProduct == null)));
   }
 
-  void _onPress() {
+  void _onPress(String type) {
     final product = Product(
       title: titleController.text,
       description: descriptionController.text,
@@ -258,10 +362,9 @@ class _AddProductsState extends State<AddProducts> {
       isShowEnquiryBtn: enquiry,
       image: (file != null) ? File(file!.path) : null,
       dateAdded: Timestamp.now(),
-      imageUrl: "",
+      imageUrl: type == "Save"? widget.oldProduct!.imageUrl : "",
       isEnabled: !isProductDisabled,
-      id: widget.oldProduct?.id ??
-          DateTime.now().microsecondsSinceEpoch.toString(),
+      id: widget.oldProduct?.id ?? DateTime.now().microsecondsSinceEpoch.toString()
     );
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(
@@ -274,6 +377,7 @@ class _AddProductsState extends State<AddProducts> {
       final userData = context.read<UserDataNotifier>().userData;
       context.read<AddServiceBloc>().add(ProductAdded(product, userData));
     }
+    GlobalVariable.isAnyChangeInProfile = true;
     Navigator.pop(context);
   }
 }

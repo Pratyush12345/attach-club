@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GlobalVariable {
   static AppMetaData metaData = AppMetaData(appBannerLink: "");
+  static bool isAnyChangeInProfile = false;
   static UserData userData = UserData(
     firstLoginDate: Timestamp.now(),
     lastLoginDate: Timestamp.now(),

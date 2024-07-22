@@ -1,5 +1,6 @@
 import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:flutter/material.dart';
 
 class EditSheet extends StatefulWidget {
@@ -60,6 +61,7 @@ class _EditSheetState extends State<EditSheet> {
             onPressed: () {
               widget.onSave(bottomSheetController.text);
               Navigator.pop(context);
+              GlobalVariable.isAnyChangeInProfile = true;
             },
             title: "Save",
           ),

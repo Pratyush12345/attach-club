@@ -128,8 +128,15 @@ class _SearchConnectionsState extends State<SearchConnections> with AutomaticKee
                                 delegate: SliverChildListDelegate(
                                 [
                                   if(context.read<SearchConnectionsBloc>().resultsList.isEmpty)
-                                  const Center(
-                                    child: Text("No recent search found")),
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("No recent search found", style: TextStyle(color: Color(0xFF94969F)),),
+                                      SizedBox(width: 4.0,),
+            
+                                      Icon(Icons.search, color: Color(0xFF94969F), size: 18.0,)
+                                    ],
+                                  ),
 
                                   if(context.read<SearchConnectionsBloc>().resultsList.isNotEmpty)
                                   for (var i = 0 ; i < context.read<SearchConnectionsBloc>().resultsList.length;i++)

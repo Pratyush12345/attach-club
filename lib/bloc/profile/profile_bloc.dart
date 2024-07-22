@@ -7,6 +7,7 @@ import 'package:attach_club/models/social_link.dart';
 import 'package:attach_club/models/user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_contacts/properties/social_media.dart';
@@ -112,7 +113,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
     on<SaveContact>((event, emit) async {
-      emit(ProfileLoading());
       final List<SocialMedia> list = [];
       for (var i in socialLinksList) {
         if (i.isEnabled) {
