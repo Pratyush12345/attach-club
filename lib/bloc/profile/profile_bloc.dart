@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:attach_club/bloc/profile/profile_repository.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:attach_club/models/review.dart';
@@ -8,6 +10,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_contacts/properties/social_media.dart';
+import 'package:http/http.dart';
 
 part 'profile_event.dart';
 
@@ -109,6 +112,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     });
     on<SaveContact>((event, emit) async {
+      emit(ProfileLoading());
       final List<SocialMedia> list = [];
       for (var i in socialLinksList) {
         if (i.isEnabled) {
@@ -118,12 +122,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           ));
         }
       }
+      Uint8List? photo;
+      if (userData.profileImageURL.isNotEmpty) {
+        final response = await get(Uri.parse(userData.profileImageURL));
+        photo = response.bodyBytes;
+      }
       final contact = Contact(
         displayName: userData.username,
+        //split userData.name into first and last name
+        name: Name(
+          first: userData.name.split(" ")[0],
+          last: userData.name.split(" ")[1],
+        ),
         phones: [Phone(userData.phoneNo)],
         socialMedias: list,
+        photo: photo,
+        addresses: [
+          Address(
+            "",
+            city: userData.city,
+            country: userData.country,
+            postalCode: userData.pin,
+            state: userData.state,
+          )
+        ],
       );
       await contact.insert();
+      emit(const ShowSnackBar("Contact Saved"));
     });
   }
 

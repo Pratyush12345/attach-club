@@ -6,6 +6,7 @@ import 'package:attach_club/core/components/heading.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:attach_club/core/components/onboarding_hero.dart';
 import 'package:attach_club/core/components/text_field.dart';
+import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -208,9 +209,12 @@ class _AddProductsState extends State<AddProducts> {
                       SizedBox(height: 0.0068 * height),
                       RichText(
                         text: TextSpan(
-                            text:
-                                "Turning this option on will hide this link from your profile for all users",
-                            style: TextStyle(color: paragraphTextColor)),
+                          text:
+                              "Turning this option on will hide this link from your profile for all users",
+                          style: TextStyle(
+                            color: paragraphTextColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -248,16 +252,17 @@ class _AddProductsState extends State<AddProducts> {
 
   void _onPress() {
     final product = Product(
-        title: titleController.text,
-        description: descriptionController.text,
-        price: priceController.text,
-        isShowEnquiryBtn: enquiry,
-        image: (file != null) ? File(file!.path) : null,
-        dateAdded: Timestamp.now(),
-        imageUrl: "",
-        isEnabled: !isProductDisabled,
-        id: widget.oldProduct?.id ??
-            DateTime.now().microsecondsSinceEpoch.toString());
+      title: titleController.text,
+      description: descriptionController.text,
+      price: priceController.text,
+      isShowEnquiryBtn: enquiry,
+      image: (file != null) ? File(file!.path) : null,
+      dateAdded: Timestamp.now(),
+      imageUrl: "",
+      isEnabled: !isProductDisabled,
+      id: widget.oldProduct?.id ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
+    );
     if (widget.oldProduct != null) {
       context.read<AddServiceBloc>().add(
             EditProduct(
@@ -266,7 +271,8 @@ class _AddProductsState extends State<AddProducts> {
             ),
           );
     } else {
-      context.read<AddServiceBloc>().add(ProductAdded(product));
+      final userData = context.read<UserDataNotifier>().userData;
+      context.read<AddServiceBloc>().add(ProductAdded(product, userData));
     }
     Navigator.pop(context);
   }

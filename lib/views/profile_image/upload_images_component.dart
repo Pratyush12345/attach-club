@@ -43,15 +43,19 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
             children: [
               GestureDetector(
                 onTap: () {
-                  showProfileSheetModal(
-                    context,
-                    _selectCoverAndUpload,
-                    () {
-                      context.read<ProfileImageBloc>().add(
-                            BannerImageDeleted(),
-                          );
-                    },
-                  );
+                  if(context.read<ProfileImageBloc>().bannerImage.isEmpty){
+                    _selectCoverAndUpload();
+                  }else{
+                    showProfileSheetModal(
+                      context,
+                      _selectCoverAndUpload,
+                          () {
+                        context.read<ProfileImageBloc>().add(
+                          BannerImageDeleted(),
+                        );
+                      },
+                    );
+                  }
                 },
                 child: _getCover(height),
               ),
@@ -59,15 +63,19 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
-                    showProfileSheetModal(
-                      context,
-                      _selectProfileAndUpload,
-                      () {
-                        context.read<ProfileImageBloc>().add(
-                              ProfileImageDeleted(),
-                            );
-                      },
-                    );
+                    if(context.read<ProfileImageBloc>().profileImage.isEmpty){
+                      _selectProfileAndUpload();
+                    }else {
+                      showProfileSheetModal(
+                        context,
+                        _selectProfileAndUpload,
+                            () {
+                          context.read<ProfileImageBloc>().add(
+                            ProfileImageDeleted(),
+                          );
+                        },
+                      );
+                    }
                   },
                   child: _getProfile(width),
                 ),

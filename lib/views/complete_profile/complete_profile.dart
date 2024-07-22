@@ -35,6 +35,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final pinCodeController = TextEditingController();
   final countryController = TextEditingController();
   final phoneNoController = TextEditingController();
+  final businessNameController = TextEditingController();
   bool isPhoneDisabled = false;
   int loading = -1;
 
@@ -51,6 +52,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
     pinCodeController.dispose();
     countryController.dispose();
     phoneNoController.dispose();
+    businessNameController.dispose();
     super.dispose();
   }
 
@@ -106,6 +108,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
               cityController.text = state.userData.city;
               pinCodeController.text = state.userData.pin;
               countryController.text = state.userData.country;
+              businessNameController.text = state.userData.businessName;
             }
           },
           builder: (context, state) {
@@ -122,13 +125,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ..._getHeader(height),
-                          SizedBox(
-                            height: 0.0257 * height,
-                          ),
+                          SizedBox(height: 0.0257 * height),
                           const Label(title: "Profile Link"),
-                          SizedBox(
-                            height: 0.0171 * height,
-                          ),
+                          SizedBox(height: 0.0171 * height),
                           CustomTextField(
                             type: TextFieldType.RegularTextField,
                             hintText: "Enter username",
@@ -142,9 +141,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             },
                             disabled: widget.isInsideManageProfile,
                           ),
-                          SizedBox(
-                            height: 0.00858 * height,
-                          ),
+                          SizedBox(height: 0.00858 * height),
                           if (!widget.isInsideManageProfile)
                             GestureDetector(
                               child: Padding(
@@ -166,15 +163,11 @@ class _CompleteProfileState extends State<CompleteProfile> {
                                     );
                               },
                             ),
-                          SizedBox(
-                            height: 0.0343 * height,
-                          ),
+                          SizedBox(height: 0.0343 * height),
                           const Label(
                             title: "Your profile will be available at:",
                           ),
-                          const SizedBox(
-                            height: 4,
-                          ),
+                          const SizedBox(height: 4),
                           RichText(
                             text: TextSpan(
                               text: "www.theattachclub.com/",
@@ -200,14 +193,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             padding: EdgeInsets.symmetric(
                               vertical: 0.01287553648 * height,
                             ),
-                            // child: CustomTextField(
-                            //   type: TextFieldType.RegularTextField,
-                            //   hintText: "Profession",
-                            //   controller: professionController,
-                            //   onChanged: (e) {
-                            //     _sendUpdate();
-                            //   },
-                            // ),
                             child: GestureDetector(
                               onTap: () {
                                 _onProfessionClick(height);
@@ -266,6 +251,15 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             hintText: "Phone No",
                             disabled: isPhoneDisabled,
                             onChanged: (_) {
+                              _sendUpdate();
+                            },
+                          ),
+                          SizedBox(height: 0.01287553648 * height),
+                          CustomTextField(
+                            type: TextFieldType.RegularTextField,
+                            hintText: "Business Name",
+                            controller: businessNameController,
+                            onChanged: (e) {
                               _sendUpdate();
                             },
                           ),
@@ -349,6 +343,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                                 pincode: pinCodeController.text,
                                 country: countryController.text,
                                 phoneNo: phoneNoController.text,
+                                businessName: businessNameController.text,
                                 isVerified: loading == 1,
                               ));
                         },
@@ -457,6 +452,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             pincode: pinCodeController.text,
             phoneNo: phoneNoController.text,
             isUsernameUpdated: isUsername,
+            businessName: businessNameController.text,
           ),
         );
   }

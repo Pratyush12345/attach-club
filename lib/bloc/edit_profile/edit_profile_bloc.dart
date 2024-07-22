@@ -18,6 +18,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   String pinCode = "";
   String country = "";
   String city = "";
+  String businessName = "";
   List<String> professionsList = [];
   List<String> filteredProfessionsList = [];
 
@@ -88,6 +89,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     Emitter<EditProfileState> emit,
   ) async {
     await _repository.updateNamedParam(event.key, event.value);
+    final userData = await _repository.getUserData();
+    emit(DataUpdated(userData));
+    emit(EditProfileInitial());
   }
 
   _onNameUpdated(
@@ -97,7 +101,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     try {
       name = event.name;
       await _repository.updateName(name);
-      emit(DataUpdated(name, profession, description));
+      final userData = await _repository.getUserData();
+      emit(DataUpdated(userData));
+      emit(EditProfileInitial());
     } on Exception catch (e) {
       emit(ShowSnackBar("Something went wrong $e"));
     }
@@ -110,7 +116,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     try {
       profession = event.profession;
       await _repository.updateProfession(profession);
-      emit(DataUpdated(name, profession, description));
+      final userData = await _repository.getUserData();
+      emit(DataUpdated(userData));
+      emit(EditProfileInitial());
     } on Exception catch (e) {
       emit(ShowSnackBar("Something went wrong $e"));
     }
@@ -123,7 +131,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     try {
       description = event.description;
       await _repository.updateDescription(description);
-      emit(DataUpdated(name, profession, description));
+      final userData = await _repository.getUserData();
+      emit(DataUpdated(userData));
+      emit(EditProfileInitial());
     } on Exception catch (e) {
       emit(ShowSnackBar("Something went wrong $e"));
     }

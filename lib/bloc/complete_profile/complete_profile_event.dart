@@ -24,6 +24,7 @@ class OnFieldsUpdated extends CompleteProfileEvent {
   final String country;
   final String pincode;
   final String phoneNo;
+  final String businessName;
   final bool isUsernameUpdated;
 
   const OnFieldsUpdated({
@@ -37,6 +38,7 @@ class OnFieldsUpdated extends CompleteProfileEvent {
     required this.country,
     required this.pincode,
     required this.phoneNo,
+    required this.businessName,
     required this.isUsernameUpdated,
   });
 
@@ -51,7 +53,8 @@ class OnFieldsUpdated extends CompleteProfileEvent {
         city,
         country,
         pincode,
-        isUsernameUpdated
+        isUsernameUpdated,
+        businessName
       ];
 }
 
@@ -66,6 +69,7 @@ class NextButtonClicked extends CompleteProfileEvent {
   final String country;
   final String phoneNo;
   final bool isVerified;
+  final String businessName;
 
   const NextButtonClicked({
     required this.username,
@@ -78,6 +82,7 @@ class NextButtonClicked extends CompleteProfileEvent {
     required this.country,
     required this.isVerified,
     required this.phoneNo,
+    required this.businessName,
   });
 
   @override

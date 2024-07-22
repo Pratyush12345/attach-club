@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 
+import '../../models/user_data.dart';
+
 part 'add_service_event.dart';
 
 part 'add_service_state.dart';
@@ -19,7 +21,7 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
   AddServiceBloc(this._repository) : super(AddServiceInitial()) {
     on<ProductAdded>((event, emit) async {
       try {
-        if(list.length>=3){
+        if(event.userData.accountType=="normal" && list.length>=3){
           emit(const ShowSnackBar("Please Upgrade Plan to add more products"));
           return emit(NavigateToBuyPlan());
         }

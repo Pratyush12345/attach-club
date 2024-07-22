@@ -6,8 +6,9 @@ abstract class AddServiceEvent extends Equatable {
 
 class ProductAdded extends AddServiceEvent {
   final Product product;
+  final UserData userData;
 
-  const ProductAdded(this.product);
+  const ProductAdded(this.product, this.userData);
 
   @override
   List<Object?> get props => [];

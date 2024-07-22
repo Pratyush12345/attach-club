@@ -26,6 +26,7 @@ class CompleteProfileBloc
           event.country.isEmpty ||
           event.pincode.isEmpty ||
           event.phoneNo.isEmpty ||
+          event.businessName.isEmpty ||
           event.loading != 1);
       emit(ButtonStatusUpdated(newStatus));
       if (event.isUsernameUpdated) {
@@ -101,6 +102,9 @@ class CompleteProfileBloc
       if (event.phoneNo.isEmpty) {
         throw ("Please enter phone number");
       }
+      if(event.businessName.isEmpty) {
+        throw ("Please enter business name");
+      }
       if (!event.isVerified) {
         throw ("Please verify username");
       }
@@ -125,6 +129,7 @@ class CompleteProfileBloc
         planExitDate: Timestamp.fromDate(DateTime.now().add(const Duration(days: 60))),
         planPurchaseDate: Timestamp.now(),
         purchasedPlanCode: "60DP",
+        businessName: event.businessName,
       );
       await _repository.uploadUserData(user);
       await _repository.uploadUserToRealtime(user);

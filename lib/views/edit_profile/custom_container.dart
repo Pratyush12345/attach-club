@@ -107,7 +107,7 @@ class _CustomContainerState extends State<CustomContainer> {
             children: [
               SizedBox(height: 0.03540772532 * height),
               const Text(
-                "Selected Platform",
+                "Select Profession",
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               SizedBox(height: 0.02789699571 * height),

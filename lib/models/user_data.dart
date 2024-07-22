@@ -39,6 +39,7 @@ class UserData {
   String state;
   String username;
   String? uid;
+  String businessName;
 
   UserData({
     this.accountType = "normal",
@@ -77,6 +78,7 @@ class UserData {
     this.isReviewEnabled = true,
     this.isShowProfileImageOnGreeting = true,
     this.uid,
+    this.businessName = ""
   });
   
    // Override the == operator and hashCode for comparison based on ID
@@ -127,6 +129,7 @@ class UserData {
       "rating": rating,
       "state": state,
       "username": username,
+      "businessName": businessName,
     };
   }
 
@@ -171,6 +174,7 @@ class UserData {
       isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
       planExitDate: map["planExitDate"] ?? Timestamp.now(),
       planPurchaseDate: map["planPurchaseDate"] ?? Timestamp.now(),
+      businessName: map["businessName"]??"",
     );
   }
 
@@ -215,10 +219,12 @@ class UserData {
       isPlanExpiredRecently: map["isPlanExpiredRecently"] ?? false,
       planExitDate: map["planExitDate"] ?? Timestamp.now(),
       planPurchaseDate: map["planPurchaseDate"] ?? Timestamp.now(),
+      businessName: map["businessName"]??"",
     );
   }
 
   factory UserData.fromJson({required Map<String, dynamic> map, String? uid}) {
+    log(uid.toString());
     return UserData(
       accountType: map["accountType"],
       age: map["age"],
@@ -272,6 +278,8 @@ class UserData {
         map["planPurchaseDate"]["_seconds"],
         map["planPurchaseDate"]["_nanoseconds"],
       ),
+      profileViewCount: map["profileViewCount"],
+      businessName: map["businessName"]??"",
     );
   }
 }

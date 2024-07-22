@@ -4,6 +4,7 @@ import 'package:attach_club/core/components/custom_add_icon.dart';
 import 'package:attach_club/core/components/label.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddImages extends StatelessWidget {
@@ -25,6 +26,12 @@ class AddImages extends StatelessWidget {
       onTap: () async {
         XFile? selectedFile =
             await ImagePicker().pickImage(source: ImageSource.gallery);
+        if(context.mounted && selectedFile!=null) {
+          CroppedFile? croppedFile = await ImageCropper().cropImage(sourcePath: selectedFile.path);
+          if(context.mounted && croppedFile!=null) {
+            selectedFile = XFile(croppedFile.path);
+          }
+        }
         if (selectedFile != null) {
           callback(selectedFile);
         }

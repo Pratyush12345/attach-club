@@ -27,6 +27,7 @@ class _EditProfileState extends State<EditProfile> {
   final pinCodeController = TextEditingController();
   final countryController = TextEditingController();
   final cityController = TextEditingController();
+  final businessNameController = TextEditingController();
 
   // bool disabled = true;
 
@@ -41,6 +42,7 @@ class _EditProfileState extends State<EditProfile> {
     pinCodeController.dispose();
     countryController.dispose();
     cityController.dispose();
+    businessNameController.dispose();
     super.dispose();
   }
 
@@ -59,6 +61,7 @@ class _EditProfileState extends State<EditProfile> {
     bloc.pinCode = userData.pin;
     bloc.country = userData.country;
     bloc.city = userData.city;
+    bloc.businessName = userData.businessName;
     userNameController.text = bloc.username;
     nameController.text = bloc.name;
     professionController.text = bloc.profession;
@@ -68,6 +71,7 @@ class _EditProfileState extends State<EditProfile> {
     pinCodeController.text = bloc.pinCode;
     countryController.text = bloc.country;
     cityController.text = bloc.city;
+    businessNameController.text = bloc.businessName;
   }
 
   @override
@@ -91,9 +95,7 @@ class _EditProfileState extends State<EditProfile> {
               descriptionController.text = state.userData.description;
             }
             if (state is DataUpdated) {
-              nameController.text = state.name;
-              professionController.text = state.profession;
-              descriptionController.text = state.description;
+              context.read<UserDataNotifier>().updateUserData(state.userData);
             }
           },
           builder: (context, state) {
@@ -185,6 +187,19 @@ class _EditProfileState extends State<EditProfile> {
                         });
                       },
                     ),
+                    SizedBox(height: 0.01287553648 * height),
+
+                    CustomContainer(
+                      title: businessNameController.text,
+                      hintText: "Business Name",
+                      param: "businessName",
+                      updateTitle: (text){
+                        setState(() {
+                          businessNameController.text = text;
+                        });
+                      },
+                    ),
+
                     SizedBox(height: 0.01287553648 * height),
                     CustomContainer(
                       title: descriptionController.text,

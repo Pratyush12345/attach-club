@@ -29,14 +29,11 @@ class InitialUserData extends EditProfileState {
 }
 
 class DataUpdated extends EditProfileState {
-  final String name;
-  final String profession;
-  final String description;
-
-  const DataUpdated(this.name, this.profession, this.description);
+  final UserData userData;
+  const DataUpdated(this.userData);
 
   @override
-  List<Object?> get props => [name, profession, description];
+  List<Object?> get props => [userData];
 }
 
 class ProfessionsLoading extends EditProfileState {
