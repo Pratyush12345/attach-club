@@ -154,7 +154,7 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
                   SwitchCard(
                     title: "Social media links",
                     subtitle:
-                        "you can turn off if you want to hide your  basic details for users.",
+                        "you can turn off if you want to hide your Social media links from public.",
                     value: isLinkEnabled,
                     onChange: (newValue) {
                       context.read<ProfilePrivacyBloc>().add(
@@ -166,7 +166,7 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
                   SwitchCard(
                     title: "Products",
                     subtitle:
-                        "you can turn off if you want to hide your  basic details for users.",
+                        "you can turn off if you want to hide your added products from public.",
                     value: isProductEnabled,
                     onChange: (newValue) {
                       context.read<ProfilePrivacyBloc>().add(
@@ -178,7 +178,7 @@ class _ProfilePrivacyState extends State<ProfilePrivacy> {
                   SwitchCard(
                     title: "Reviews",
                     subtitle:
-                        "you can turn off if you want to hide your  basic details for users.",
+                        "you can turn off if you want to hide your reviws from public.",
                     value: isReviewEnabled,
                     onChange: (newValue) {
                       context.read<ProfilePrivacyBloc>().add(

@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:attach_club/constants.dart';
 import 'package:attach_club/core/repository/core_repository.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
+import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/settings/gradient_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../core/components/line_break.dart';
 
 class OtherPages extends StatefulWidget {
@@ -26,8 +30,73 @@ class _OtherPagesState extends State<OtherPages> {
     fontSize: 14,
     color: secondaryTextColor,
   );
+  showDeactivateAlertDialog(BuildContext context) {
+    // set up the buttons
+    final buttonStyle = TextButton.styleFrom(
+      backgroundColor: const Color(0xFF2D4CF9),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
 
-  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      style: buttonStyle,
+      child: const Text(
+        "Cancel",
+        style: TextStyle(
+          color: primaryTextColor,
+        ),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      style: buttonStyle,
+      child: const Text(
+        "Continue",
+        style: TextStyle(
+          color: primaryTextColor,
+        ),
+      ),
+      onPressed: () {
+        context.read<CoreRepository>().logout(context);
+        Navigator.of(context).popUntil((route) => false);
+        Navigator.of(context).pushNamed("/signup");
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      backgroundColor: const Color(0xFF181B2F),
+      title: const Text(
+        "Are you sure?",
+        style: TextStyle(
+          color: primaryTextColor,
+        ),
+      ),
+      content: const Text(
+        "Are you sure you want to deactivate account?",
+        style: TextStyle(
+          color: primaryTextColor,
+        ),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+  
+    showAlertDialog(BuildContext context) {
     // set up the buttons
     final buttonStyle = TextButton.styleFrom(
       backgroundColor: const Color(0xFF2D4CF9),
@@ -198,7 +267,10 @@ class _OtherPagesState extends State<OtherPages> {
             Icons.share,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            String text = "Download the app with the link \n${Platform.isAndroid?  GlobalVariable.metaData.playStoreLink :  GlobalVariable.metaData.appStoreLink}";
+            Share.share(text);
+          }
         ),
         const SizedBox(
           height: 16,
@@ -227,7 +299,9 @@ class _OtherPagesState extends State<OtherPages> {
           ),
           isGradient: false,
           textColor: Colors.red,
-          onPressed: () {},
+          onPressed: () {
+             showDeactivateAlertDialog(context);
+          },
         ),
       ],
     );

@@ -204,13 +204,23 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                           ),
                         if (userData.isBasicDetailEnabled)
                           Text(
+                            userData.businessName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),   
+                        if (userData.isBasicDetailEnabled)
+                          Text(
                             userData.city,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                             ),
-                          ),  
+                          ),
+                         
                         if (userData.isReviewEnabled)
                           Column(
                             children: [
