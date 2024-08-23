@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   final bool disabled;
   final double? buttonWidth;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final double? doubleSize;
   final ButtonType buttonType;
   final Color? color;
@@ -25,6 +26,7 @@ class CustomButton extends StatelessWidget {
     this.isDark = false,
     this.buttonWidth,
     this.prefixIcon,
+    this.suffixIcon,
     this.doubleSize,
     this.buttonType = ButtonType.LargeButton,
     this.color,
@@ -94,7 +96,9 @@ class CustomButton extends StatelessWidget {
                 width: doubleSize,
                 height: doubleSize,
               ),
-            )
+            ),
+          SizedBox(width: 2.0,),  
+         suffixIcon ?? const SizedBox(),   
         ],
       ),
     );

@@ -59,6 +59,7 @@ class _AddLinkState extends State<AddLink> {
           },
           builder: (context, state) {
             final list = context.read<AddLinkBloc>().list;
+            list.sort((a,b)=>a.socialMedia.name.compareTo(b.socialMedia.name));
             if (state is AddLinkLoading) {
               return const Center(
                 child: CircularProgressIndicator(
@@ -73,9 +74,9 @@ class _AddLinkState extends State<AddLink> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  Container(
+                    height: MediaQuery.of(context).size.height*.72,
+                    child: ListView(
                       children: [
                         ..._getHeader(height),
                         SizedBox(

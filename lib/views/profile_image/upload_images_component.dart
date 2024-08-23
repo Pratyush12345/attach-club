@@ -1,4 +1,5 @@
 import 'package:attach_club/bloc/profile_image/profile_image_bloc.dart';
+import 'package:attach_club/core/components/button.dart';
 import 'package:attach_club/views/profile_image/profile_sheet_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -40,8 +41,9 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
           );
         }
         return SizedBox(
-          height: 0.4023175966 * height,
-          child: Stack(
+          height: 0.76 * height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               GestureDetector(
                 onTap: () {
@@ -61,6 +63,27 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                 },
                 child: _getCover(height),
               ),
+              CustomButton(
+                        onPressed: () {
+                          if(context.read<ProfileImageBloc>().bannerImage.isEmpty){
+                    _selectCoverAndUpload();
+                  }else{
+                    showProfileSheetModal(
+                      context,
+                      _selectCoverAndUpload,
+                          () {
+                        context.read<ProfileImageBloc>().add(
+                          BannerImageDeleted(),
+                        );
+                      },
+                    );
+                  }
+                           },
+                        title: "Edit Cover Image",
+                        suffixIcon: Icon(Icons.edit, color: Colors.white,),
+                        // isDark: true,
+                      ),
+              SizedBox(height: 14.0,),        
               Align(
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
@@ -81,7 +104,28 @@ class _UploadImagesComponentState extends State<UploadImagesComponent> {
                   },
                   child: _getProfile(width),
                 ),
-              )
+              ),
+              CustomButton(
+                        onPressed: () async{
+                           if(context.read<ProfileImageBloc>().profileImage.isEmpty){
+                      _selectProfileAndUpload();
+                    }else {
+                      showProfileSheetModal(
+                        context,
+                        _selectProfileAndUpload,
+                            () {
+                          context.read<ProfileImageBloc>().add(
+                            ProfileImageDeleted(),
+                          );
+                        },
+                      );
+                    }
+                  
+                        },
+                        title: "Edit Profile image ",
+                        suffixIcon: Icon(Icons.edit, color: Colors.white,),
+                        // isDark: true,
+                      ),
             ],
           ),
         );

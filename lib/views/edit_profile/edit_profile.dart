@@ -5,6 +5,7 @@ import 'package:attach_club/core/components/text_field.dart';
 import 'package:attach_club/core/repository/user_data_notifier.dart';
 import 'package:attach_club/models/globalVariable.dart';
 import 'package:attach_club/views/edit_profile/custom_container.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -138,17 +139,39 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     SizedBox(height: 0.0243 * height),
                     const Label(title: "Your profile will be available at:"),
-                    const SizedBox(height: 4),
-                    RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        text: "${GlobalVariable.metaData.webURL}",
-                        style: _getTextStyle(Colors.white, 20, FontWeight.w500),
-                        children: [
-                          TextSpan(text: userNameController.text),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: "${GlobalVariable.metaData.webURL}",
+                              style: _getTextStyle(Colors.white, 17, FontWeight.w400),
+                              children: [
+                                TextSpan(text: userNameController.text),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(onPressed: (){
+                            FlutterClipboard.copy(GlobalVariable.metaData.webURL! + "${userNameController.text}").then(( value ){
+                             ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text("Text Copied to clipboard"),
+                                          ),
+                                        );
+                            });
+                                
+                                                
+                          }
+                          , icon: Icon(Icons.copy)),
+                        )
                         ],
-                      ),
                     ),
                     SizedBox(height: 0.0343 * height),
                     const Label(title: "Basic Details"),

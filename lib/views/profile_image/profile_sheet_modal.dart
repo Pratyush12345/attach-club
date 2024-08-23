@@ -39,7 +39,7 @@ class EditImage extends StatelessWidget {
               Navigator.pop(context);
               onChangeClick();
             },
-            title: "Edit",
+            title: "Change",
             buttonWidth: 0.425581,
           ),
           const SizedBox(
@@ -50,7 +50,7 @@ class EditImage extends StatelessWidget {
               onDeleteClick();
               Navigator.pop(context);
             },
-            title: "Delete",
+            title: "Remove",
             buttonWidth: 0.425581,
             isDark: true,
           ),

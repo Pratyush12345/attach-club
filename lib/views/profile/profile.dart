@@ -158,6 +158,19 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             },
                           ),
                         ),
+                        if(userData.uid == GlobalVariable.userData.uid)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                            Navigator.of(context).pushNamed("/settings/manageProfile");
+                            }
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -192,23 +205,23 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             color: primaryTextColor,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 5),
                         if (userData.isBasicDetailEnabled)
                           Text(
                             userData.profession,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 18,
                               fontWeight: FontWeight.w400,
-                              color: Colors.grey,
+                              color: Colors.white,
                             ),
                           ),
                         if (userData.isBasicDetailEnabled)
                           Text(
                             userData.businessName,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 18,
                               fontWeight: FontWeight.w400,
-                              color: Colors.grey,
+                              color: Colors.white,
                             ),
                           ),   
                         if (userData.isBasicDetailEnabled)
@@ -350,6 +363,10 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       if(i.isEnabled)  
                                       GestureDetector(
                                         onTap: () async {
+                                          print(context
+                                        .read<ProfileBloc>()
+                                        .socialLinksList.length);
+                                        print("p..");
                                           if (i.link.contains(".com") ||
                                               i.link.contains("wa") ||
                                               i.link.contains("https://")) {
